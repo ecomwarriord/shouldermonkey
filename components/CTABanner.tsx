@@ -50,6 +50,22 @@ export default function CTABanner() {
           </div>
         </motion.div>
 
+        {/* Empathy statement */}
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.05 }}
+          style={{
+            fontSize: 'clamp(0.9rem, 2vw, 1.05rem)',
+            color: 'rgba(240,237,255,0.4)', lineHeight: 1.7,
+            maxWidth: '520px', margin: '0 auto 2rem',
+            fontStyle: 'italic',
+          }}
+        >
+          We know what it&apos;s like to be good at what you do — and still feel like the business is running you instead of the other way around.
+        </motion.p>
+
         <motion.h2
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -67,6 +83,30 @@ export default function CTABanner() {
           <span className="text-gradient-spectrum">Start winning clients.</span>
         </motion.h2>
 
+        {/* Success picture */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.13 }}
+          style={{
+            display: 'flex', justifyContent: 'center', flexWrap: 'wrap',
+            gap: '1.5rem', marginBottom: '2rem',
+          }}
+        >
+          {[
+            { icon: '📅', text: 'Calendar full without chasing' },
+            { icon: '💬', text: 'Every lead followed up automatically' },
+            { icon: '⭐', text: 'Reviews growing while you sleep' },
+            { icon: '🧘', text: 'You run the business. It runs itself.' },
+          ].map((item) => (
+            <div key={item.text} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '15px' }}>{item.icon}</span>
+              <span style={{ fontSize: '0.875rem', color: 'rgba(240,237,255,0.5)', fontWeight: 500 }}>{item.text}</span>
+            </div>
+          ))}
+        </motion.div>
+
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -78,7 +118,7 @@ export default function CTABanner() {
             maxWidth: '560px', margin: '0 auto 2.5rem',
           }}
         >
-          Your competitors are already using systems like this. Every day you don't is another day of leads going cold, no-shows going unreplaced, and clients drifting to whoever follows up faster.
+          Your competitors are already using systems like this. Every day you don&apos;t is another day of leads going cold, no-shows going unreplaced, and clients drifting to whoever follows up faster.
         </motion.p>
 
         <motion.div

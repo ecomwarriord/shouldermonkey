@@ -154,6 +154,23 @@ export default function Problem() {
           >
             Each one costs money. None of them talk to each other. And every gap between them is a lead you just lost.
           </motion.p>
+
+          {/* Philosophical problem */}
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            style={{
+              fontSize: '0.9375rem',
+              color: 'rgba(240,237,255,0.3)',
+              lineHeight: 1.7,
+              maxWidth: '520px', margin: '1.25rem auto 0',
+              fontStyle: 'italic',
+            }}
+          >
+            Running a service business is hard enough. You shouldn&apos;t need a tech degree on top of it.
+          </motion.p>
         </div>
 
         {/* Tool grid */}

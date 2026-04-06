@@ -207,6 +207,61 @@ export default function Testimonials() {
           ))}
         </div>
 
+        {/* 90-day success picture */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          style={{
+            margin: '0 0 4rem',
+            padding: 'clamp(2rem, 4vw, 3rem)',
+            borderRadius: '24px',
+            background: 'linear-gradient(135deg, rgba(0,235,193,0.06), rgba(132,75,254,0.04))',
+            border: '1px solid rgba(0,235,193,0.15)',
+            textAlign: 'center',
+          }}
+        >
+          <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#00ebc1', marginBottom: '1rem' }}>
+            90 days in
+          </div>
+          <h3 style={{
+            fontFamily: 'var(--font-syne), sans-serif',
+            fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
+            fontWeight: 800, color: '#ffffff',
+            letterSpacing: '-0.02em', lineHeight: 1.2,
+            marginBottom: '1.25rem',
+          }}>
+            This is what your business looks like<br />
+            <span className="text-gradient-cyan">when the system is working.</span>
+          </h3>
+          <p style={{ fontSize: '1rem', color: 'rgba(240,237,255,0.5)', lineHeight: 1.75, maxWidth: '600px', margin: '0 auto 2.5rem' }}>
+            Leads replied to in seconds — not hours. No-shows down. Reviews growing without you asking. Your calendar full because the system fills it. And you, finally, working on your business instead of in it.
+          </p>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+            gap: '1rem',
+            maxWidth: '700px', margin: '0 auto',
+          }}>
+            {[
+              { stat: '< 30s', label: 'Average lead response time' },
+              { stat: 'Automated', label: 'Every follow-up sequence' },
+              { stat: 'Growing', label: 'Google reviews — passively' },
+              { stat: 'Cancelled', label: 'At least 3 old subscriptions' },
+            ].map((item) => (
+              <div key={item.label} style={{
+                padding: '1.25rem 1rem',
+                borderRadius: '14px',
+                background: 'rgba(255,255,255,0.02)',
+                border: '1px solid rgba(0,235,193,0.1)',
+              }}>
+                <div style={{ fontFamily: 'var(--font-syne), sans-serif', fontSize: '1.375rem', fontWeight: 800, color: '#00ebc1', marginBottom: '4px' }}>{item.stat}</div>
+                <div style={{ fontSize: '0.775rem', color: 'rgba(240,237,255,0.4)', lineHeight: 1.4 }}>{item.label}</div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
         {/* Platform trust strip */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}

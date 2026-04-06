@@ -474,9 +474,8 @@ export default function Hero() {
                 marginBottom: '1.25rem',
               }}
             >
-              Stop losing leads.<br />
-              Start winning<br />
-              <span className="text-gradient-purple">clients.</span>
+              Your business runs you.<br />
+              <span className="text-gradient-purple">Let&apos;s fix that.</span>
             </motion.h1>
 
             {/* Subheadline — tightened into two punchy lines */}
@@ -487,10 +486,10 @@ export default function Hero() {
               style={{ marginBottom: '0.75rem', maxWidth: '460px' }}
             >
               <p style={{ fontSize: 'clamp(1rem, 1.75vw, 1.125rem)', color: 'rgba(240,237,255,0.7)', lineHeight: 1.65, marginBottom: '0.5rem', fontWeight: 500 }}>
-                One platform that captures leads, follows up automatically, and fills your calendar.
+                We build your entire system for you — pre-configured for your industry — so you log in to something that already works.
               </p>
               <p style={{ fontSize: 'clamp(0.9rem, 1.5vw, 1rem)', color: 'rgba(240,237,255,0.4)', lineHeight: 1.65 }}>
-                Replaces 12+ tools. Pre-configured for your business. Live the same day.
+                Captures leads. Follows up automatically. Fills your calendar. Replaces the tools you're already paying for.
               </p>
             </motion.div>
 
