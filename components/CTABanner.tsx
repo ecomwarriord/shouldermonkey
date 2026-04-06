@@ -134,7 +134,7 @@ export default function CTABanner() {
               <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </a>
-          <a href="mailto:hello@shouldermonkey.co" className="btn-ghost" style={{ fontSize: '1.0625rem', padding: '1.125rem 2.25rem' }}>
+          <a href="https://api.shouldermonkey.co/widget/booking/8U5JLwmKnUeDVkD4ATNm" target="_blank" rel="noopener noreferrer" className="btn-ghost" style={{ fontSize: '1.0625rem', padding: '1.125rem 2.25rem' }}>
             Book a Demo
           </a>
         </motion.div>
