@@ -1,0 +1,14 @@
+{
+  "name": "shouldermonkey-remotion",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "npx remotion studio src/index.ts",
+    "render": "npx remotion render src/index.ts ShoulderMonkeyDemo ../public/videos/demo.mp4",
+    "render:preview": "npx remotion render src/index.ts ShoulderMonkeyDemo ../public/videos/demo.mp4 --frames=0-300 --concurrency=4"
+  },
+  "dependencies": {
+    "remotion": "*",
+    "@remotion/cli": "*"
+  }
+}
