@@ -47,7 +47,7 @@ Payments are processed securely via our payment provider. We do not store your c
   },
   {
     title: '5. Cancellation and Refunds',
-    body: `You may cancel your subscription at any time through your account dashboard or by contacting us at hello@shouldermonkey.co.
+    body: `You may cancel your subscription at any time through your account dashboard or by contacting us at info@shouldermonkey.co.
 
 Monthly subscriptions: cancellation takes effect at the end of the current billing period. No partial refunds are issued for unused time.
 
@@ -113,7 +113,7 @@ Australian Consumer Law: Nothing in these Terms limits any rights you have under
     title: '13. Contact',
     body: `For questions about these Terms:
 
-Email: hello@shouldermonkey.co
+Email: info@shouldermonkey.co
 Phone: +61 2 5657 6545
 Address: Shoulder Monkey, 377 Kent St, Sydney NSW 2000, Australia`,
   },

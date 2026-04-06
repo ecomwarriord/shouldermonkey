@@ -64,7 +64,7 @@ We require all third parties to maintain appropriate data security standards.`,
 Australian residents: Your rights are governed by the Privacy Act 1988 (Cth) and the Australian Privacy Principles.
 New Zealand residents: Your rights are governed by the Privacy Act 2020.
 
-To exercise any of these rights, contact us at privacy@shouldermonkey.co. We will respond within 30 days.`,
+To exercise any of these rights, contact us at info@shouldermonkey.co. We will respond within 30 days.`,
   },
   {
     title: '6. Cookies',
@@ -94,7 +94,7 @@ Backup data may persist for up to 30 additional days after deletion.`,
     title: '11. Contact Us',
     body: `For privacy-related enquiries, requests, or complaints:
 
-Email: privacy@shouldermonkey.co
+Email: info@shouldermonkey.co
 Phone: +61 2 5657 6545
 Address: Shoulder Monkey, 377 Kent St, Sydney NSW 2000, Australia
 

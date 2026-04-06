@@ -38,7 +38,7 @@ const FAQS = [
   },
   {
     q: 'Does Shoulder Monkey work for my type of business?',
-    a: 'If you run a service business — any kind — it almost certainly does. Shoulder Monkey works across hair and beauty, gyms and fitness, med spas and clinics, mortgage brokers, allied health, tradies, real estate, accountants, cleaners, coaches, pet services, and more. If your business captures leads, books appointments, sends invoices, and needs clients to come back, Shoulder Monkey was built for you. If you\'re unsure, email us at hello@shouldermonkey.co and we\'ll tell you straight.',
+    a: 'If you run a service business — any kind — it almost certainly does. Shoulder Monkey works across hair and beauty, gyms and fitness, med spas and clinics, mortgage brokers, allied health, tradies, real estate, accountants, cleaners, coaches, pet services, and more. If your business captures leads, books appointments, sends invoices, and needs clients to come back, Shoulder Monkey was built for you. If you\'re unsure, email us at info@shouldermonkey.co and we\'ll tell you straight.',
   },
 ]
 
@@ -167,7 +167,7 @@ export default function FAQ() {
           <p style={{ fontSize: '1.0625rem', color: 'rgba(240,237,255,0.6)', marginBottom: '1.25rem' }}>
             Still got questions? We're based in Sydney, AU — and we actually reply.
           </p>
-          <a href="mailto:hello@shouldermonkey.co" className="btn-ghost">
+          <a href="mailto:info@shouldermonkey.co" className="btn-ghost">
             Send us a message
           </a>
         </motion.div>
