@@ -98,7 +98,7 @@ export default function Nav() {
           >
             Pricing
           </a>
-          <a href="#trial" onClick={scrollTo('#trial')} className="btn-primary" style={{ padding: '0.6rem 1.375rem', fontSize: '0.875rem' }}>
+          <a href="#pricing" onClick={scrollTo('#pricing')} className="btn-primary" style={{ padding: '0.6rem 1.375rem', fontSize: '0.875rem' }}>
             Start Free Trial
           </a>
         </div>
@@ -141,7 +141,7 @@ export default function Nav() {
                   {l.label}
                 </a>
               ))}
-              <a href="#trial" onClick={scrollTo('#trial')} className="btn-primary" style={{ marginTop: '0.5rem', justifyContent: 'center', textAlign: 'center' }}>
+              <a href="#pricing" onClick={scrollTo('#pricing')} className="btn-primary" style={{ marginTop: '0.5rem', justifyContent: 'center', textAlign: 'center' }}>
                 Start Free Trial
               </a>
             </div>

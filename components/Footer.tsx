@@ -8,7 +8,7 @@ const footerLinks = {
     { label: 'Features',    href: '#features' },
     { label: 'Pricing',     href: '#pricing' },
     { label: 'How It Works', href: '#how-it-works' },
-    { label: 'Start Trial', href: '#trial' },
+    { label: 'Start Trial', href: '#pricing' },
   ],
   'Who It\'s For': [
     { label: 'Hair & Beauty',     href: '#niches' },

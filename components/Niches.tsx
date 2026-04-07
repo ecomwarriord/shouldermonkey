@@ -245,7 +245,7 @@ export default function Niches() {
                 {active.body}
               </p>
 
-              <a href="#trial" className="btn-primary" style={{ display: 'inline-flex' }}>
+              <a href="#pricing" className="btn-primary" style={{ display: 'inline-flex' }}>
                 Start Free Trial — {active.label}
               </a>
             </div>

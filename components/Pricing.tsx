@@ -233,6 +233,7 @@ export default function Pricing() {
       id="pricing"
       style={{
         position: 'relative',
+        scrollMarginTop: '68px',
         padding: 'clamp(80px, 12vw, 140px) 1.5rem',
         background: 'linear-gradient(to bottom, #030108, #0a0612 40%, #030108)',
         overflow: 'hidden',

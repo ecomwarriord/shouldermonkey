@@ -142,7 +142,7 @@ export default function HowItWorks() {
           transition={{ duration: 0.8 }}
           style={{ textAlign: 'center', marginTop: '4rem' }}
         >
-          <a href="#trial" className="btn-primary" style={{ fontSize: '1.0625rem', padding: '1.125rem 2.75rem' }}>
+          <a href="#pricing" className="btn-primary" style={{ fontSize: '1.0625rem', padding: '1.125rem 2.75rem' }}>
             Start Your Free Trial
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
