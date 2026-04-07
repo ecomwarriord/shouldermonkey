@@ -458,7 +458,7 @@ export default function Hero() {
           className="hero-grid"
         >
           {/* Left: Copy */}
-          <div>
+          <div style={{ minWidth: 0 }}>
             <SocialProofChip />
 
             {/* Headline */}
@@ -468,7 +468,7 @@ export default function Hero() {
               transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
               style={{
                 fontFamily: 'var(--font-syne), sans-serif',
-                fontSize: 'clamp(2.75rem, 5.5vw, 4.25rem)',
+                fontSize: 'clamp(2rem, 7vw, 4.25rem)',
                 fontWeight: 800, lineHeight: 1.06,
                 letterSpacing: '-0.03em', color: '#ffffff',
                 marginBottom: '1.25rem',
