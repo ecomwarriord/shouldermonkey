@@ -60,7 +60,7 @@ export default function Nav() {
         </a>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex" style={{ display: 'flex', alignItems: 'center', gap: '2.25rem' }}>
+        <nav className="hidden md:flex" style={{ alignItems: 'center', gap: '2.25rem' }}>
           {navLinks.map((l) => (
             <a
               key={l.href}
@@ -82,7 +82,7 @@ export default function Nav() {
         </nav>
 
         {/* CTAs */}
-        <div className="hidden md:flex" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <div className="hidden md:flex" style={{ alignItems: 'center', gap: '0.75rem' }}>
           <a
             href="#pricing"
             onClick={scrollTo('#pricing')}

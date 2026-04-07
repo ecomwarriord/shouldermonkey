@@ -409,7 +409,7 @@ function SocialProofChip() {
       <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#00ebc1', boxShadow: '0 0 8px #00ebc1', flexShrink: 0, animation: 'pulse-glow 2s infinite' }} />
 
       {/* Text */}
-      <span style={{ fontSize: '12.5px', color: 'rgba(240,237,255,0.6)', fontWeight: 500, whiteSpace: 'nowrap' }}>
+      <span style={{ fontSize: '12.5px', color: 'rgba(240,237,255,0.6)', fontWeight: 500 }}>
         The all-in-one platform for service businesses · AU, NZ & worldwide
       </span>
     </motion.div>

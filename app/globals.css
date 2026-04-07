@@ -44,6 +44,10 @@ body {
 
 /* ── Custom cursor ── */
 * { cursor: none !important; }
+@media (hover: none) and (pointer: coarse) {
+  * { cursor: auto !important; }
+  .btn-primary, .btn-ghost { cursor: pointer !important; }
+}
 
 /* ── Selection ── */
 ::selection { background: rgba(132,75,254,0.4); color: #ffffff; }
