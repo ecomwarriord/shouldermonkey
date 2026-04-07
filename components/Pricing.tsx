@@ -38,7 +38,7 @@ const PLANS = [
     tag: 'Most Popular',
     highlight: true,
     color: '#00ebc1',
-    stripeUrl: 'https://buy.stripe.com/00gcN5e1NeSa6oOchPg7e01',
+    stripeUrl: 'https://buy.stripe.com/00wcN5e1NeSa6oOchPg7e01',
     description: 'The full marketing engine. Capture leads, nurture them, and convert them — automatically.',
     features: [
       { text: 'Everything in Silver',              included: true },

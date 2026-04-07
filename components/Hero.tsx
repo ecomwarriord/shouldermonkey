@@ -328,7 +328,7 @@ function EmailCapture() {
     if (!email) return
     setSubmitted(true)
     setTimeout(() => {
-      window.location.href = `https://buy.stripe.com/00gcN5e1NeSa6oOchPg7e01?prefilled_email=${encodeURIComponent(email)}`
+      window.location.href = `https://buy.stripe.com/00wcN5e1NeSa6oOchPg7e01?prefilled_email=${encodeURIComponent(email)}`
     }, 600)
   }
 
