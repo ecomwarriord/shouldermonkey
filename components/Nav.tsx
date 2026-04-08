@@ -84,19 +84,20 @@ export default function Nav() {
         {/* CTAs */}
         <div className="hidden md:flex" style={{ alignItems: 'center', gap: '0.75rem' }}>
           <a
-            href="#pricing"
-            onClick={scrollTo('#pricing')}
+            href="https://app.shouldermonkey.co"
+            target="_blank"
+            rel="noopener noreferrer"
             style={{
               padding: '0.5rem 1.25rem',
               fontSize: '0.875rem', fontWeight: 500,
-              color: 'rgba(240,237,255,0.6)',
+              color: 'rgba(240,237,255,0.35)',
               textDecoration: 'none',
               transition: 'color 0.15s ease',
             }}
-            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#ffffff' }}
-            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'rgba(240,237,255,0.6)' }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = 'rgba(240,237,255,0.7)' }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'rgba(240,237,255,0.35)' }}
           >
-            Pricing
+            Log in
           </a>
           <a href="#pricing" onClick={scrollTo('#pricing')} className="btn-primary" style={{ padding: '0.6rem 1.375rem', fontSize: '0.875rem' }}>
             Start Free Trial
@@ -143,6 +144,10 @@ export default function Nav() {
               ))}
               <a href="#pricing" onClick={scrollTo('#pricing')} className="btn-primary" style={{ marginTop: '0.5rem', justifyContent: 'center', textAlign: 'center' }}>
                 Start Free Trial
+              </a>
+              <a href="https://app.shouldermonkey.co" target="_blank" rel="noopener noreferrer"
+                style={{ textAlign: 'center', fontSize: '0.875rem', color: 'rgba(240,237,255,0.35)', textDecoration: 'none' }}>
+                Already a customer? Log in
               </a>
             </div>
           </motion.div>

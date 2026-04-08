@@ -22,6 +22,11 @@ const footerLinks = {
     { label: 'Privacy Policy',    href: '/privacy' },
     { label: 'Terms of Service',  href: '/terms' },
   ],
+  Account: [
+    { label: 'Log in',            href: 'https://app.shouldermonkey.co' },
+    { label: 'Start Free Trial',  href: '#pricing' },
+    { label: 'Book a Demo',       href: 'https://api.shouldermonkey.co/widget/booking/8U5JLwmKnUeDVkD4ATNm' },
+  ],
 }
 
 export default function Footer() {
