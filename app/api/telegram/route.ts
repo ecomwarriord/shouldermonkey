@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
     history.push({ role: 'user', content: userText })
 
     const { text: reply } = await generateText({
-      model: anthropic('claude-sonnet-4.6'),
+      model: anthropic('claude-sonnet-4-6'),
       system: SYSTEM_PROMPT,
       messages: history.slice(-30),
     })
