@@ -110,12 +110,13 @@ export async function POST(req: NextRequest) {
         await sendTelegram(chatId, `Nothing to brief — conversation is empty.`)
         return NextResponse.json({ ok: true })
       }
+      const transcript = history.slice(-20)
+        .map(m => `${m.role === 'user' ? 'Dee' : 'JARVIS'}: ${m.content}`)
+        .join('\n\n')
+
       const { text: summary } = await generateText({
         model: anthropic('claude-sonnet-4-6'),
-        system: `Extract the key decisions, new information, and important context from this conversation between Dee and JARVIS.
-Format as tight bullet points. Focus only on things that matter for business execution — decisions made, new information shared, tasks agreed, context that wasn't previously known.
-Skip small talk. Be concise and factual.`,
-        messages: history.slice(-20),
+        prompt: `Extract the key decisions, new information, and important context from this conversation. Format as tight bullet points. Focus only on things that matter for business execution — decisions made, new information shared, tasks agreed, context that wasn't previously known. Skip small talk. Be concise and factual.\n\nConversation:\n${transcript}`,
       })
       await redis.set('jarvis:briefing', JSON.stringify({
         summary,
