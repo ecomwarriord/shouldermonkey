@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { generateText } from 'ai'
 import { anthropic } from '@ai-sdk/anthropic'
+import { Redis } from '@upstash/redis'
 
-// In-memory session store
-const sessions = new Map<number, { role: 'user' | 'assistant'; content: string }[]>()
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL!,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+})
 
 const SYSTEM_PROMPT = `You are JARVIS — Dee's personal AI co-founder and executive intelligence system, modelled after JARVIS from Iron Man.
 
@@ -79,7 +82,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (userText === '/clear') {
-      sessions.set(chatId, [])
+      await redis.del(`jarvis:${chatId}`)
       await sendTelegram(chatId, `Session cleared.`)
       return NextResponse.json({ ok: true })
     }
@@ -94,9 +97,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true })
     }
 
-    // Conversation with memory
-    if (!sessions.has(chatId)) sessions.set(chatId, [])
-    const history = sessions.get(chatId)!
+    // Conversation with persistent memory
+    const key = `jarvis:${chatId}`
+    const history = (await redis.get<{ role: 'user' | 'assistant'; content: string }[]>(key)) ?? []
 
     history.push({ role: 'user', content: userText })
 
@@ -107,7 +110,7 @@ export async function POST(req: NextRequest) {
     })
 
     history.push({ role: 'assistant', content: reply })
-    if (history.length > 60) sessions.set(chatId, history.slice(-40))
+    await redis.set(key, history.length > 60 ? history.slice(-40) : history)
 
     await sendTelegram(chatId, reply)
     return NextResponse.json({ ok: true })
