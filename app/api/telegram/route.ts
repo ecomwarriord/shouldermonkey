@@ -11,7 +11,7 @@ const redis = new Redis({
 const SYSTEM_PROMPT = `You are JARVIS — Dee's personal AI co-founder and executive intelligence system, modelled after JARVIS from Iron Man.
 
 ## Who Dee is
-Dee is an entrepreneur building a portfolio of businesses while working full-time in cybersecurity sales in Australia. His partner is Annika. Goal: AUD $20k+/month within 12 months so Annika can quit her job and they achieve financial freedom. Currently making $0 — starting from scratch.
+Dee is an entrepreneur building a portfolio of businesses while working full-time in cybersecurity sales in Australia. His partner is Annika. Goal: AUD $20k+/month within 12 months so Annika can quit her job and they achieve financial freedom. Currently making $0 — starting from scratch. Android only — no Apple devices.
 
 ## His businesses
 1. **Shoulder Monkey** (shouldermonkey.co) — White-label GHL SaaS for SMBs (salons, gyms, clinics, mortgage brokers, allied health). Pricing: Silver $246/mo, Gold $368/mo, Platinum $478/mo AUD. Website built. Zero clients. Priority #1.
@@ -60,6 +60,12 @@ async function sendTelegram(chatId: number, text: string) {
   })
 }
 
+async function buildSystemPrompt(): Promise<string> {
+  const context = await redis.get<string>('jarvis:context')
+  if (!context) return SYSTEM_PROMPT
+  return `${SYSTEM_PROMPT}\n\n## Live Updates (from desktop session)\n${context}`
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
@@ -97,15 +103,58 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true })
     }
 
-    // Conversation with persistent memory
+    // /brief — summarise conversation and save for desktop pickup
+    if (userText === '/brief') {
+      const history = (await redis.get<{ role: 'user' | 'assistant'; content: string }[]>(`jarvis:${chatId}`)) ?? []
+      if (history.length === 0) {
+        await sendTelegram(chatId, `Nothing to brief — conversation is empty.`)
+        return NextResponse.json({ ok: true })
+      }
+      const { text: summary } = await generateText({
+        model: anthropic('claude-sonnet-4-6'),
+        system: `Extract the key decisions, new information, and important context from this conversation between Dee and JARVIS.
+Format as tight bullet points. Focus only on things that matter for business execution — decisions made, new information shared, tasks agreed, context that wasn't previously known.
+Skip small talk. Be concise and factual.`,
+        messages: history.slice(-20),
+      })
+      await redis.set('jarvis:briefing', JSON.stringify({
+        summary,
+        timestamp: new Date().toISOString(),
+      }))
+      await sendTelegram(chatId, `*Briefing saved.* Desktop Jarvis will be caught up when you return.\n\n${summary}`)
+      return NextResponse.json({ ok: true })
+    }
+
+    // /sync — show current shared context
+    if (userText === '/sync') {
+      const context = await redis.get<string>('jarvis:context')
+      const briefingRaw = await redis.get<string>('jarvis:briefing')
+      const briefing = briefingRaw ? JSON.parse(briefingRaw) : null
+
+      let msg = `*Shared brain status:*\n\n`
+      msg += context
+        ? `*Desktop context:*\n${context}\n\n`
+        : `*Desktop context:* None pushed yet.\n\n`
+      msg += briefing
+        ? `*Last briefing:* ${new Date(briefing.timestamp).toLocaleString('en-AU')}\n${briefing.summary}`
+        : `*Last briefing:* None saved yet.`
+
+      await sendTelegram(chatId, msg)
+      return NextResponse.json({ ok: true })
+    }
+
+    // Conversation with persistent memory + live context
     const key = `jarvis:${chatId}`
-    const history = (await redis.get<{ role: 'user' | 'assistant'; content: string }[]>(key)) ?? []
+    const [history, systemPrompt] = await Promise.all([
+      redis.get<{ role: 'user' | 'assistant'; content: string }[]>(key).then(h => h ?? []),
+      buildSystemPrompt(),
+    ])
 
     history.push({ role: 'user', content: userText })
 
     const { text: reply } = await generateText({
       model: anthropic('claude-sonnet-4-6'),
-      system: SYSTEM_PROMPT,
+      system: systemPrompt,
       messages: history.slice(-30),
     })
 
