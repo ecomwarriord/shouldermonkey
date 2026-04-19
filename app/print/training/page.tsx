@@ -214,8 +214,8 @@ function CoverPage() {
           </div>
           <div>
             <div style={T.label}>Prepared by</div>
-            <div style={{ ...T.h3, marginTop: '5px' }}>Qaneri Creative</div>
-            <div style={{ ...T.small, marginTop: '2px' }}>Powered by Shoulder Monkey</div>
+            <div style={{ ...T.h3, marginTop: '5px' }}>Shoulder Monkey</div>
+            <div style={{ ...T.small, marginTop: '2px' }}>info@shouldermonkey.co</div>
           </div>
           <div>
             <div style={T.label}>Date</div>
@@ -259,8 +259,8 @@ function HowToUsePage() {
             </Card>
             <Card title="Platform access">
               <div style={{ ...T.body, marginBottom: '8px' }}>You access the platform from any browser:</div>
-              <div style={{ ...T.mono, background: C.bgBox, borderRadius: '6px', padding: '8px 12px', fontSize: '0.8rem' }}>app.qanericreative.com</div>
-              <div style={{ ...T.small, marginTop: '6px' }}>Bookmark this URL. Log in with the credentials Qaneri shared with you.</div>
+              <div style={{ ...T.mono, background: C.bgBox, borderRadius: '6px', padding: '8px 12px', fontSize: '0.8rem' }}>app.shouldermonkey.co</div>
+              <div style={{ ...T.small, marginTop: '6px' }}>Bookmark this URL. Log in with the credentials Shoulder Monkey shared with you.</div>
             </Card>
             <Card title="Mobile app">
               <div style={T.body}>Download the <strong style={{ color: C.white }}>LeadConnector</strong> app (iOS or Android) for on-the-go access to conversations, contacts, and notifications. Use the same login credentials.</div>
@@ -274,7 +274,7 @@ function HowToUsePage() {
                 ['⚡', 'Automated', 'The system does this for you — no action needed.'],
                 ['👤', 'Manual', 'You need to do this step yourself.'],
                 ['⚠️', 'Important', 'Pay attention — mistakes here affect clients.'],
-                ['🚫', 'Do Not Touch', 'Configured by Qaneri. Do not modify.'],
+                ['🚫', 'Do Not Touch', 'Configured by Shoulder Monkey. Do not modify.'],
                 ['💡', 'Tip', 'A helpful shortcut or best practice.'],
               ].map(([icon, label, desc]) => (
                 <div key={label as string} style={{ display: 'flex', gap: '10px', marginBottom: '10px', alignItems: 'flex-start' }}>
@@ -287,7 +287,7 @@ function HowToUsePage() {
               ))}
             </Card>
             <InfoBox color="amber">
-              <strong>Before you start:</strong> Never share your login credentials. Each person should have their own user account. Contact Qaneri if you need additional users added.
+              <strong>Before you start:</strong> Never share your login credentials. Each person should have their own user account. Contact Shoulder Monkey if you need additional users added.
             </InfoBox>
           </>
         }
@@ -297,9 +297,9 @@ function HowToUsePage() {
       <div style={{ ...T.label, marginBottom: '10px' }}>Quick contacts</div>
       <div style={{ display: 'flex', gap: '12px' }}>
         {[
-          { label: 'Platform Support', value: 'Qaneri Creative', note: 'For setup issues, broken workflows, anything technical' },
-          { label: 'Login Issues', value: 'hello@qanericreative.com', note: 'If you cannot access the platform' },
-          { label: 'Your Account URL', value: 'app.qanericreative.com', note: 'Bookmark this in your browser now' },
+          { label: 'Platform Support', value: 'Shoulder Monkey', note: 'For setup issues, broken workflows, anything technical' },
+          { label: 'Support Email', value: 'info@shouldermonkey.co', note: 'If you cannot access the platform' },
+          { label: 'Your Account URL', value: 'app.shouldermonkey.co', note: 'Bookmark this in your browser now' },
         ].map(({ label, value, note }) => (
           <div key={label} style={{ flex: 1, background: C.bgBox, borderRadius: '8px', padding: '10px 12px', border: `1px solid ${C.divider}` }}>
             <div style={T.label}>{label}</div>
@@ -328,7 +328,7 @@ function PlatformOverviewPage() {
     { icon: '💳', name: 'Payments', desc: 'Invoices and payment tracking' },
     { icon: '📋', name: 'Forms', desc: 'Lead capture forms — submissions land here' },
     { icon: '📣', name: 'Marketing', desc: 'Email campaigns and broadcasts' },
-    { icon: '⚙️', name: 'Settings', desc: 'Account configuration — ask Qaneri before changing anything here' },
+    { icon: '⚙️', name: 'Settings', desc: 'Account configuration — ask Shoulder Monkey before changing anything here' },
   ]
 
   return (
@@ -663,7 +663,7 @@ function WorkflowsPage() {
       <SectionHeader number="06" title="Workflows & Automation" subtitle="What happens automatically — and what you still need to do manually" />
 
       <InfoBox color="red">
-        <strong>🚫 Do NOT modify, pause, or delete any of the workflows below.</strong> They were built and tested by Qaneri Creative. Changes will break your automations and you may stop receiving leads or clients may not receive their documents.
+        <strong>🚫 Do NOT modify, pause, or delete any of the workflows below.</strong> They were built and tested by Shoulder Monkey. Changes will break your automations and you may stop receiving leads or clients may not receive their documents.
       </InfoBox>
 
       <div style={{ ...T.label, marginBottom: '8px' }}>Your 11 automated workflows</div>
@@ -795,7 +795,7 @@ function DocumentsPage() {
             </Card>
 
             <InfoBox color="red">
-              <strong>🚫 Never edit the template itself</strong> unless Qaneri asks you to. Editing the master template changes it for all future contracts.
+              <strong>🚫 Never edit the template itself</strong> unless Shoulder Monkey asks you to. Editing the master template changes it for all future contracts.
             </InfoBox>
           </>
         }
@@ -956,10 +956,10 @@ function QuickReferencePage() {
 function DoNotTouchPage() {
   return (
     <PageWrapper style={{ position: 'relative' }}>
-      <SectionHeader number="10" title="Do Not Touch" subtitle="These settings and features are configured by Qaneri Creative. Any changes can break your system." />
+      <SectionHeader number="10" title="Do Not Touch" subtitle="These settings and features are configured by Shoulder Monkey. Any changes can break your system." />
 
       <InfoBox color="red">
-        <strong>🚫 If you ever accidentally change something on this list, stop immediately and contact Qaneri.</strong> Do not try to fix it yourself — it is almost always faster and safer for us to restore it than to troubleshoot after further changes.
+        <strong>🚫 If you ever accidentally change something on this list, stop immediately and contact Shoulder Monkey.</strong> Do not try to fix it yourself — it is almost always faster and safer for us to restore it than to troubleshoot after further changes.
       </InfoBox>
 
       <TwoCol
@@ -999,7 +999,7 @@ function DoNotTouchPage() {
 
             <div style={{ ...T.label, marginBottom: '8px', marginTop: '10px' }}>Contract Templates</div>
             <Card accent="rgba(239,68,68,0.35)">
-              <div style={T.body}>You send contracts by using a template — never by editing the template itself. If contract terms need to change, tell Qaneri and we will update the master template.</div>
+              <div style={T.body}>You send contracts by using a template — never by editing the template itself. If contract terms need to change, tell Shoulder Monkey and we will update the master template.</div>
             </Card>
           </>
         }
@@ -1040,7 +1040,7 @@ function DoNotTouchPage() {
                 'Settings → Integrations (Google, Stripe, Twilio)',
                 'API keys or webhook URLs',
                 'Sub-account settings',
-                'User permissions or roles (ask Qaneri to add new users)',
+                'User permissions or roles (ask Shoulder Monkey to add new users)',
               ].map(item => (
                 <div key={item} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '5px' }}>
                   <div style={{ color: C.red, flexShrink: 0 }}>🚫</div>
@@ -1050,7 +1050,7 @@ function DoNotTouchPage() {
             </Card>
 
             <InfoBox color="amber">
-              <strong>⚠️ When in doubt, don&apos;t.</strong> If you are not sure whether something is safe to change, screenshot it and send it to Qaneri first. We would rather answer a quick question than fix a broken system.
+              <strong>⚠️ When in doubt, don&apos;t.</strong> If you are not sure whether something is safe to change, screenshot it and send it to Shoulder Monkey first. We would rather answer a quick question than fix a broken system.
             </InfoBox>
           </>
         }
@@ -1074,13 +1074,13 @@ function BackCoverPage() {
         <div style={{ ...T.label, marginBottom: '12px' }}>Need help?</div>
         <div style={{ ...T.h2, marginBottom: '8px' }}>We&apos;re right here.</div>
         <div style={{ ...T.body, maxWidth: '420px', marginBottom: '32px' }}>
-          If something is not working, you are not sure how to do something, or you think an automation is not firing correctly — reach out to Qaneri before trying to fix it yourself.
+          If something is not working, you are not sure how to do something, or you think an automation is not firing correctly — reach out to Shoulder Monkey before trying to fix it yourself.
         </div>
 
         <div style={{ display: 'flex', gap: '16px', marginBottom: '40px' }}>
           {[
-            { label: 'For platform issues', value: 'hello@qanericreative.com', note: 'Broken workflows, access issues, missing features' },
-            { label: 'For urgent matters', value: 'WhatsApp Qaneri', note: 'If a client is waiting and something is broken' },
+            { label: 'For platform issues', value: 'info@shouldermonkey.co', note: 'Broken workflows, access issues, missing features' },
+            { label: 'For urgent matters', value: 'info@shouldermonkey.co', note: 'If a client is waiting and something is broken' },
             { label: 'For training questions', value: 'Refer to this guide first', note: 'Then contact us if it doesn\'t answer your question' },
           ].map(({ label, value, note }) => (
             <div key={label} style={{ flex: 1, background: C.bgBox, border: `1px solid ${C.purpleBdr}`, borderRadius: '10px', padding: '16px' }}>
@@ -1118,7 +1118,7 @@ function BackCoverPage() {
             height={36}
             style={{ height: '30px', width: 'auto', objectFit: 'contain', objectPosition: 'left', opacity: 0.7 }}
           />
-          <div style={{ ...T.small, marginTop: '6px' }}>Powering BridgeGrowth on the Shoulder Monkey platform</div>
+          <div style={{ ...T.small, marginTop: '6px' }}>Powering BridgeGrowth · shouldermonkey.co</div>
         </div>
         <div style={{ textAlign: 'right' }}>
           <div style={{ ...T.small, color: C.purple }}>BridgeGrowth Platform Training Guide v1.0</div>
