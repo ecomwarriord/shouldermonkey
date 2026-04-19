@@ -118,10 +118,7 @@ export async function POST(req: NextRequest) {
         model: anthropic('claude-sonnet-4-6'),
         prompt: `Extract the key decisions, new information, and important context from this conversation. Format as tight bullet points. Focus only on things that matter for business execution — decisions made, new information shared, tasks agreed, context that wasn't previously known. Skip small talk. Be concise and factual.\n\nConversation:\n${transcript}`,
       })
-      await redis.set('jarvis:briefing', JSON.stringify({
-        summary,
-        timestamp: new Date().toISOString(),
-      }))
+      await redis.set('jarvis:briefing', { summary, timestamp: new Date().toISOString() })
       await sendTelegram(chatId, `*Briefing saved.* Desktop Jarvis will be caught up when you return.\n\n${summary}`)
       return NextResponse.json({ ok: true })
     }
@@ -129,8 +126,7 @@ export async function POST(req: NextRequest) {
     // /sync — show current shared context
     if (userText === '/sync') {
       const context = await redis.get<string>('jarvis:context')
-      const briefingRaw = await redis.get<string>('jarvis:briefing')
-      const briefing = briefingRaw ? JSON.parse(briefingRaw) : null
+      const briefing = await redis.get<{ summary: string; timestamp: string }>('jarvis:briefing')
 
       let msg = `*Shared brain status:*\n\n`
       msg += context
