@@ -7,6 +7,7 @@ import { LeadCapture } from './scenes/LeadCapture'
 import { Automation } from './scenes/Automation'
 import { Result } from './scenes/Result'
 import { CTA } from './scenes/CTA'
+import { SalonReel } from './scenes/SalonReel'
 
 function ShoulderMonkeyDemo() {
   const frame = useCurrentFrame()
@@ -45,13 +46,23 @@ function ShoulderMonkeyDemo() {
 
 export function RemotionRoot() {
   return (
-    <Composition
-      id="ShoulderMonkeyDemo"
-      component={ShoulderMonkeyDemo}
-      durationInFrames={TOTAL_FRAMES}
-      fps={FPS}
-      width={1920}
-      height={1080}
-    />
+    <>
+      <Composition
+        id="ShoulderMonkeyDemo"
+        component={ShoulderMonkeyDemo}
+        durationInFrames={TOTAL_FRAMES}
+        fps={FPS}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="SalonReel"
+        component={SalonReel}
+        durationInFrames={360}
+        fps={30}
+        width={1280}
+        height={720}
+      />
+    </>
   )
 }

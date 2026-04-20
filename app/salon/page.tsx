@@ -1,300 +1,293 @@
 'use client'
 
-import { motion, useInView, animate, AnimatePresence } from 'framer-motion'
+import { motion, useInView, animate, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
+import dynamic from 'next/dynamic'
 
-// ─── Types ──────────────────────────────────────────────────────────────────
+const SalonPlayer = dynamic(() => import('../../components/SalonPlayer').then(m => ({ default: m.SalonPlayer })), { ssr: false })
 
-interface SMS { time: string; label: string; message: string; icon: string }
-interface Review { name: string; initials: string; text: string; service: string; time: string; bg: string }
-interface Activity { text: string; sub: string; color: string }
-
-// ─── Data ───────────────────────────────────────────────────────────────────
-
-const SMS_SEQUENCE: SMS[] = [
-  {
-    time: 'Mon 3:47pm', label: 'Instantly on booking', icon: '✅',
-    message: `Hi Sarah! 🎉 Your appointment is confirmed:\n\n📅 Wed 23 Apr at 2:00pm\n✂️ Balayage + Blow Dry with Emma\n📍 Shop 4, Knox St, Double Bay\n\nNeed to reschedule? Reply CHANGE 💛`,
-  },
-  {
-    time: 'Tue 2:00pm', label: '24 hours before', icon: '⏰',
-    message: `Hey Sarah! Just a reminder 👋\n\nYou have an appointment tomorrow at 2pm with Emma at The Loft.\n\nNeed to move it? Reply CHANGE or call us on (02) 9xxx xxxx`,
-  },
-  {
-    time: 'Wed 12:00pm', label: '2 hours before', icon: '📍',
-    message: `See you in 2 hours, Sarah! 🎨\n\n📍 Shop 4, Knox St, Double Bay\n🚗 Free parking on Guilfoyle Ave\n\nWe can't wait to see you!`,
-  },
-  {
-    time: 'Wed 6:30pm', label: '2 hours after visit', icon: '⭐',
-    message: `Hi Sarah! Hope you're loving your new look ✨\n\nIf you have 30 seconds, a Google review would mean the world to us 🙏\n\n→ Leave a review [link]`,
-  },
-  {
-    time: 'Sat 9:00am', label: '3 days later', icon: '💕',
-    message: `Hey Sarah! It was so lovely having you in 💕\n\nWhen you're ready for your next visit, we recommend a toner refresh in about 6 weeks.\n\n→ Book now [link]`,
-  },
-  {
-    time: '4 Jun · 9am', label: '6 weeks later', icon: '🔮',
-    message: `Sarah, your hair is probably craving some love by now 😄\n\nWe have spots this Tuesday & Thursday. Ready to lock it in?\n\n→ Book now [link]`,
-  },
-]
-
-const REVIEWS: Review[] = [
-  { name: 'Rachel M.', initials: 'RM', bg: '#c9917a', service: 'Balayage + Blow Dry', time: '2 hours ago', text: "Emma is an absolute artist. My balayage has never looked so natural. And the reminder texts are such a lovely touch — I never forget my appointments anymore!" },
-  { name: 'Priya K.', initials: 'PK', bg: '#d4a04a', service: 'Colour + Cut', time: 'Yesterday', text: "Walked in stressed, walked out feeling like a completely different person. The team at The Loft are genuinely magic. Already booked my next one." },
-  { name: 'Sophie T.', initials: 'ST', bg: '#9a7a6e', service: 'Keratin Treatment', time: '3 days ago', text: "I've been coming here 3 years and they just keep getting better. I never even have to remember to rebook — they send me a text at exactly the right time." },
-  { name: 'Jess O.', initials: 'JO', bg: '#b8896a', service: 'Full Highlights', time: '1 week ago', text: "Best salon in Double Bay, hands down. Tash always knows what I need before I even explain it. And the post-visit follow-up message made me feel so looked after." },
-  { name: 'Mia R.', initials: 'MR', bg: '#c4956a', service: 'Brazilian Blowout', time: '2 weeks ago', text: "The whole experience — from booking online to the little check-in message after — is just flawless. I recommend The Loft to every single person I know." },
-  { name: 'Lauren B.', initials: 'LB', bg: '#a07860', service: 'Toner Refresh', time: '2 weeks ago', text: "My hair has genuinely never been healthier. And the messages they send make me feel like a VIP client every single time. This is what a salon should be." },
-]
-
-const LIVE_ACTIVITY: Activity[] = [
-  { text: 'Reminder sent → Sarah M.', sub: 'Wed 2pm appointment confirmed', color: '#c9917a' },
-  { text: 'Review received → Rachel M.', sub: '5 stars · "Never looked so natural" ⭐⭐⭐⭐⭐', color: '#d4a04a' },
-  { text: 'Rebooking booked → Priya K.', sub: 'Locked in for Thursday 15 May at 11am', color: '#00ebc1' },
-  { text: '$340 collected → Chloe B.', sub: 'Balayage package · card on file', color: '#6b35f5' },
-  { text: 'New lead replied → Jamie (Instagram)', sub: 'Automated response sent · appointment booked', color: '#00ebc1' },
-  { text: 'Win-back sent → Marcus T.', sub: 'Hadn\'t visited in 9 weeks · offer sent', color: '#c9917a' },
-  { text: 'Review received → Sophie T.', sub: '5 stars · "Just keeps getting better" ⭐⭐⭐⭐⭐', color: '#d4a04a' },
-  { text: '$178 collected → Lauren B.', sub: 'Toner refresh · auto-receipt sent', color: '#6b35f5' },
-]
-
-// ─── Micro components ────────────────────────────────────────────────────────
-
-function Counter({ to, prefix = '', suffix = '' }: { to: number; prefix?: string; suffix?: string }) {
-  const [val, setVal] = useState(0)
-  const ref = useRef<HTMLSpanElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-50px' })
-  useEffect(() => {
-    if (!inView) return
-    const ctrl = animate(0, to, { duration: 2.4, ease: 'easeOut', onUpdate: v => setVal(Math.floor(v)) })
-    return ctrl.stop
-  }, [inView, to])
-  return <span ref={ref}>{prefix}{val.toLocaleString()}{suffix}</span>
+// ─── Design tokens ─────────────────────────────────────────────────────────
+// Dark warm luxury — deep charcoal with amber/gold
+const C = {
+  bg:       '#0d0a07',
+  surface:  '#1a1410',
+  card:     'rgba(253,248,240,0.04)',
+  border:   'rgba(232,168,110,0.12)',
+  borderHi: 'rgba(232,168,110,0.35)',
+  amber:    '#e8a86e',
+  gold:     '#d4a04a',
+  cream:    '#fdf8f0',
+  muted:    'rgba(253,248,240,0.4)',
+  subtle:   'rgba(253,248,240,0.12)',
+  // SM colours bleed in at the bottom
+  purple:   '#6b35f5',
+  cyan:     '#00ebc1',
 }
 
-function Reveal({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
+// ─── Primitives ─────────────────────────────────────────────────────────────
+
+function Counter({ to, prefix = '', suffix = '' }: { to: number; prefix?: string; suffix?: string }) {
+  const [v, setV] = useState(0)
+  const ref = useRef<HTMLSpanElement>(null)
+  const inView = useInView(ref, { once: true, margin: '-40px' })
+  useEffect(() => {
+    if (!inView) return
+    const c = animate(0, to, { duration: 2.2, ease: 'easeOut', onUpdate: n => setV(Math.floor(n)) })
+    return c.stop
+  }, [inView, to])
+  return <span ref={ref}>{prefix}{v.toLocaleString()}{suffix}</span>
+}
+
+function FadeUp({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
   const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-60px' })
+  const inView = useInView(ref, { once: true, margin: '-50px' })
   return (
     <motion.div ref={ref} className={className}
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 32 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.75, delay, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
     >{children}</motion.div>
   )
 }
 
-function Stars() {
+function Stars({ color = C.gold }: { color?: string }) {
   return (
-    <div className="flex gap-0.5">
+    <span className="flex gap-px">
       {[0,1,2,3,4].map(i => (
-        <svg key={i} width="14" height="14" viewBox="0 0 14 14" fill="#d4a04a">
-          <path d="M7 1l1.5 3.5 3.5.5-2.5 2.5.5 3.5L7 9.5 4 11l.5-3.5L2 5l3.5-.5z" />
+        <svg key={i} width="13" height="13" viewBox="0 0 13 13" fill={color}>
+          <path d="M6.5 0.5l1.4 3.3 3.6.5-2.6 2.5.6 3.5L6.5 9 3 10.3l.6-3.5L1 4.3l3.6-.5z"/>
         </svg>
       ))}
-    </div>
+    </span>
   )
 }
 
-function SMStars() {
-  return (
-    <div className="flex gap-0.5">
-      {[0,1,2,3,4].map(i => (
-        <svg key={i} width="14" height="14" viewBox="0 0 14 14" fill="#00ebc1">
-          <path d="M7 1l1.5 3.5 3.5.5-2.5 2.5.5 3.5L7 9.5 4 11l.5-3.5L2 5l3.5-.5z" />
-        </svg>
-      ))}
-    </div>
-  )
-}
+// ─── Phone mockup ───────────────────────────────────────────────────────────
 
-// ─── Sections ────────────────────────────────────────────────────────────────
-
-function SalonNav() {
+function PhoneMockup({ messages, title }: { messages: { text: string; from: 'salon' | 'client'; delay: number }[]; title: string }) {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#faf7f2]/90 backdrop-blur-sm border-b border-[#c9917a]/20">
-      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-[#c9917a] flex items-center justify-center">
-            <span className="text-white text-xs font-bold">TL</span>
+    <div className="relative mx-auto" style={{ width: 260, height: 540 }}>
+      {/* Frame */}
+      <div className="absolute inset-0 rounded-[44px] border-2 overflow-hidden"
+        style={{
+          background: '#0f0c0a',
+          borderColor: C.borderHi,
+          boxShadow: `0 0 0 1px rgba(0,0,0,0.5), 0 40px 80px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.04)`,
+        }}>
+        {/* Notch */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-6 rounded-b-2xl z-10"
+          style={{ background: '#0f0c0a' }} />
+        {/* Status bar */}
+        <div className="flex items-center justify-between px-6 pt-3 pb-1">
+          <span style={{ color: C.cream, fontSize: 11, fontWeight: 600 }}>9:41</span>
+          <div style={{ width: 96, height: 24 }} /> {/* notch space */}
+          <div className="flex items-center gap-1">
+            {[4,3,2].map((h,i) => <div key={i} className="w-1 rounded-sm" style={{ height: h*3, background: C.cream, opacity: 0.6 }} />)}
+            <div className="ml-1 text-xs" style={{ color: C.cream, opacity: 0.6 }}>●</div>
           </div>
+        </div>
+        {/* Header */}
+        <div className="flex items-center gap-3 px-4 py-2 border-b" style={{ borderColor: C.border }}>
+          <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
+            style={{ background: C.amber, color: '#0d0a07' }}>TL</div>
           <div>
-            <div className="font-semibold text-[#2d1b14] text-sm leading-tight tracking-wide">The Loft</div>
-            <div className="text-[#9a7a6e] text-xs">Salon & Spa</div>
+            <div style={{ color: C.cream, fontSize: 13, fontWeight: 600 }}>The Loft</div>
+            <div style={{ color: C.muted, fontSize: 10 }}>{title}</div>
           </div>
         </div>
-        <div className="hidden md:flex items-center gap-8 text-sm text-[#6b4d40]">
-          <a href="#" className="hover:text-[#c9917a] transition-colors">Services</a>
-          <a href="#" className="hover:text-[#c9917a] transition-colors">Our Team</a>
-          <a href="#" className="hover:text-[#c9917a] transition-colors">Gallery</a>
-          <a href="#" className="hover:text-[#c9917a] transition-colors">Contact</a>
+        {/* Messages */}
+        <div className="flex flex-col gap-2 px-3 py-3 overflow-hidden" style={{ maxHeight: 420 }}>
+          {messages.map((m, i) => (
+            <motion.div key={i}
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ delay: m.delay, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              className={`flex ${m.from === 'salon' ? 'justify-start' : 'justify-end'}`}
+            >
+              <div className="max-w-[85%] rounded-2xl px-3 py-2"
+                style={{
+                  background: m.from === 'salon' ? 'rgba(232,168,110,0.15)' : C.amber,
+                  color: m.from === 'salon' ? C.cream : '#0d0a07',
+                  fontSize: 11,
+                  lineHeight: 1.5,
+                  borderTopLeftRadius: m.from === 'salon' ? 4 : undefined,
+                  borderTopRightRadius: m.from === 'client' ? 4 : undefined,
+                }}>
+                {m.text}
+              </div>
+            </motion.div>
+          ))}
         </div>
-        <button className="bg-[#2d1b14] text-[#faf7f2] text-sm font-medium px-5 py-2.5 rounded-full hover:bg-[#c9917a] transition-colors">
-          Book Now
-        </button>
       </div>
-    </nav>
+    </div>
   )
 }
+
+// ─── Hero ───────────────────────────────────────────────────────────────────
 
 function Hero() {
-  return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#faf7f2] pt-16">
-      {/* Decorative circles */}
-      <div className="absolute top-20 right-10 w-96 h-96 rounded-full bg-[#c9917a]/10 blur-3xl" />
-      <div className="absolute bottom-20 left-10 w-80 h-80 rounded-full bg-[#d4a04a]/10 blur-3xl" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[#c9917a]/5 blur-2xl" />
+  const heroMessages = [
+    { from: 'salon' as const, delay: 0.6, text: '✅ Confirmed! The Loft Salon & Spa\n\n📅 Wed 23 Apr · 2:00pm\n✂️ Balayage with Emma\n📍 Knox St, Double Bay' },
+    { from: 'salon' as const, delay: 1.8, text: '⏰ Hey Sarah! Reminder — see you tomorrow at 2pm with Emma. Need to move it? Reply CHANGE 💛' },
+    { from: 'client' as const, delay: 2.8, text: 'All good, can\'t wait! 🙌' },
+    { from: 'salon' as const, delay: 3.6, text: '⭐ Hi Sarah! Hope you loved today. If you have 30 secs, a Google review means the world → [link]' },
+  ]
 
-      <div className="relative max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center w-full">
+  return (
+    <section className="relative min-h-screen flex items-center overflow-hidden pt-16"
+      style={{ background: C.bg }}>
+      {/* Ambient glows */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute -top-40 right-1/4 w-[600px] h-[600px] rounded-full blur-[120px]"
+          style={{ background: 'radial-gradient(circle, rgba(232,168,110,0.08) 0%, transparent 70%)' }} />
+        <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full blur-[80px]"
+          style={{ background: 'radial-gradient(circle, rgba(212,160,74,0.06) 0%, transparent 70%)' }} />
+        {/* Noise grain */}
+        <svg className="absolute inset-0 w-full h-full opacity-[0.025]" xmlns="http://www.w3.org/2000/svg">
+          <filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter>
+          <rect width="100%" height="100%" filter="url(#n)" />
+        </svg>
+      </div>
+
+      <div className="relative max-w-6xl mx-auto px-6 py-20 grid lg:grid-cols-2 gap-20 items-center w-full">
         {/* Left */}
         <div>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="inline-flex items-center gap-2 bg-[#c9917a]/15 border border-[#c9917a]/30 rounded-full px-4 py-1.5 mb-6"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-[#c9917a] animate-pulse" />
-            <span className="text-[#c9917a] text-xs font-medium tracking-wide">Open today · 9am – 7pm · Double Bay, Sydney</span>
+            className="inline-flex items-center gap-2.5 rounded-full px-4 py-1.5 mb-8 text-xs font-semibold tracking-widest uppercase"
+            style={{ background: 'rgba(232,168,110,0.08)', border: `1px solid ${C.border}`, color: C.amber }}>
+            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: C.amber }} />
+            Double Bay, Sydney · Est. 2018
           </motion.div>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="text-6xl md:text-7xl font-bold text-[#2d1b14] leading-[1.05] tracking-tight mb-4"
-            style={{ fontFamily: 'var(--font-syne)' }}
-          >
-            The Loft<br />
-            <span className="text-[#c9917a]">Salon</span> &amp; Spa
+          <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+            className="leading-[1.0] tracking-tight mb-6"
+            style={{ fontFamily: 'var(--font-syne)', fontSize: 'clamp(52px, 6vw, 80px)', fontWeight: 800 }}>
+            <span style={{ color: C.cream }}>The Loft<br /></span>
+            <span style={{
+              background: `linear-gradient(135deg, ${C.amber} 0%, ${C.gold} 60%, #c8823a 100%)`,
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text'
+            }}>Salon & Spa</span>
           </motion.h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="text-[#6b4d40] text-lg leading-relaxed mb-8 max-w-md"
-          >
-            Where every visit feels like your first. Premium hair, skin, and nail services in the heart of Double Bay.
+          <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
+            className="text-lg leading-relaxed mb-10 max-w-md"
+            style={{ color: C.muted }}>
+            Where every visit feels like your first. Premium hair, skin & nail services — and a system that makes every client feel like they&apos;re your only one.
           </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-wrap gap-4 mb-10"
-          >
-            <button className="bg-[#2d1b14] text-[#faf7f2] font-semibold px-8 py-4 rounded-full text-sm hover:bg-[#c9917a] transition-all duration-300 hover:scale-105">
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.26, ease: [0.22, 1, 0.36, 1] }}
+            className="flex flex-wrap gap-3 mb-12">
+            <button className="font-semibold px-7 py-3.5 rounded-full text-sm transition-all duration-300 hover:scale-105 hover:shadow-xl"
+              style={{ background: C.amber, color: '#0d0a07', boxShadow: `0 0 0 0 ${C.amber}` }}>
               Book an Appointment
             </button>
-            <button className="border border-[#c9917a]/40 text-[#2d1b14] font-medium px-8 py-4 rounded-full text-sm hover:bg-[#c9917a]/10 transition-colors">
+            <button className="font-medium px-7 py-3.5 rounded-full text-sm transition-all duration-200"
+              style={{ border: `1px solid ${C.border}`, color: C.muted, background: 'transparent' }}>
               View Services
             </button>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            transition={{ duration: 0.7, delay: 0.5 }}
-            className="flex flex-wrap gap-6"
-          >
+          {/* Stat pills */}
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="flex flex-wrap gap-3">
             {[
-              { icon: '⭐', stat: '4.9', label: '847 Google reviews' },
-              { icon: '👥', stat: '500+', label: 'regular clients' },
-              { icon: '✂️', stat: '6', label: 'master stylists' },
-            ].map((item, i) => (
-              <div key={i} className="flex items-center gap-2">
-                <span className="text-lg">{item.icon}</span>
-                <div>
-                  <span className="font-bold text-[#2d1b14]">{item.stat}</span>
-                  <span className="text-[#9a7a6e] text-sm ml-1">{item.label}</span>
-                </div>
-              </div>
+              { icon: '⭐', value: '4.9', label: '847 Google reviews' },
+              { icon: '✂️', value: '6', label: 'master stylists' },
+              { icon: '📅', value: 'Open', label: 'today until 7pm' },
+            ].map((s, i) => (
+              <motion.div key={i}
+                initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.5 + i * 0.1, duration: 0.5 }}
+                className="flex items-center gap-2 rounded-full px-4 py-2 text-sm"
+                style={{ background: C.card, border: `1px solid ${C.border}` }}>
+                <span>{s.icon}</span>
+                <span className="font-semibold" style={{ color: C.cream }}>{s.value}</span>
+                <span style={{ color: C.muted }}>{s.label}</span>
+              </motion.div>
             ))}
           </motion.div>
         </div>
 
-        {/* Right — booking card mockup */}
-        <motion.div
-          initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          className="relative"
-        >
-          {/* Main booking widget */}
-          <div className="bg-white rounded-3xl shadow-2xl shadow-[#c9917a]/15 p-8 border border-[#c9917a]/10">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <div className="font-semibold text-[#2d1b14]">Book Your Visit</div>
-                <div className="text-[#9a7a6e] text-sm">Available this week</div>
-              </div>
-              <div className="bg-[#c9917a]/10 text-[#c9917a] text-xs font-medium px-3 py-1 rounded-full">3 spots left</div>
-            </div>
+        {/* Right — phone */}
+        <motion.div initial={{ opacity: 0, x: 40, y: 20 }} animate={{ opacity: 1, x: 0, y: 0 }}
+          transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          className="flex justify-center lg:justify-end">
+          <div className="relative">
+            {/* Glow behind phone */}
+            <div className="absolute inset-0 blur-[60px] -z-10 rounded-full"
+              style={{ background: `radial-gradient(circle, rgba(232,168,110,0.2) 0%, transparent 70%)` }} />
 
-            <div className="space-y-3 mb-6">
-              {[
-                { day: 'Tuesday 22 Apr', time: '11:00am', stylist: 'Emma', avail: true },
-                { day: 'Wednesday 23 Apr', time: '2:00pm', stylist: 'Tash', avail: true },
-                { day: 'Thursday 24 Apr', time: '9:30am', stylist: 'Emma', avail: true },
-                { day: 'Friday 25 Apr', time: '4:00pm', stylist: 'Jade', avail: false },
-              ].map((slot, i) => (
-                <div key={i} className={`flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer ${slot.avail ? 'border-[#c9917a]/20 hover:border-[#c9917a] hover:bg-[#c9917a]/5' : 'border-gray-100 opacity-40'}`}>
-                  <div>
-                    <div className="text-sm font-medium text-[#2d1b14]">{slot.day}</div>
-                    <div className="text-xs text-[#9a7a6e]">{slot.time} · with {slot.stylist}</div>
-                  </div>
-                  {slot.avail
-                    ? <div className="w-5 h-5 rounded-full border-2 border-[#c9917a]/40" />
-                    : <div className="text-xs text-gray-400">Taken</div>
-                  }
-                </div>
-              ))}
-            </div>
-            <button className="w-full bg-[#2d1b14] text-[#faf7f2] font-semibold py-3.5 rounded-xl text-sm hover:bg-[#c9917a] transition-colors">
-              Confirm Appointment
-            </button>
-          </div>
+            <PhoneMockup title="Booking confirmed" messages={heroMessages} />
 
-          {/* Floating notification */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 1.2 }}
-            className="absolute -bottom-4 -left-6 bg-[#2d1b14] rounded-2xl p-4 shadow-xl max-w-[220px]"
-          >
-            <div className="flex items-start gap-3">
-              <div className="text-2xl">📱</div>
-              <div>
-                <div className="text-[#faf7f2] text-xs font-semibold mb-0.5">Confirmation sent!</div>
-                <div className="text-[#9a7a6e] text-xs leading-relaxed">Sarah M. just booked and got her confirmation SMS in 3 seconds</div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Reviews badge */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 1.5 }}
-            className="absolute -top-4 -right-4 bg-white rounded-2xl px-4 py-3 shadow-xl border border-[#c9917a]/10"
-          >
-            <div className="flex items-center gap-2">
+            {/* Floating badge — reviews */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, x: 20 }} animate={{ opacity: 1, scale: 1, x: 0 }}
+              transition={{ delay: 1.8, duration: 0.5 }}
+              className="absolute -right-4 top-16 rounded-2xl px-4 py-3 shadow-2xl"
+              style={{ background: '#1f1a14', border: `1px solid ${C.borderHi}` }}>
               <Stars />
-              <span className="text-[#2d1b14] text-sm font-bold">4.9</span>
-            </div>
-            <div className="text-[#9a7a6e] text-xs mt-0.5">847 reviews</div>
-          </motion.div>
+              <div className="font-bold mt-1 text-sm" style={{ color: C.cream }}>4.9 · 847 reviews</div>
+            </motion.div>
+
+            {/* Floating badge — revenue */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, x: -20 }} animate={{ opacity: 1, scale: 1, x: 0 }}
+              transition={{ delay: 2, duration: 0.5 }}
+              className="absolute -left-8 bottom-20 rounded-2xl px-4 py-3 shadow-2xl"
+              style={{ background: '#1f1a14', border: `1px solid ${C.borderHi}` }}>
+              <div className="text-xs font-semibold uppercase tracking-wide mb-1" style={{ color: C.amber }}>This month</div>
+              <div className="font-bold text-lg" style={{ color: C.cream, fontFamily: 'var(--font-syne)' }}>$47,230</div>
+              <div className="text-xs mt-0.5" style={{ color: C.muted }}>↑ 18% vs last month</div>
+            </motion.div>
+          </div>
         </motion.div>
       </div>
     </section>
   )
 }
 
+// ─── Cinematic reel ─────────────────────────────────────────────────────────
+
+function CinematicReel() {
+  return (
+    <section className="py-20 px-6" style={{ background: '#0a0805' }}>
+      <div className="max-w-6xl mx-auto">
+        <FadeUp className="text-center mb-10">
+          <div className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.amber }}>Live Preview</div>
+          <h2 className="text-3xl md:text-4xl font-bold" style={{ fontFamily: 'var(--font-syne)', color: C.cream }}>
+            A salon running at full power
+          </h2>
+        </FadeUp>
+        <FadeUp delay={0.1}>
+          <div className="relative rounded-3xl overflow-hidden mx-auto"
+            style={{
+              maxWidth: 900,
+              aspectRatio: '16/9',
+              boxShadow: `0 0 0 1px rgba(232,168,110,0.1), 0 40px 100px rgba(0,0,0,0.6), 0 0 80px rgba(232,168,110,0.06)`,
+            }}>
+            <SalonPlayer />
+          </div>
+        </FadeUp>
+      </div>
+    </section>
+  )
+}
+
+// ─── Ticker ──────────────────────────────────────────────────────────────────
+
 function Ticker() {
   const items = '47 appointments this week  ·  3 new 5-star reviews today  ·  $8,400 collected  ·  94% rebooking rate  ·  12 automated messages sent  ·  0 missed follow-ups  ·  '
   return (
-    <div className="overflow-hidden bg-[#2d1b14] py-3 relative">
-      <motion.div
-        animate={{ x: ['0%', '-50%'] }}
-        transition={{ duration: 35, repeat: Infinity, ease: 'linear' }}
-        className="flex whitespace-nowrap"
-      >
-        {[1, 2, 3, 4].map(i => (
-          <span key={i} className="text-[#c9917a] text-sm font-medium tracking-widest uppercase mr-8">
+    <div className="overflow-hidden py-3 border-y" style={{ background: 'rgba(232,168,110,0.05)', borderColor: C.border }}>
+      <motion.div animate={{ x: ['0%', '-50%'] }} transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
+        className="flex whitespace-nowrap">
+        {[1,2,3,4].map(i => (
+          <span key={i} className="text-xs font-semibold tracking-widest uppercase mr-8" style={{ color: C.amber, opacity: 0.7 }}>
             {items}
           </span>
         ))}
@@ -303,40 +296,44 @@ function Ticker() {
   )
 }
 
+// ─── Metrics ─────────────────────────────────────────────────────────────────
+
 function Metrics() {
   const stats = [
-    { label: 'Monthly Revenue', value: 47230, prefix: '$', suffix: '', change: '+18%', note: 'vs last month' },
-    { label: 'New Clients', value: 127, prefix: '', suffix: '', change: '+23%', note: 'this month' },
-    { label: 'Rebooking Rate', value: 94, prefix: '', suffix: '%', change: '+6pts', note: 'vs 6 months ago' },
-    { label: 'Average Ticket', value: 178, prefix: '$', suffix: '', change: '+$24', note: 'vs last quarter' },
+    { label: 'Monthly Revenue', value: 47230, pre: '$', suf: '', change: '+18%', sub: 'vs last month' },
+    { label: 'New Clients', value: 127, pre: '', suf: '', change: '+23%', sub: 'this month' },
+    { label: 'Rebooking Rate', value: 94, pre: '', suf: '%', change: '+6pts', sub: 'vs 6 months ago' },
+    { label: 'Avg Ticket Value', value: 178, pre: '$', suf: '', change: '+$24', sub: 'vs last quarter' },
   ]
-
   return (
-    <section className="bg-[#faf7f2] py-20 px-6">
+    <section className="py-24 px-6" style={{ background: C.bg }}>
       <div className="max-w-6xl mx-auto">
-        <Reveal>
-          <div className="text-center mb-12">
-            <div className="text-[#c9917a] text-sm font-semibold tracking-widest uppercase mb-3">April 2025</div>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#2d1b14]" style={{ fontFamily: 'var(--font-syne)' }}>
-              The Loft this month
-            </h2>
-          </div>
-        </Reveal>
+        <FadeUp className="text-center mb-16">
+          <div className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.amber }}>April 2025</div>
+          <h2 className="text-4xl md:text-5xl font-bold" style={{ fontFamily: 'var(--font-syne)', color: C.cream }}>
+            The Loft, by the numbers
+          </h2>
+        </FadeUp>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {stats.map((s, i) => (
-            <Reveal key={i} delay={i * 0.1}>
-              <div className="bg-white rounded-2xl p-6 border border-[#c9917a]/10 shadow-sm">
-                <div className="text-[#9a7a6e] text-xs font-medium uppercase tracking-wide mb-3">{s.label}</div>
-                <div className="text-3xl font-bold text-[#2d1b14] mb-2" style={{ fontFamily: 'var(--font-syne)' }}>
-                  <Counter to={s.value} prefix={s.prefix} suffix={s.suffix} />
+            <FadeUp key={i} delay={i * 0.08}>
+              <div className="relative rounded-2xl p-6 overflow-hidden group transition-all duration-300 hover:scale-[1.02]"
+                style={{ background: C.card, border: `1px solid ${C.border}`, backdropFilter: 'blur(12px)' }}>
+                {/* Hover glow */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl"
+                  style={{ background: `radial-gradient(circle at 50% 0%, rgba(232,168,110,0.08) 0%, transparent 70%)` }} />
+                <div className="text-xs font-semibold uppercase tracking-wide mb-4" style={{ color: C.muted }}>{s.label}</div>
+                <div className="text-3xl md:text-4xl font-bold mb-3" style={{ color: C.cream, fontFamily: 'var(--font-syne)' }}>
+                  <Counter to={s.value} prefix={s.pre} suffix={s.suf} />
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded-full">{s.change}</span>
-                  <span className="text-xs text-[#9a7a6e]">{s.note}</span>
+                  <span className="text-xs font-bold px-2.5 py-1 rounded-full"
+                    style={{ background: 'rgba(34,197,94,0.1)', color: '#4ade80' }}>{s.change}</span>
+                  <span className="text-xs" style={{ color: C.subtle }}>{s.sub}</span>
                 </div>
               </div>
-            </Reveal>
+            </FadeUp>
           ))}
         </div>
       </div>
@@ -344,165 +341,168 @@ function Metrics() {
   )
 }
 
-function AutomationFlow() {
-  return (
-    <section className="bg-[#f5f0ea] py-20 px-6">
-      <div className="max-w-6xl mx-auto">
-        <Reveal>
-          <div className="text-center mb-4">
-            <div className="text-[#c9917a] text-sm font-semibold tracking-widest uppercase mb-3">Client Journey</div>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#2d1b14] mb-4" style={{ fontFamily: 'var(--font-syne)' }}>
-              Every client, perfectly looked after
-            </h2>
-            <p className="text-[#6b4d40] max-w-lg mx-auto">
-              From the moment someone books, to six weeks later when it&apos;s time to come back — everything runs automatically.
-            </p>
-          </div>
-        </Reveal>
+// ─── Automation showcase ─────────────────────────────────────────────────────
 
-        <div className="mt-12 grid lg:grid-cols-2 gap-12 items-start">
-          {/* Timeline */}
-          <div className="space-y-0">
-            {SMS_SEQUENCE.map((sms, i) => (
-              <Reveal key={i} delay={i * 0.08}>
-                <div className="flex gap-4">
-                  {/* Timeline line */}
-                  <div className="flex flex-col items-center">
-                    <div className="w-9 h-9 rounded-full bg-[#2d1b14] flex items-center justify-center text-base shrink-0 shadow-md">
-                      {sms.icon}
-                    </div>
-                    {i < SMS_SEQUENCE.length - 1 && (
-                      <div className="w-px flex-1 bg-gradient-to-b from-[#c9917a]/40 to-[#c9917a]/10 my-1 min-h-[40px]" />
-                    )}
+function AutomationShowcase() {
+  const stages = [
+    { icon: '✅', label: 'Instantly on booking',  preview: 'Confirmed! Wed 23 Apr · 2pm with Emma' },
+    { icon: '⏰', label: '24h before',             preview: 'Reminder — see you tomorrow at 2pm 👋' },
+    { icon: '📍', label: '2 hours before',         preview: 'See you soon! Free parking on Guilfoyle Ave' },
+    { icon: '⭐', label: '2h after visit',          preview: 'Hope you loved today! Leave us a review? 🙏' },
+    { icon: '💕', label: '3 days later',            preview: 'Ready to book your next visit?' },
+    { icon: '🔮', label: '6 weeks later',           preview: 'Your hair might be craving some love 😄' },
+  ]
+
+  const phoneMessages = [
+    { from: 'salon' as const, delay: 0.3, text: '✅ Confirmed! Wed 23 Apr · 2:00pm\n✂️ Balayage with Emma\n📍 Knox St, Double Bay 💛' },
+    { from: 'salon' as const, delay: 1.2, text: '⏰ Tomorrow reminder! See you at 2pm with Emma. Need to move it? Reply CHANGE' },
+    { from: 'client' as const, delay: 2.1, text: 'Perfect, see you then! ✨' },
+    { from: 'salon' as const, delay: 3.0, text: '📍 2 hours away! Free parking on Guilfoyle Ave. Can\'t wait to see you!' },
+    { from: 'salon' as const, delay: 4.2, text: '⭐ Hope you\'re loving your new look! 30 seconds for a Google review? → [link]' },
+  ]
+
+  return (
+    <section className="py-24 px-6" style={{ background: '#0f0c0a' }}>
+      <div className="max-w-6xl mx-auto">
+        <FadeUp className="text-center mb-16">
+          <div className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.amber }}>Client Journey</div>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ fontFamily: 'var(--font-syne)', color: C.cream }}>
+            Every client, perfectly looked after
+          </h2>
+          <p className="text-lg max-w-xl mx-auto" style={{ color: C.muted }}>
+            From the moment they book to six weeks after their visit — every message, sent automatically, at exactly the right time.
+          </p>
+        </FadeUp>
+
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          {/* Stage list */}
+          <div className="space-y-2">
+            {stages.map((s, i) => (
+              <FadeUp key={i} delay={i * 0.07}>
+                <div className="flex items-center gap-4 rounded-2xl px-5 py-4 transition-all duration-200 group cursor-default"
+                  style={{ background: C.card, border: `1px solid ${C.border}` }}>
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg shrink-0"
+                    style={{ background: 'rgba(232,168,110,0.08)', border: `1px solid ${C.border}` }}>
+                    {s.icon}
                   </div>
-                  {/* Message */}
-                  <div className="pb-6 flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className="text-[#2d1b14] text-xs font-bold tracking-wide">{sms.time}</span>
-                      <span className="bg-[#c9917a]/15 text-[#c9917a] text-xs px-2.5 py-0.5 rounded-full font-medium">{sms.label}</span>
-                    </div>
-                    <div className="bg-white rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm border border-[#c9917a]/10 max-w-xs">
-                      <div className="text-xs text-[#6b4d40] leading-relaxed whitespace-pre-line">{sms.message}</div>
-                    </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-xs font-semibold uppercase tracking-wide mb-0.5" style={{ color: C.amber }}>{s.label}</div>
+                    <div className="text-sm truncate" style={{ color: C.muted }}>{s.preview}</div>
                   </div>
+                  <div className="w-2 h-2 rounded-full shrink-0" style={{ background: C.amber, opacity: 0.4 }} />
                 </div>
-              </Reveal>
+              </FadeUp>
             ))}
           </div>
 
-          {/* Stats sidebar */}
-          <div className="lg:sticky lg:top-24 space-y-4">
-            <Reveal delay={0.2}>
-              <div className="bg-[#2d1b14] rounded-2xl p-6 text-[#faf7f2]">
-                <div className="text-[#c9917a] text-xs font-semibold tracking-widest uppercase mb-4">This Sequence</div>
-                <div className="space-y-4">
-                  {[
-                    { label: 'Messages sent automatically', value: '6 per client' },
-                    { label: 'No-shows reduced by', value: '67%' },
-                    { label: 'Review generation rate', value: '38%' },
-                    { label: 'Rebooking conversion', value: '52%' },
-                    { label: 'Revenue recovered (lapsed clients)', value: '$3,200/mo' },
-                  ].map((item, i) => (
-                    <div key={i} className="flex justify-between items-center border-b border-[#c9917a]/10 pb-3 last:border-0 last:pb-0">
-                      <span className="text-[#9a7a6e] text-sm">{item.label}</span>
-                      <span className="text-[#c9917a] font-bold text-sm">{item.value}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </Reveal>
+          {/* Phone */}
+          <FadeUp delay={0.2} className="flex justify-center">
+            <div className="relative">
+              <div className="absolute inset-0 blur-[80px] -z-10 rounded-full"
+                style={{ background: `radial-gradient(circle, rgba(232,168,110,0.15) 0%, transparent 60%)` }} />
+              <PhoneMockup title="Automated sequence" messages={phoneMessages} />
 
-            <Reveal delay={0.3}>
-              <div className="bg-white rounded-2xl p-6 border border-[#c9917a]/10 shadow-sm">
-                <div className="text-[#9a7a6e] text-xs font-semibold tracking-widest uppercase mb-3">Staff time saved</div>
-                <div className="text-4xl font-bold text-[#2d1b14] mb-1" style={{ fontFamily: 'var(--font-syne)' }}>
-                  <Counter to={23} suffix="h" />
-                </div>
-                <div className="text-[#9a7a6e] text-sm">per week, on follow-ups alone</div>
-              </div>
-            </Reveal>
-
-            <Reveal delay={0.4}>
-              <div className="bg-[#c9917a] rounded-2xl p-6 text-white">
-                <div className="text-white/70 text-xs font-semibold tracking-widest uppercase mb-3">Clients never lost</div>
-                <div className="text-4xl font-bold mb-1" style={{ fontFamily: 'var(--font-syne)' }}>
-                  <Counter to={94} suffix="%" />
-                </div>
-                <div className="text-white/80 text-sm">return within 3 months</div>
-              </div>
-            </Reveal>
-          </div>
+              {/* Stats beside phone */}
+              <motion.div
+                initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }} transition={{ delay: 0.5, duration: 0.6 }}
+                className="absolute -right-4 top-1/3 space-y-3">
+                {[
+                  { label: 'No-shows reduced', value: '67%' },
+                  { label: 'Review rate', value: '38%' },
+                  { label: 'Rebooking rate', value: '52%' },
+                ].map((stat, i) => (
+                  <div key={i} className="rounded-xl px-3 py-2 text-right w-36"
+                    style={{ background: '#1f1a14', border: `1px solid ${C.border}` }}>
+                    <div className="text-lg font-bold" style={{ color: C.amber, fontFamily: 'var(--font-syne)' }}>{stat.value}</div>
+                    <div className="text-xs" style={{ color: C.muted }}>{stat.label}</div>
+                  </div>
+                ))}
+              </motion.div>
+            </div>
+          </FadeUp>
         </div>
       </div>
     </section>
   )
 }
 
-function Reviews() {
-  const [visible, setVisible] = useState(3)
+// ─── Reviews ─────────────────────────────────────────────────────────────────
+
+const REVIEWS = [
+  { name: 'Rachel M.', initials: 'RM', service: 'Balayage + Blow Dry', time: '2 hours ago', text: "Emma is an absolute artist. My balayage has never looked so natural. And the reminder texts are such a lovely touch — I never forget my appointments anymore!" },
+  { name: 'Priya K.', initials: 'PK', service: 'Colour + Cut', time: 'Yesterday', text: "Walked in stressed, walked out feeling like a completely different person. The team at The Loft are genuinely magic. Already booked my next one." },
+  { name: 'Sophie T.', initials: 'ST', service: 'Keratin Treatment', time: '3 days ago', text: "I've been coming here 3 years and they just keep getting better. I never even have to remember to rebook — they send me a text at exactly the right time." },
+  { name: 'Jess O.', initials: 'JO', service: 'Full Highlights', time: '1 week ago', text: "Best salon in Double Bay, hands down. Tash always knows what I need before I even explain it. The post-visit follow-up message made me feel so looked after." },
+  { name: 'Mia R.', initials: 'MR', service: 'Brazilian Blowout', time: '2 weeks ago', text: "The whole experience — from booking online to the little check-in message after — is just flawless. I recommend The Loft to every person I know." },
+  { name: 'Lauren B.', initials: 'LB', service: 'Toner Refresh', time: '2 weeks ago', text: "My hair has genuinely never been healthier. And the messages they send make me feel like a VIP client every single time." },
+]
+
+function ReviewsSection() {
+  const [count, setCount] = useState(3)
   const ref = useRef(null)
   const inView = useInView(ref, { once: true })
 
   useEffect(() => {
     if (!inView) return
-    const timers = REVIEWS.slice(3).map((_, i) =>
-      setTimeout(() => setVisible(v => v + 1), (i + 1) * 1200)
-    )
-    return () => timers.forEach(clearTimeout)
+    const t1 = setTimeout(() => setCount(4), 1400)
+    const t2 = setTimeout(() => setCount(5), 2800)
+    const t3 = setTimeout(() => setCount(6), 4200)
+    return () => [t1,t2,t3].forEach(clearTimeout)
   }, [inView])
 
   return (
-    <section className="bg-[#faf7f2] py-20 px-6" ref={ref}>
+    <section ref={ref} className="py-24 px-6" style={{ background: C.bg }}>
       <div className="max-w-6xl mx-auto">
-        <Reveal>
-          <div className="text-center mb-12">
-            <div className="text-[#c9917a] text-sm font-semibold tracking-widest uppercase mb-3">Reputation</div>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#2d1b14] mb-4" style={{ fontFamily: 'var(--font-syne)' }}>
-              Reviews that write themselves
-            </h2>
-            <div className="flex items-center justify-center gap-3">
-              <Stars />
-              <span className="font-bold text-[#2d1b14]">4.9</span>
-              <span className="text-[#9a7a6e] text-sm">·  847 Google reviews  ·  new ones arriving daily</span>
-            </div>
+        <FadeUp className="text-center mb-16">
+          <div className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.amber }}>Reputation</div>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ fontFamily: 'var(--font-syne)', color: C.cream }}>
+            Reviews that write themselves
+          </h2>
+          <div className="flex items-center justify-center gap-3">
+            <Stars />
+            <span className="font-bold" style={{ color: C.cream }}>4.9</span>
+            <span className="text-sm" style={{ color: C.muted }}>· 847 Google reviews · new ones arriving daily</span>
           </div>
-        </Reveal>
+        </FadeUp>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           <AnimatePresence>
-            {REVIEWS.slice(0, visible).map((r, i) => (
-              <motion.div
-                key={r.name}
-                layout
-                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            {REVIEWS.slice(0, count).map((r, i) => (
+              <motion.div key={r.name} layout
+                initial={{ opacity: 0, scale: 0.92, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.9 }}
+                exit={{ opacity: 0 }}
                 transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                className="bg-white rounded-2xl p-6 border border-[#c9917a]/10 shadow-sm"
-              >
+                className="rounded-2xl p-6 flex flex-col"
+                style={{ background: C.card, border: `1px solid ${C.border}` }}>
+                {/* Header */}
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div
-                      className="w-10 h-10 rounded-full flex items-center justify-center text-white text-xs font-bold"
-                      style={{ background: r.bg }}
-                    >
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
+                      style={{ background: `rgba(232,168,110,${0.2 + i * 0.05})`, color: C.amber, border: `1px solid ${C.border}` }}>
                       {r.initials}
                     </div>
                     <div>
-                      <div className="font-semibold text-[#2d1b14] text-sm">{r.name}</div>
-                      <div className="text-[#9a7a6e] text-xs">{r.service}</div>
+                      <div className="font-semibold text-sm" style={{ color: C.cream }}>{r.name}</div>
+                      <div className="text-xs" style={{ color: C.muted }}>{r.service}</div>
                     </div>
                   </div>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="#4285F4">
-                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                  {/* Google G */}
+                  <svg width="18" height="18" viewBox="0 0 24 24" className="shrink-0 mt-0.5">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                     <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
                     <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
                     <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
                   </svg>
                 </div>
                 <Stars />
-                <p className="text-[#4a3428] text-sm leading-relaxed mt-3">&ldquo;{r.text}&rdquo;</p>
-                <div className="text-[#b0907a] text-xs mt-3">{r.time}</div>
+                <p className="text-sm leading-relaxed mt-3 flex-1" style={{ color: C.muted }}>
+                  &ldquo;{r.text}&rdquo;
+                </p>
+                <div className="text-xs mt-4 pt-4" style={{ color: C.subtle, borderTop: `1px solid ${C.border}` }}>
+                  {r.time}
+                </div>
               </motion.div>
             ))}
           </AnimatePresence>
@@ -512,126 +512,66 @@ function Reviews() {
   )
 }
 
-function Calendar() {
-  const days = ['Mon 21', 'Tue 22', 'Wed 23', 'Thu 24', 'Fri 25', 'Sat 26']
-  const stylists = ['Emma', 'Tash', 'Jade', 'Marcus', 'Lily', 'Chloe']
-  const slots = [
-    [true, true, true, true, false, true],
-    [true, false, true, true, true, true],
-    [true, true, true, false, true, true],
-    [false, true, true, true, true, true],
-    [true, true, false, true, true, false],
-    [true, true, true, true, true, true],
-  ]
+// ─── Live feed ───────────────────────────────────────────────────────────────
 
-  return (
-    <section className="bg-[#f0ebe3] py-20 px-6">
-      <div className="max-w-6xl mx-auto">
-        <Reveal>
-          <div className="text-center mb-12">
-            <div className="text-[#c9917a] text-sm font-semibold tracking-widest uppercase mb-3">This Week</div>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#2d1b14] mb-4" style={{ fontFamily: 'var(--font-syne)' }}>
-              Every chair, filled
-            </h2>
-            <p className="text-[#6b4d40] max-w-lg mx-auto">
-              6 stylists. 6 days. Fully booked. All managed automatically — no phone tag, no double bookings.
-            </p>
-          </div>
-        </Reveal>
-
-        <Reveal delay={0.2}>
-          <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-[#c9917a]/10 overflow-x-auto">
-            <div className="min-w-[600px]">
-              {/* Header */}
-              <div className="grid grid-cols-7 gap-2 mb-4">
-                <div />
-                {days.map(d => (
-                  <div key={d} className="text-center text-xs font-semibold text-[#9a7a6e] uppercase tracking-wide">{d}</div>
-                ))}
-              </div>
-              {/* Rows */}
-              {stylists.map((stylist, si) => (
-                <div key={stylist} className="grid grid-cols-7 gap-2 mb-2">
-                  <div className="flex items-center text-sm font-medium text-[#2d1b14]">{stylist}</div>
-                  {slots[si].map((booked, di) => (
-                    <motion.div
-                      key={di}
-                      initial={{ opacity: 0, scale: 0.5 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: (si * 6 + di) * 0.02, duration: 0.3 }}
-                      className={`h-10 rounded-lg flex items-center justify-center text-xs font-medium ${booked
-                        ? 'bg-[#2d1b14] text-[#c9917a]'
-                        : 'bg-[#c9917a]/10 text-[#c9917a]/40 border border-[#c9917a]/10'}`}
-                    >
-                      {booked ? '●' : '○'}
-                    </motion.div>
-                  ))}
-                </div>
-              ))}
-              <div className="mt-4 flex items-center gap-6 text-xs text-[#9a7a6e]">
-                <div className="flex items-center gap-2"><div className="w-3 h-3 rounded bg-[#2d1b14]" /> Booked</div>
-                <div className="flex items-center gap-2"><div className="w-3 h-3 rounded border border-[#c9917a]/30" /> Available</div>
-                <div className="ml-auto font-medium text-[#2d1b14]">35/36 slots filled this week · 97% capacity</div>
-              </div>
-            </div>
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  )
-}
+const LIVE = [
+  { text: 'Reminder sent → Sarah M.', sub: 'Wed 2pm appointment · delivered', color: C.amber },
+  { text: 'Review received → Rachel M.', sub: '5 stars · "Never looked so natural" ⭐⭐⭐⭐⭐', color: '#4ade80' },
+  { text: 'Rebooking confirmed → Priya K.', sub: 'Thu 15 May at 11am · locked in', color: C.amber },
+  { text: '$340 collected → Chloe B.', sub: 'Balayage package · card on file · receipt sent', color: '#4ade80' },
+  { text: 'New lead → Jamie (Instagram)', sub: 'Auto-replied · appointment booked in 4 min', color: C.amber },
+  { text: 'Win-back → Marcus T.', sub: '9 weeks no visit · offer sent · booked', color: '#4ade80' },
+  { text: 'Review received → Sophie T.', sub: '5 stars · "Just keeps getting better" ⭐⭐⭐⭐⭐', color: C.amber },
+  { text: '$178 collected → Lauren B.', sub: 'Toner refresh · auto-receipt sent', color: '#4ade80' },
+]
 
 function LiveFeed() {
-  const [items, setItems] = useState<Activity[]>(LIVE_ACTIVITY.slice(0, 3))
+  const [items, setItems] = useState(LIVE.slice(0, 4))
   const ref = useRef(null)
   const inView = useInView(ref, { once: true })
-  const indexRef = useRef(3)
+  const idx = useRef(4)
 
   useEffect(() => {
     if (!inView) return
-    const interval = setInterval(() => {
-      const next = LIVE_ACTIVITY[indexRef.current % LIVE_ACTIVITY.length]
-      setItems(prev => [next, ...prev].slice(0, 6))
-      indexRef.current++
-    }, 2200)
-    return () => clearInterval(interval)
+    const t = setInterval(() => {
+      setItems(prev => [LIVE[idx.current % LIVE.length], ...prev].slice(0, 6))
+      idx.current++
+    }, 2000)
+    return () => clearInterval(t)
   }, [inView])
 
   return (
-    <section ref={ref} className="bg-[#0f0a1e] py-20 px-6">
-      <div className="max-w-6xl mx-auto">
-        <Reveal>
+    <section ref={ref} className="py-24 px-6" style={{ background: '#0f0c0a' }}>
+      <div className="max-w-3xl mx-auto">
+        <FadeUp>
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-2 h-2 rounded-full bg-[#00ebc1] animate-pulse" />
-            <div className="text-[#00ebc1] text-sm font-semibold tracking-widest uppercase">Live Activity</div>
+            <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: C.amber }} />
+            <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: C.amber }}>Live · right now</span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-[#f0edff] mb-4" style={{ fontFamily: 'var(--font-syne)' }}>
-            The system, right now
+          <h2 className="text-3xl font-bold mb-3" style={{ fontFamily: 'var(--font-syne)', color: C.cream }}>
+            The business, running itself
           </h2>
-          <p className="text-[#f0edff]/50 mb-10">While the team focuses on clients, the backend runs itself.</p>
-        </Reveal>
+          <p className="text-base mb-10" style={{ color: C.muted }}>
+            While Emma&apos;s with a client, the system is doing all of this.
+          </p>
+        </FadeUp>
 
-        <div className="space-y-3">
+        <div className="space-y-2">
           <AnimatePresence mode="popLayout">
             {items.map((item, i) => (
-              <motion.div
-                key={`${item.text}-${i}`}
-                layout
-                initial={{ opacity: 0, y: -20, scale: 0.97 }}
+              <motion.div key={`${item.text}-${i}`} layout
+                initial={{ opacity: 0, y: -16, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.97 }}
+                exit={{ opacity: 0, scale: 0.96 }}
                 transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                className="bg-[#1a1030]/80 border border-[#6b35f5]/20 rounded-2xl px-5 py-4 flex items-center justify-between"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-2 h-2 rounded-full shrink-0" style={{ background: item.color }} />
-                  <div>
-                    <div className="text-[#f0edff] text-sm font-medium">{item.text}</div>
-                    <div className="text-[#f0edff]/40 text-xs mt-0.5">{item.sub}</div>
-                  </div>
+                className="flex items-center gap-4 rounded-xl px-5 py-4"
+                style={{ background: C.card, border: `1px solid ${C.border}` }}>
+                <div className="w-2 h-2 rounded-full shrink-0" style={{ background: item.color }} />
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-medium truncate" style={{ color: C.cream }}>{item.text}</div>
+                  <div className="text-xs truncate mt-0.5" style={{ color: C.muted }}>{item.sub}</div>
                 </div>
-                <div className="text-[#f0edff]/30 text-xs whitespace-nowrap ml-4">just now</div>
+                <div className="text-xs shrink-0" style={{ color: C.subtle }}>just now</div>
               </motion.div>
             ))}
           </AnimatePresence>
@@ -641,114 +581,181 @@ function LiveFeed() {
   )
 }
 
-function Reveal2() {
+// ─── SM Reveal — the curtain pull ────────────────────────────────────────────
+
+function Reveal() {
+  const ref = useRef(null)
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
+  const purpleOpacity = useTransform(scrollYProgress, [0, 0.4], [0, 1])
+
   return (
-    <section className="bg-[#030108] py-24 px-6 relative overflow-hidden">
-      {/* Background glow */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full bg-[#6b35f5]/10 blur-3xl" />
-        <div className="absolute top-1/3 right-0 w-96 h-96 rounded-full bg-[#00ebc1]/5 blur-3xl" />
-      </div>
+    <section ref={ref} className="relative py-32 px-6 overflow-hidden"
+      style={{ background: `linear-gradient(to bottom, #0f0c0a 0%, #030108 40%)` }}>
+
+      {/* Purple bleeds in as you scroll into this section */}
+      <motion.div className="absolute inset-0 pointer-events-none"
+        style={{ opacity: purpleOpacity }}>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] rounded-full blur-[120px]"
+          style={{ background: 'radial-gradient(circle, rgba(107,53,245,0.25) 0%, transparent 70%)' }} />
+        <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full blur-[80px]"
+          style={{ background: 'radial-gradient(circle, rgba(0,235,193,0.08) 0%, transparent 70%)' }} />
+      </motion.div>
+
+      {/* Noise */}
+      <svg className="absolute inset-0 w-full h-full opacity-[0.02] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+        <filter id="n2"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter>
+        <rect width="100%" height="100%" filter="url(#n2)" />
+      </svg>
 
       <div className="relative max-w-4xl mx-auto text-center">
-        <Reveal>
-          <div className="inline-flex items-center gap-2 bg-[#6b35f5]/10 border border-[#6b35f5]/30 rounded-full px-5 py-2 mb-8">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#6b35f5]" />
-            <span className="text-[#a673ff] text-xs font-semibold tracking-widest uppercase">The system behind The Loft</span>
+        <FadeUp>
+          <div className="inline-flex items-center gap-2.5 rounded-full px-5 py-2 mb-10 text-xs font-semibold tracking-widest uppercase"
+            style={{ background: 'rgba(107,53,245,0.08)', border: '1px solid rgba(107,53,245,0.25)', color: '#a673ff' }}>
+            <div className="w-1.5 h-1.5 rounded-full" style={{ background: '#6b35f5' }} />
+            The system behind The Loft
           </div>
-        </Reveal>
+        </FadeUp>
 
-        <Reveal delay={0.1}>
-          <p className="text-[#f0edff]/40 text-lg mb-4">The Loft doesn&apos;t run on hustle.</p>
-          <h2 className="text-5xl md:text-7xl font-bold leading-tight mb-6" style={{ fontFamily: 'var(--font-syne)' }}>
-            <span className="text-[#f0edff]">It runs on</span>{' '}
-            <span style={{
-              background: 'linear-gradient(135deg, #a673ff 0%, #844bfe 50%, #00ebc1 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}>
-              Shoulder Monkey.
-            </span>
-          </h2>
-        </Reveal>
-
-        <Reveal delay={0.2}>
-          <p className="text-[#f0edff]/60 text-lg max-w-2xl mx-auto mb-14 leading-relaxed">
-            Everything you just saw — the automated SMS sequences, the review generation, the full calendar, the live dashboard — is Shoulder Monkey, running silently in the background.
+        <FadeUp delay={0.1}>
+          <p className="text-lg mb-3" style={{ color: 'rgba(240,237,255,0.35)' }}>
+            The Loft doesn&apos;t run on luck, or hustle, or sticky notes.
           </p>
-        </Reveal>
+          <h2 className="font-bold leading-[1.05] mb-6"
+            style={{ fontFamily: 'var(--font-syne)', fontSize: 'clamp(44px, 6vw, 80px)', color: '#f0edff' }}>
+            It runs on{' '}
+            <span style={{
+              background: 'linear-gradient(135deg, #a673ff 0%, #844bfe 40%, #00ebc1 100%)',
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text'
+            }}>Shoulder Monkey.</span>
+          </h2>
+        </FadeUp>
+
+        <FadeUp delay={0.2}>
+          <p className="text-lg max-w-2xl mx-auto mb-16 leading-relaxed"
+            style={{ color: 'rgba(240,237,255,0.5)' }}>
+            Everything you just saw — the automated messages, the review generation, the full calendar, the live dashboard — is Shoulder Monkey, running silently underneath The Loft&apos;s brand.
+          </p>
+        </FadeUp>
 
         {/* Feature grid */}
-        <Reveal delay={0.3}>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-14 text-left">
+        <FadeUp delay={0.3}>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-16 text-left">
             {[
-              { icon: '📱', label: 'Automated SMS sequences', desc: 'Confirmation → reminder → review → rebook' },
-              { icon: '📅', label: 'Online booking system', desc: '24/7 bookings, zero phone calls needed' },
-              { icon: '⭐', label: 'Review on autopilot', desc: 'Requests sent at the perfect moment, every time' },
-              { icon: '💰', label: 'Payments & invoicing', desc: 'Cards on file, auto-receipts, no chasing' },
-              { icon: '🔄', label: 'Rebooking campaigns', desc: 'Win back lapsed clients automatically' },
-              { icon: '📊', label: 'Revenue dashboard', desc: 'Every metric, in real time, on your phone' },
+              { icon: '📱', label: 'Automated SMS sequences', desc: 'Confirmation → reminder → review → rebook. Every time.' },
+              { icon: '📅', label: 'Online booking system', desc: '24/7 bookings. No phone calls. No double-bookings.' },
+              { icon: '⭐', label: 'Review generation', desc: 'Sent 2 hours after every visit. 38% conversion rate.' },
+              { icon: '💰', label: 'Payments & invoicing', desc: 'Cards on file. Auto-receipts. Zero chasing.' },
+              { icon: '🔄', label: 'Rebooking campaigns', desc: 'Win back lapsed clients before they go elsewhere.' },
+              { icon: '📊', label: 'Revenue dashboard', desc: 'Every metric, in real time, on your phone.' },
             ].map((f, i) => (
-              <div key={i} className="bg-[#0f0a1e] border border-[#6b35f5]/20 rounded-2xl p-5 hover:border-[#6b35f5]/50 transition-colors">
+              <motion.div key={i}
+                initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }} transition={{ delay: 0.3 + i * 0.06, duration: 0.6 }}
+                className="rounded-2xl p-5 transition-all duration-300 hover:scale-[1.02] group"
+                style={{ background: 'rgba(240,237,255,0.03)', border: '1px solid rgba(107,53,245,0.15)' }}>
                 <div className="text-2xl mb-3">{f.icon}</div>
-                <div className="text-[#f0edff] text-sm font-semibold mb-1">{f.label}</div>
-                <div className="text-[#f0edff]/40 text-xs leading-relaxed">{f.desc}</div>
-              </div>
+                <div className="font-semibold text-sm mb-1.5" style={{ color: '#f0edff' }}>{f.label}</div>
+                <div className="text-xs leading-relaxed" style={{ color: 'rgba(240,237,255,0.35)' }}>{f.desc}</div>
+              </motion.div>
             ))}
           </div>
-        </Reveal>
+        </FadeUp>
 
         {/* CTA */}
-        <Reveal delay={0.4}>
-          <div className="bg-gradient-to-br from-[#1a0a3e] to-[#0a0612] border border-[#6b35f5]/30 rounded-3xl p-10">
-            <div className="text-[#f0edff] text-2xl font-bold mb-3" style={{ fontFamily: 'var(--font-syne)' }}>
+        <FadeUp delay={0.4}>
+          <div className="rounded-3xl p-10 relative overflow-hidden"
+            style={{
+              background: 'linear-gradient(135deg, rgba(107,53,245,0.12) 0%, rgba(0,235,193,0.04) 100%)',
+              border: '1px solid rgba(107,53,245,0.25)',
+            }}>
+            {/* Inner glow */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-px"
+              style={{ background: 'linear-gradient(90deg, transparent, rgba(107,53,245,0.5), transparent)' }} />
+
+            <h3 className="text-2xl md:text-3xl font-bold mb-3" style={{ fontFamily: 'var(--font-syne)', color: '#f0edff' }}>
               Ready to build this for your salon?
-            </div>
-            <p className="text-[#f0edff]/50 mb-8 max-w-lg mx-auto">
-              We set everything up for you in 7 days. You focus on your clients. We handle the rest.
+            </h3>
+            <p className="mb-8 max-w-lg mx-auto" style={{ color: 'rgba(240,237,255,0.45)' }}>
+              We set everything up in 7 days. You focus on your clients. We handle the rest — forever.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="https://www.shouldermonkey.co" className="inline-flex items-center justify-center gap-2 bg-[#6b35f5] hover:bg-[#844bfe] text-white font-semibold px-8 py-4 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#6b35f5]/30">
-                Book a free strategy call
-                <span>→</span>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <a href="https://www.shouldermonkey.co"
+                className="inline-flex items-center justify-center gap-2 font-semibold px-8 py-4 rounded-full text-sm transition-all duration-300 hover:scale-105"
+                style={{
+                  background: '#6b35f5',
+                  color: '#fff',
+                  boxShadow: '0 0 40px rgba(107,53,245,0.3)',
+                }}>
+                Book a free strategy call →
               </a>
-              <a href="https://www.shouldermonkey.co" className="inline-flex items-center justify-center gap-2 border border-[#6b35f5]/40 text-[#a673ff] font-medium px-8 py-4 rounded-full hover:bg-[#6b35f5]/10 transition-colors">
+              <a href="https://www.shouldermonkey.co"
+                className="inline-flex items-center justify-center gap-2 font-medium px-8 py-4 rounded-full text-sm transition-colors"
+                style={{ border: '1px solid rgba(107,53,245,0.3)', color: '#a673ff' }}>
                 See pricing
               </a>
             </div>
-            <div className="flex items-center justify-center gap-6 mt-8">
-              <div className="flex items-center gap-2">
-                <SMStars />
-                <span className="text-[#f0edff]/50 text-xs">Trusted by 200+ AU service businesses</span>
-              </div>
+            <div className="flex items-center justify-center gap-2 mt-8" style={{ color: 'rgba(240,237,255,0.3)', fontSize: 13 }}>
+              <Stars color="#6b35f5" />
+              <span>Trusted by 200+ service businesses across Australia & NZ</span>
             </div>
           </div>
-        </Reveal>
+        </FadeUp>
       </div>
     </section>
   )
 }
 
-// ─── Page ────────────────────────────────────────────────────────────────────
+// ─── Nav ────────────────────────────────────────────────────────────────────
+
+function Nav() {
+  return (
+    <nav className="fixed top-0 left-0 right-0 z-50" style={{
+      background: 'rgba(13,10,7,0.85)',
+      backdropFilter: 'blur(20px)',
+      borderBottom: `1px solid ${C.border}`,
+    }}>
+      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
+            style={{ background: C.amber, color: '#0d0a07' }}>TL</div>
+          <div>
+            <div className="font-semibold text-sm tracking-wide" style={{ color: C.cream }}>The Loft</div>
+            <div className="text-xs" style={{ color: C.muted }}>Salon & Spa</div>
+          </div>
+        </div>
+        <div className="hidden md:flex items-center gap-8 text-sm" style={{ color: C.muted }}>
+          {['Services', 'Our Team', 'Gallery', 'Contact'].map(l => (
+            <a key={l} href="#" className="hover:opacity-80 transition-opacity">{l}</a>
+          ))}
+        </div>
+        <button className="font-semibold px-5 py-2 rounded-full text-sm transition-all hover:opacity-90"
+          style={{ background: C.amber, color: '#0d0a07' }}>
+          Book Now
+        </button>
+      </div>
+    </nav>
+  )
+}
+
+// ─── Page ───────────────────────────────────────────────────────────────────
 
 export default function SalonPage() {
   return (
-    <div style={{ cursor: 'auto' }} className="min-h-screen">
+    <div style={{ cursor: 'auto', background: C.bg }}>
       <style>{`
         .salon-page * { cursor: auto !important; }
         .salon-page a, .salon-page button { cursor: pointer !important; }
       `}</style>
       <div className="salon-page">
-        <SalonNav />
+        <Nav />
         <Hero />
+        <CinematicReel />
         <Ticker />
         <Metrics />
-        <AutomationFlow />
-        <Reviews />
-        <Calendar />
+        <AutomationShowcase />
+        <ReviewsSection />
         <LiveFeed />
-        <Reveal2 />
+        <Reveal />
       </div>
     </div>
   )
