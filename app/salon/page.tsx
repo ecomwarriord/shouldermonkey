@@ -29,8 +29,6 @@ const C = {
   border:   'rgba(184,149,106,0.18)',
   borderHi: 'rgba(184,149,106,0.4)',
   card:     'rgba(255,255,255,0.82)',
-  purple:   '#6b35f5',
-  cyan:     '#00ebc1',
 }
 
 const W: React.CSSProperties = {
@@ -118,8 +116,8 @@ function Nav() {
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 32, fontSize: 13 }}>
-          {['Services','Our Team','Gallery','Contact'].map(l => (
-            <a key={l} href="#" style={{ color: C.muted, textDecoration: 'none' }}>{l}</a>
+          {[['Services','#services'],['Our Team','#team'],['Gallery','#gallery'],['Contact','#contact']].map(([l,h]) => (
+            <a key={l} href={h} style={{ color: C.muted, textDecoration: 'none' }}>{l}</a>
           ))}
         </div>
         <button style={{ background: C.accent, color: '#fff', border: 'none', borderRadius: 100, padding: '10px 22px', fontSize: 13, fontWeight: 700, cursor: 'pointer', boxShadow: `0 4px 20px rgba(184,149,106,0.3)` }}>
@@ -306,6 +304,8 @@ const TEAM = [
   { name: 'Natasha Reid',  role: 'Creative Director', years: '12 years', specialty: 'Precision cutting, editorial & bridal styling',      emoji: '✂️', quote: '"A great cut grows out beautifully — that\'s the real test."', initials: 'NR' },
   { name: 'Lily Chang',    role: 'Senior Stylist',    years: '6 years',  specialty: 'Keratin, treatments & Asian hair specialists',        emoji: '💆', quote: '"Healthy hair is the foundation of every great style."',       initials: 'LC' },
   { name: 'Jade Moretti',  role: 'Stylist',           years: '4 years',  specialty: 'Colour, curly hair & texture work',                  emoji: '🌿', quote: '"Your texture is your superpower — let\'s show it off."',      initials: 'JM' },
+  { name: 'Zoe Park',      role: 'Nail Technician',   years: '5 years',  specialty: 'Gel sets, nail art & extensions',                    emoji: '💅', quote: '"Nails are the finishing touch that ties the whole look together."', initials: 'ZP' },
+  { name: 'Chloe Adams',   role: 'Stylist',           years: '3 years',  specialty: 'Blow dry bar, toning & colour refreshes',            emoji: '🌸', quote: '"There\'s nothing like watching a client see themselves in the mirror."', initials: 'CA' },
 ]
 
 function Team() {
@@ -319,7 +319,7 @@ function Team() {
           <h2 style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 800, color: C.text, letterSpacing: '-0.03em', margin: '0 0 14px' }}>The artists behind the work</h2>
           <p style={{ fontSize: 16, color: C.muted, maxWidth: 480, margin: '0 auto' }}>Six master stylists, each with their own craft. Together, they&apos;re The Loft.</p>
         </FadeUp>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
           {TEAM.map((member, i) => (
             <FadeUp key={i} delay={i * 0.08}>
               <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 24, padding: 24, textAlign: 'center', boxShadow: '0 4px 24px rgba(28,21,16,0.06)', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', boxSizing: 'border-box' }}>
@@ -477,7 +477,7 @@ function Reviews() {
 
 function BookingCTA() {
   return (
-    <section style={{ padding: 'clamp(4rem, 8vw, 6rem) 0', background: C.bg }}>
+    <section id="contact" style={{ padding: 'clamp(4rem, 8vw, 6rem) 0', background: C.bg }}>
       <div style={W}>
         <FadeUp>
           <div style={{ background: `linear-gradient(135deg, rgba(184,149,106,0.1) 0%, rgba(184,149,106,0.04) 100%)`, border: `1px solid ${C.borderHi}`, borderRadius: 32, padding: 'clamp(2.5rem, 6vw, 4rem)', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
