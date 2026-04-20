@@ -367,11 +367,11 @@ function CinematicReel() {
 
 const GALLERY = [
   { label: 'Balayage',       sub: 'Emma · 3 hours',      tag: 'Colour',     c1: '#e8d5c4', c2: '#c9a47e', photo: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=600&h=400&fit=crop&q=80' },
-  { label: 'Keratin Finish', sub: 'Lily · 2.5 hours',    tag: 'Treatment',  c1: '#dce8d5', c2: '#8eb87e', photo: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600&h=400&fit=crop&q=80' },
+  { label: 'Keratin Finish', sub: 'Lily · 2.5 hours',    tag: 'Treatment',  c1: '#dce8d5', c2: '#8eb87e', photo: 'https://images.unsplash.com/photo-1527799820374-e92f6f5e7e2d?w=600&h=400&fit=crop&q=80' },
   { label: 'Editorial Cut',  sub: 'Natasha · 1.5 hours', tag: 'Cut & Style',c1: '#d5dce8', c2: '#7e95b8', photo: 'https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=600&h=400&fit=crop&q=80' },
-  { label: 'Full Highlights',sub: 'Emma · 4 hours',      tag: 'Colour',     c1: '#e8ddd5', c2: '#b89e7e', photo: 'https://images.unsplash.com/photo-1519735777090-ec97162dc266?w=600&h=400&fit=crop&q=80' },
+  { label: 'Full Highlights',sub: 'Emma · 4 hours',      tag: 'Colour',     c1: '#e8ddd5', c2: '#b89e7e', photo: 'https://images.unsplash.com/photo-1595152452543-a5a2b872b32d?w=600&h=400&fit=crop&q=80' },
   { label: 'Bridal Updo',    sub: 'Natasha · 2 hours',   tag: 'Bridal',     c1: '#e8d5e0', c2: '#c47ea8', photo: 'https://images.unsplash.com/photo-1562322140-8baeececf3df?w=600&h=400&fit=crop&q=80' },
-  { label: 'Curly Texture',  sub: 'Jade · 2 hours',      tag: 'Cut & Style',c1: '#e8e5d5', c2: '#b8a87e', photo: 'https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=600&h=400&fit=crop&q=80' },
+  { label: 'Curly Texture',  sub: 'Jade · 2 hours',      tag: 'Cut & Style',c1: '#e8e5d5', c2: '#b8a87e', photo: 'https://images.unsplash.com/photo-1559599101-f09722fb4948?w=600&h=400&fit=crop&q=80' },
 ]
 
 function Gallery() {
