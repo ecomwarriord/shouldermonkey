@@ -1,6 +1,6 @@
 'use client'
 
-import { motion, useInView, animate, AnimatePresence, useScroll, useTransform } from 'framer-motion'
+import { motion, useInView, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 
@@ -18,7 +18,6 @@ const SalonPlayer = dynamic(
   }
 )
 
-// ─── Tokens ───────────────────────────────────────────────────────────────────
 const C = {
   bg:       '#faf8f4',
   surface:  '#f4f0ea',
@@ -30,8 +29,6 @@ const C = {
   border:   'rgba(184,149,106,0.18)',
   borderHi: 'rgba(184,149,106,0.4)',
   card:     'rgba(255,255,255,0.82)',
-  green:    '#166534',
-  greenBg:  'rgba(22,163,74,0.08)',
   purple:   '#6b35f5',
   cyan:     '#00ebc1',
 }
@@ -40,20 +37,6 @@ const W: React.CSSProperties = {
   width: '100%', maxWidth: 1240,
   margin: '0 auto',
   padding: '0 clamp(1.5rem, 4vw, 3rem)',
-}
-
-// ─── Primitives ───────────────────────────────────────────────────────────────
-
-function Counter({ to, prefix = '', suffix = '' }: { to: number; prefix?: string; suffix?: string }) {
-  const [v, setV] = useState(0)
-  const ref = useRef<HTMLSpanElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-40px' })
-  useEffect(() => {
-    if (!inView) return
-    const c = animate(0, to, { duration: 2.2, ease: 'easeOut', onUpdate: n => setV(Math.floor(n)) })
-    return c.stop
-  }, [inView, to])
-  return <span ref={ref}>{prefix}{v.toLocaleString()}{suffix}</span>
 }
 
 function FadeUp({ children, delay = 0, style = {} }: { children: React.ReactNode; delay?: number; style?: React.CSSProperties }) {
@@ -79,8 +62,6 @@ function Stars({ size = 13, color = C.accent }: { size?: number; color?: string 
     </span>
   )
 }
-
-// ─── Phone ────────────────────────────────────────────────────────────────────
 
 function Phone({ messages, title }: { messages: { text: string; from: 'salon'|'client'; delay: number }[]; title: string }) {
   return (
@@ -125,8 +106,6 @@ function Phone({ messages, title }: { messages: { text: string; from: 'salon'|'c
   )
 }
 
-// ─── Nav ──────────────────────────────────────────────────────────────────────
-
 function Nav() {
   return (
     <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100, background: 'rgba(250,248,244,0.92)', backdropFilter: 'blur(20px)', borderBottom: `1px solid ${C.border}` }}>
@@ -138,7 +117,7 @@ function Nav() {
             <div style={{ fontSize: 10, color: C.muted }}>Salon & Spa · Double Bay</div>
           </div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 32, fontSize: 13, color: C.muted }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 32, fontSize: 13 }}>
           {['Services','Our Team','Gallery','Contact'].map(l => (
             <a key={l} href="#" style={{ color: C.muted, textDecoration: 'none' }}>{l}</a>
           ))}
@@ -151,25 +130,21 @@ function Nav() {
   )
 }
 
-// ─── Hero ─────────────────────────────────────────────────────────────────────
-
 function Hero() {
   const msgs = [
     { from: 'salon' as const, delay: 0.6,  text: '✅ Confirmed! The Loft Salon & Spa\n\n📅 Wed 23 Apr · 2:00pm\n✂️ Balayage with Emma\n📍 Knox St, Double Bay' },
-    { from: 'salon' as const, delay: 1.8,  text: '⏰ Hey Sarah! Reminder — see you tomorrow at 2pm with Emma. Need to move it? Reply CHANGE 💛' },
-    { from: 'client' as const, delay: 2.8, text: "All good, can't wait! 🙌" },
-    { from: 'salon' as const, delay: 3.6,  text: '⭐ Hi Sarah! Hope you loved today. 30 secs for a Google review? → [link]' },
+    { from: 'salon' as const, delay: 1.8,  text: '⏰ Hey Sarah! Just a reminder — see you tomorrow at 2pm with Emma. Need to move it? Reply CHANGE 💛' },
+    { from: 'client' as const, delay: 2.8, text: "Can't wait, thank you! 🙌" },
+    { from: 'salon' as const, delay: 3.8,  text: '🌿 Hi Sarah! Your keratin is due for a refresh — want to lock in a time? We have spots this week 💛' },
   ]
   return (
     <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', background: C.bg, overflow: 'hidden', paddingTop: 64 }}>
-      {/* Subtle warm glows */}
       <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
         <div style={{ position: 'absolute', top: '-10%', right: '-5%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(184,149,106,0.08) 0%, transparent 70%)', filter: 'blur(60px)' }} />
         <div style={{ position: 'absolute', bottom: '5%', left: '10%', width: 300, height: 300, borderRadius: '50%', background: 'radial-gradient(circle, rgba(184,149,106,0.05) 0%, transparent 70%)', filter: 'blur(40px)' }} />
       </div>
       <div style={{ ...W, padding: 'clamp(4rem, 8vw, 6rem) clamp(1.5rem, 4vw, 3rem)' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 'clamp(3rem, 5vw, 6rem)', alignItems: 'center' }}>
-          {/* Left */}
           <div>
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.22,1,0.36,1] }}
               style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: C.accentLt, border: `1px solid ${C.border}`, borderRadius: 100, padding: '6px 16px', marginBottom: 28 }}>
@@ -185,7 +160,7 @@ function Hero() {
 
             <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.18, ease: [0.22,1,0.36,1] }}
               style={{ fontSize: 17, lineHeight: 1.75, color: C.muted, margin: '0 0 36px', maxWidth: 400 }}>
-              Where every visit feels like your first. Premium hair, skin & nail services — with a system that makes every client feel truly seen.
+              Premium hair, skin & nail services in the heart of Double Bay. Come in for the experience. Leave looking — and feeling — your absolute best.
             </motion.p>
 
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.26, ease: [0.22,1,0.36,1] }}
@@ -215,16 +190,14 @@ function Hero() {
             </motion.div>
           </div>
 
-          {/* Right */}
           <motion.div initial={{ opacity: 0, x: 32, y: 16 }} animate={{ opacity: 1, x: 0, y: 0 }} transition={{ duration: 1, delay: 0.3, ease: [0.22,1,0.36,1] }}
             style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
             <div style={{ position: 'relative' }}>
               <div style={{ position: 'absolute', inset: '-15%', borderRadius: '50%', background: 'radial-gradient(circle, rgba(184,149,106,0.12) 0%, transparent 70%)', filter: 'blur(50px)', zIndex: 0 }} />
               <div style={{ position: 'relative', zIndex: 1 }}>
-                <Phone title="Booking confirmed" messages={msgs} />
+                <Phone title="Your visit at The Loft" messages={msgs} />
               </div>
             </div>
-            {/* Stat badges below phone — always in flow, never clips */}
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', width: '100%' }}>
               <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.8, duration: 0.5 }}
                 style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 16, padding: '12px 18px', textAlign: 'center', boxShadow: '0 4px 20px rgba(28,21,16,0.08)' }}>
@@ -233,9 +206,9 @@ function Hero() {
               </motion.div>
               <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 2.0, duration: 0.5 }}
                 style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 16, padding: '12px 18px', boxShadow: '0 4px 20px rgba(28,21,16,0.08)' }}>
-                <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: C.accent, marginBottom: 4 }}>This month</div>
-                <div style={{ fontSize: 22, fontWeight: 800, color: C.text, letterSpacing: '-0.03em' }}>$47,230</div>
-                <div style={{ fontSize: 11, color: C.muted, marginTop: 2 }}>↑ 18% vs last month</div>
+                <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: C.accent, marginBottom: 4 }}>Services from</div>
+                <div style={{ fontSize: 22, fontWeight: 800, color: C.text, letterSpacing: '-0.03em' }}>$95</div>
+                <div style={{ fontSize: 11, color: C.muted, marginTop: 2 }}>Colour · Cut · Treatments</div>
               </motion.div>
             </div>
           </motion.div>
@@ -245,7 +218,127 @@ function Hero() {
   )
 }
 
-// ─── Cinematic Reel ───────────────────────────────────────────────────────────
+const SERVICES = [
+  {
+    icon: '🎨',
+    name: 'Colour',
+    tagline: 'From soft balayage to bold transformations',
+    items: ['Balayage from $180', 'Full Colour from $120', 'Highlights from $160', 'Toner Refresh from $60', 'Colour Correction POA'],
+    bg: 'rgba(184,149,106,0.08)',
+  },
+  {
+    icon: '✂️',
+    name: 'Cut & Style',
+    tagline: 'Precision cuts for every hair type and texture',
+    items: ["Women's Cut & Blowout from $95", "Men's Cut from $55", 'Fringe Trim from $25', 'Dry Cut from $75', 'Bridal Trial from $180'],
+    bg: 'rgba(184,149,106,0.04)',
+  },
+  {
+    icon: '💆',
+    name: 'Treatments',
+    tagline: 'Repair, restore and strengthen from within',
+    items: ['Keratin from $120', 'Brazilian Blowout from $220', 'Olaplex Treatment from $80', 'Scalp Ritual from $65', 'Bond Repair from $90'],
+    bg: 'rgba(184,149,106,0.08)',
+  },
+  {
+    icon: '👰',
+    name: 'Bridal & Occasions',
+    tagline: 'Flawless looks for your most important days',
+    items: ['Bridal Hair by consultation', 'Bridal Party packages', 'Formal Updo from $120', 'Blow Dry Bar from $55', 'Colour + Style packages'],
+    bg: 'rgba(184,149,106,0.04)',
+  },
+  {
+    icon: '💅',
+    name: 'Nails',
+    tagline: 'Manicures, pedicures & gel sets',
+    items: ['Gel Manicure from $60', 'Classic Manicure from $40', 'Gel Pedicure from $70', 'Classic Pedicure from $50', 'Nail Art from $15/nail'],
+    bg: 'rgba(184,149,106,0.08)',
+  },
+  {
+    icon: '🌿',
+    name: 'Extensions',
+    tagline: 'Instant length and volume with a natural finish',
+    items: ['Tape-In from $600', 'Micro-Link from $800', 'Sew-In from $700', 'Clip-In Fitting from $80', 'Extension Maintenance from $180'],
+    bg: 'rgba(184,149,106,0.04)',
+  },
+]
+
+function Services() {
+  return (
+    <section id="services" style={{ padding: 'clamp(4rem, 8vw, 6rem) 0', background: C.surface }}>
+      <div style={W}>
+        <FadeUp style={{ textAlign: 'center', marginBottom: 56 }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: C.accentLt, border: `1px solid ${C.border}`, borderRadius: 100, padding: '6px 16px', marginBottom: 16 }}>
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: C.accent }}>Our Services</span>
+          </div>
+          <h2 style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 800, color: C.text, letterSpacing: '-0.03em', margin: '0 0 14px' }}>Everything you need. All in one place.</h2>
+          <p style={{ fontSize: 16, color: C.muted, maxWidth: 480, margin: '0 auto' }}>From your first cut to a full transformation — The Loft does it all, beautifully.</p>
+        </FadeUp>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+          {SERVICES.map((s, i) => (
+            <FadeUp key={i} delay={i * 0.06}>
+              <div style={{ background: s.bg, border: `1px solid ${C.border}`, borderRadius: 24, padding: '28px 24px', height: '100%', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
+                <div style={{ fontSize: 28, marginBottom: 14 }}>{s.icon}</div>
+                <div style={{ fontSize: 18, fontWeight: 800, color: C.text, letterSpacing: '-0.02em', marginBottom: 6 }}>{s.name}</div>
+                <div style={{ fontSize: 13, color: C.muted, marginBottom: 20, lineHeight: 1.5 }}>{s.tagline}</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8, flex: 1 }}>
+                  {s.items.map((item, j) => (
+                    <div key={j} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13, color: C.text }}>
+                      <span style={{ width: 5, height: 5, borderRadius: '50%', background: C.accent, flexShrink: 0, opacity: 0.7 }} />
+                      {item}
+                    </div>
+                  ))}
+                </div>
+                <button style={{ marginTop: 24, background: 'transparent', border: `1px solid ${C.borderHi}`, borderRadius: 100, padding: '9px 18px', fontSize: 12, fontWeight: 700, color: C.accent, cursor: 'pointer', letterSpacing: '0.04em' }}>
+                  Book {s.name} →
+                </button>
+              </div>
+            </FadeUp>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+const TEAM = [
+  { name: 'Emma Clarke',   role: 'Senior Colourist',  years: '8 years',  specialty: 'Balayage, colour correction & creative blondes', emoji: '🎨', quote: '"Every client deserves hair that makes them stop and stare."',   initials: 'EC' },
+  { name: 'Natasha Reid',  role: 'Creative Director', years: '12 years', specialty: 'Precision cutting, editorial & bridal styling',      emoji: '✂️', quote: '"A great cut grows out beautifully — that\'s the real test."', initials: 'NR' },
+  { name: 'Lily Chang',    role: 'Senior Stylist',    years: '6 years',  specialty: 'Keratin, treatments & Asian hair specialists',        emoji: '💆', quote: '"Healthy hair is the foundation of every great style."',       initials: 'LC' },
+  { name: 'Jade Moretti',  role: 'Stylist',           years: '4 years',  specialty: 'Colour, curly hair & texture work',                  emoji: '🌿', quote: '"Your texture is your superpower — let\'s show it off."',      initials: 'JM' },
+]
+
+function Team() {
+  return (
+    <section id="team" style={{ padding: 'clamp(4rem, 8vw, 6rem) 0', background: C.bg }}>
+      <div style={W}>
+        <FadeUp style={{ textAlign: 'center', marginBottom: 56 }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: C.accentLt, border: `1px solid ${C.border}`, borderRadius: 100, padding: '6px 16px', marginBottom: 16 }}>
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: C.accent }}>Our Team</span>
+          </div>
+          <h2 style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 800, color: C.text, letterSpacing: '-0.03em', margin: '0 0 14px' }}>The artists behind the work</h2>
+          <p style={{ fontSize: 16, color: C.muted, maxWidth: 480, margin: '0 auto' }}>Six master stylists, each with their own craft. Together, they&apos;re The Loft.</p>
+        </FadeUp>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
+          {TEAM.map((member, i) => (
+            <FadeUp key={i} delay={i * 0.08}>
+              <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 24, padding: 24, textAlign: 'center', boxShadow: '0 4px 24px rgba(28,21,16,0.06)', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', boxSizing: 'border-box' }}>
+                <div style={{ width: 72, height: 72, borderRadius: '50%', background: `linear-gradient(135deg, ${C.accentLt} 0%, rgba(184,149,106,0.2) 100%)`, border: `2px solid ${C.borderHi}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, marginBottom: 16, flexShrink: 0 }}>
+                  {member.emoji}
+                </div>
+                <div style={{ fontSize: 16, fontWeight: 800, color: C.text, letterSpacing: '-0.01em', marginBottom: 4 }}>{member.name}</div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: C.accent, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>{member.role}</div>
+                <div style={{ fontSize: 11, color: C.muted, marginBottom: 14 }}>{member.years} experience</div>
+                <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.6, marginBottom: 16 }}>{member.specialty}</div>
+                <p style={{ fontSize: 12, color: C.subtle, fontStyle: 'italic', lineHeight: 1.6, margin: '0' }}>{member.quote}</p>
+              </div>
+            </FadeUp>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
 
 function CinematicReel() {
   return (
@@ -254,10 +347,10 @@ function CinematicReel() {
         <FadeUp style={{ textAlign: 'center', marginBottom: 40 }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: C.accentLt, border: `1px solid ${C.border}`, borderRadius: 100, padding: '6px 16px', marginBottom: 16 }}>
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.accent, display: 'inline-block', animation: 'pulse 2s infinite' }} />
-            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: C.accent }}>Live Preview · April 2025</span>
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: C.accent }}>The Loft Experience</span>
           </div>
-          <h2 style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 800, color: C.text, letterSpacing: '-0.03em', margin: '0 0 12px' }}>A salon running at full power</h2>
-          <p style={{ fontSize: 16, color: C.muted, maxWidth: 480, margin: '0 auto' }}>Real numbers. Real messages. This is The Loft, running on autopilot.</p>
+          <h2 style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 800, color: C.text, letterSpacing: '-0.03em', margin: '0 0 12px' }}>See what we do</h2>
+          <p style={{ fontSize: 16, color: C.muted, maxWidth: 480, margin: '0 auto' }}>From colour to care — every service crafted with intention, by a team that genuinely loves what they do.</p>
         </FadeUp>
         <FadeUp delay={0.1}>
           <div style={{ position: 'relative', maxWidth: 960, margin: '0 auto', borderRadius: 24, overflow: 'hidden', background: '#f4f0ea', aspectRatio: '16/9', boxShadow: `0 0 0 1px ${C.border}, 0 40px 80px rgba(28,21,16,0.12), 0 0 60px rgba(184,149,106,0.08)` }}>
@@ -272,46 +365,40 @@ function CinematicReel() {
   )
 }
 
-// ─── Ticker ───────────────────────────────────────────────────────────────────
+const GALLERY = [
+  { label: 'Balayage',       sub: 'Emma · 3 hours',     tag: 'Colour',     c1: '#e8d5c4', c2: '#c9a47e' },
+  { label: 'Keratin Finish', sub: 'Lily · 2.5 hours',   tag: 'Treatment',  c1: '#dce8d5', c2: '#8eb87e' },
+  { label: 'Editorial Cut',  sub: 'Natasha · 1.5 hours',tag: 'Cut & Style',c1: '#d5dce8', c2: '#7e95b8' },
+  { label: 'Full Highlights',sub: 'Emma · 4 hours',     tag: 'Colour',     c1: '#e8ddd5', c2: '#b89e7e' },
+  { label: 'Bridal Updo',    sub: 'Natasha · 2 hours',  tag: 'Bridal',     c1: '#e8d5e0', c2: '#c47ea8' },
+  { label: 'Curly Texture',  sub: 'Jade · 2 hours',     tag: 'Cut & Style',c1: '#e8e5d5', c2: '#b8a87e' },
+]
 
-function Ticker() {
-  const txt = '47 appointments this week  ·  3 new 5-star reviews today  ·  $8,400 collected  ·  94% rebooking rate  ·  12 automated messages sent  ·  0 missed follow-ups  ·  '
+function Gallery() {
   return (
-    <div style={{ overflow: 'hidden', padding: '11px 0', background: C.bg, borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}` }}>
-      <motion.div animate={{ x: ['0%','-50%'] }} transition={{ duration: 40, repeat: Infinity, ease: 'linear' }} style={{ display: 'flex', whiteSpace: 'nowrap' }}>
-        {[1,2,3,4].map(i => <span key={i} style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: C.accent, opacity: 0.7, marginRight: 32 }}>{txt}</span>)}
-      </motion.div>
-    </div>
-  )
-}
-
-// ─── Metrics ─────────────────────────────────────────────────────────────────
-
-function Metrics() {
-  const stats = [
-    { label: 'Monthly Revenue',  value: 47230, pre: '$', suf: '',  change: '+18%', sub: 'vs last month' },
-    { label: 'New Clients',      value: 127,   pre: '',  suf: '',  change: '+23%', sub: 'this month' },
-    { label: 'Rebooking Rate',   value: 94,    pre: '',  suf: '%', change: '+6pts', sub: 'vs 6 months ago' },
-    { label: 'Avg Ticket Value', value: 178,   pre: '$', suf: '',  change: '+$24', sub: 'this quarter' },
-  ]
-  return (
-    <section style={{ padding: 'clamp(4rem, 8vw, 6rem) 0', background: C.bg }}>
+    <section id="gallery" style={{ padding: 'clamp(4rem, 8vw, 6rem) 0', background: C.bg }}>
       <div style={W}>
         <FadeUp style={{ textAlign: 'center', marginBottom: 48 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: C.accent, marginBottom: 12 }}>April 2025</div>
-          <h2 style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 800, color: C.text, letterSpacing: '-0.03em', margin: 0 }}>The Loft, by the numbers</h2>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: C.accentLt, border: `1px solid ${C.border}`, borderRadius: 100, padding: '6px 16px', marginBottom: 16 }}>
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: C.accent }}>Our Work</span>
+          </div>
+          <h2 style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 800, color: C.text, letterSpacing: '-0.03em', margin: '0 0 14px' }}>Transformations we&apos;re proud of</h2>
+          <p style={{ fontSize: 16, color: C.muted, maxWidth: 480, margin: '0 auto' }}>Every client leaves The Loft looking — and feeling — like the best version of themselves.</p>
         </FadeUp>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
-          {stats.map((s,i) => (
-            <FadeUp key={i} delay={i * 0.08}>
-              <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 20, padding: '28px 24px', backdropFilter: 'blur(8px)', boxShadow: '0 4px 24px rgba(28,21,16,0.06)' }}>
-                <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: C.muted, marginBottom: 16 }}>{s.label}</div>
-                <div style={{ fontSize: 'clamp(32px, 3vw, 44px)', fontWeight: 800, color: C.text, letterSpacing: '-0.04em', marginBottom: 14 }}>
-                  <Counter to={s.value} prefix={s.pre} suffix={s.suf} />
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+          {GALLERY.map((item, i) => (
+            <FadeUp key={i} delay={i * 0.06}>
+              <div style={{ borderRadius: 20, overflow: 'hidden', border: `1px solid ${C.border}`, boxShadow: '0 4px 20px rgba(28,21,16,0.07)' }}>
+                <div style={{ height: 200, background: `linear-gradient(160deg, ${item.c1} 0%, ${item.c2} 100%)`, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                  <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(255,255,255,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28 }}>✨</div>
+                  <div style={{ position: 'absolute', top: 12, left: 12, background: 'rgba(255,255,255,0.88)', borderRadius: 100, padding: '4px 12px', fontSize: 11, fontWeight: 700, color: C.text, letterSpacing: '0.06em' }}>{item.tag}</div>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ fontSize: 12, fontWeight: 700, padding: '3px 10px', borderRadius: 100, background: C.greenBg, color: C.green }}>{s.change}</span>
-                  <span style={{ fontSize: 12, color: C.subtle }}>{s.sub}</span>
+                <div style={{ background: C.card, padding: '16px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: C.text }}>{item.label}</div>
+                    <div style={{ fontSize: 12, color: C.muted, marginTop: 2 }}>{item.sub}</div>
+                  </div>
+                  <Stars size={11} />
                 </div>
               </div>
             </FadeUp>
@@ -322,77 +409,13 @@ function Metrics() {
   )
 }
 
-// ─── Automation ───────────────────────────────────────────────────────────────
-
-function Automation() {
-  const stages = [
-    { step: '01', label: 'Instantly on booking',  preview: 'Confirmed! Wed 23 Apr · 2pm with Emma' },
-    { step: '02', label: '24 hours before',        preview: 'Reminder — see you tomorrow at 2pm' },
-    { step: '03', label: '2 hours before',         preview: 'See you soon! Free parking on Guilfoyle Ave' },
-    { step: '04', label: '2 hours after visit',    preview: 'Hope you loved today! Leave us a review?' },
-    { step: '05', label: '3 days later',           preview: 'Ready to book your next visit?' },
-    { step: '06', label: '6 weeks later',          preview: 'Your hair might be craving some love' },
-  ]
-  const msgs = [
-    { from: 'salon' as const, delay: 0.3, text: '✅ Confirmed! Wed 23 Apr · 2:00pm\n✂️ Balayage with Emma\n📍 Knox St, Double Bay 💛' },
-    { from: 'salon' as const, delay: 1.2, text: '⏰ Tomorrow at 2pm with Emma. Need to move it? Reply CHANGE' },
-    { from: 'client' as const, delay: 2.1, text: 'Perfect, see you then! ✨' },
-    { from: 'salon' as const, delay: 3.0, text: "📍 2 hours away! Free parking on Guilfoyle Ave. Can't wait to see you!" },
-    { from: 'salon' as const, delay: 4.2, text: '⭐ Hope you\'re loving your new look! 30 seconds for a Google review? → [link]' },
-  ]
-  return (
-    <section style={{ padding: 'clamp(4rem, 8vw, 6rem) 0', background: C.surface }}>
-      <div style={W}>
-        <FadeUp style={{ textAlign: 'center', marginBottom: 56 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: C.accent, marginBottom: 12 }}>Client Journey</div>
-          <h2 style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 800, color: C.text, letterSpacing: '-0.03em', margin: '0 0 14px' }}>Every client, perfectly looked after</h2>
-          <p style={{ fontSize: 16, color: C.muted, maxWidth: 500, margin: '0 auto' }}>From booking to six weeks later — every message, sent automatically, at exactly the right time.</p>
-        </FadeUp>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(3rem, 5vw, 5rem)', alignItems: 'center' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {stages.map((s,i) => (
-              <FadeUp key={i} delay={i * 0.07}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 16, background: C.card, border: `1px solid ${C.border}`, borderRadius: 16, padding: '16px 20px', boxShadow: '0 2px 12px rgba(28,21,16,0.05)' }}>
-                  <div style={{ fontSize: 11, fontWeight: 800, color: C.accent, opacity: 0.5, minWidth: 24 }}>{s.step}</div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: C.accent, marginBottom: 3 }}>{s.label}</div>
-                    <div style={{ fontSize: 13, color: C.muted, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.preview}</div>
-                  </div>
-                  <div style={{ width: 6, height: 6, borderRadius: '50%', background: C.accent, opacity: 0.3, flexShrink: 0 }} />
-                </div>
-              </FadeUp>
-            ))}
-          </div>
-          <FadeUp delay={0.2} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24 }}>
-            <div style={{ position: 'relative' }}>
-              <div style={{ position: 'absolute', inset: '-20%', borderRadius: '50%', background: 'radial-gradient(circle, rgba(184,149,106,0.1) 0%, transparent 70%)', filter: 'blur(40px)', zIndex: 0 }} />
-              <div style={{ position: 'relative', zIndex: 1 }}><Phone title="Automated sequence" messages={msgs} /></div>
-            </div>
-            <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.5, duration: 0.6 }}
-              style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
-              {[{ label: 'No-shows down', value: '67%' }, { label: 'Review rate', value: '38%' }, { label: 'Rebook rate', value: '52%' }].map((stat,i) => (
-                <div key={i} style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, padding: '12px 16px', textAlign: 'center', minWidth: 90, boxShadow: '0 2px 12px rgba(28,21,16,0.06)' }}>
-                  <div style={{ fontSize: 22, fontWeight: 800, color: C.accent, letterSpacing: '-0.03em' }}>{stat.value}</div>
-                  <div style={{ fontSize: 11, color: C.muted, marginTop: 3 }}>{stat.label}</div>
-                </div>
-              ))}
-            </motion.div>
-          </FadeUp>
-        </div>
-      </div>
-    </section>
-  )
-}
-
-// ─── Reviews ──────────────────────────────────────────────────────────────────
-
 const REVIEWS = [
-  { name: 'Rachel M.', initials: 'RM', service: 'Balayage + Blow Dry', time: '2 hours ago',  text: "Emma is an absolute artist. My balayage has never looked so natural. And the reminder texts are such a lovely touch — I never forget my appointments anymore!" },
-  { name: 'Priya K.',  initials: 'PK', service: 'Colour + Cut',        time: 'Yesterday',    text: "Walked in stressed, walked out feeling like a completely different person. The team at The Loft are genuinely magic. Already booked my next one." },
-  { name: 'Sophie T.', initials: 'ST', service: 'Keratin Treatment',   time: '3 days ago',   text: "I've been coming here 3 years and they just keep getting better. I never even have to remember to rebook — they send me a text at exactly the right time." },
-  { name: 'Jess O.',   initials: 'JO', service: 'Full Highlights',     time: '1 week ago',   text: "Best salon in Double Bay, hands down. Tash always knows what I need before I even explain it. The post-visit follow-up made me feel so looked after." },
-  { name: 'Mia R.',    initials: 'MR', service: 'Brazilian Blowout',   time: '2 weeks ago',  text: "The whole experience — from booking online to the little check-in message after — is just flawless. I recommend The Loft to every person I know." },
-  { name: 'Lauren B.', initials: 'LB', service: 'Toner Refresh',      time: '2 weeks ago',  text: "My hair has genuinely never been healthier. And the messages they send make me feel like a VIP client every single time." },
+  { name: 'Rachel M.', initials: 'RM', service: 'Balayage + Blow Dry', time: '2 hours ago',  text: "Emma is an absolute artist. My balayage has never looked so natural. I walked in with a photo reference and she nailed it — honestly better than I imagined." },
+  { name: 'Priya K.',  initials: 'PK', service: 'Colour + Cut',        time: 'Yesterday',    text: "Walked in stressed, walked out feeling like a completely different person. The team here genuinely cares about what you want. Already booked my next one." },
+  { name: 'Sophie T.', initials: 'ST', service: 'Keratin Treatment',   time: '3 days ago',   text: "I've been coming here 3 years and the quality just keeps getting better. Lily knows exactly what my hair needs. The keratin lasts months — totally worth it." },
+  { name: 'Jess O.',   initials: 'JO', service: 'Full Highlights',     time: '1 week ago',   text: "Best salon in Double Bay, hands down. Tash always knows what I need before I even explain it. The vibe in here is incredible — it feels like a proper treat every time." },
+  { name: 'Mia R.',    initials: 'MR', service: 'Brazilian Blowout',   time: '2 weeks ago',  text: "The whole experience is just flawless. They remember how I like my coffee, they remember my hair history. And the results are always incredible. 10/10 every time." },
+  { name: 'Lauren B.', initials: 'LB', service: 'Toner Refresh',       time: '2 weeks ago',  text: "My hair has genuinely never been healthier since I switched to The Loft. Every single stylist is so talented and the atmosphere makes you feel like a total VIP." },
 ]
 
 function Reviews() {
@@ -406,22 +429,23 @@ function Reviews() {
     const t3 = setTimeout(() => setCount(6), 4200)
     return () => [t1,t2,t3].forEach(clearTimeout)
   }, [inView])
-
   return (
-    <section ref={ref} style={{ padding: 'clamp(4rem, 8vw, 6rem) 0', background: C.bg }}>
+    <section ref={ref} style={{ padding: 'clamp(4rem, 8vw, 6rem) 0', background: C.surface }}>
       <div style={W}>
         <FadeUp style={{ textAlign: 'center', marginBottom: 48 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: C.accent, marginBottom: 12 }}>Reputation</div>
-          <h2 style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 800, color: C.text, letterSpacing: '-0.03em', margin: '0 0 16px' }}>Reviews that write themselves</h2>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: C.accentLt, border: `1px solid ${C.border}`, borderRadius: 100, padding: '6px 16px', marginBottom: 16 }}>
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: C.accent }}>Client Reviews</span>
+          </div>
+          <h2 style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 800, color: C.text, letterSpacing: '-0.03em', margin: '0 0 16px' }}>What our clients say</h2>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
             <Stars />
             <span style={{ fontWeight: 700, color: C.text }}>4.9</span>
-            <span style={{ fontSize: 14, color: C.muted }}>· 847 Google reviews · new ones arriving daily</span>
+            <span style={{ fontSize: 14, color: C.muted }}>· 847 Google reviews</span>
           </div>
         </FadeUp>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
           <AnimatePresence>
-            {REVIEWS.slice(0, count).map((r,i) => (
+            {REVIEWS.slice(0, count).map((r) => (
               <motion.div key={r.name} layout initial={{ opacity: 0, scale: 0.94, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.5, ease: [0.22,1,0.36,1] }}
                 style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 20, padding: 24, display: 'flex', flexDirection: 'column', boxShadow: '0 4px 20px rgba(28,21,16,0.06)' }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 16 }}>
@@ -451,78 +475,59 @@ function Reviews() {
   )
 }
 
-// ─── Live Feed ────────────────────────────────────────────────────────────────
-
-const LIVE = [
-  { text: 'Reminder sent → Sarah M.',        sub: 'Wed 2pm appointment · delivered',              dot: C.accent },
-  { text: 'Review received → Rachel M.',     sub: '5 stars · "Never looked so natural"',          dot: C.green },
-  { text: 'Rebooking confirmed → Priya K.',  sub: 'Thu 15 May at 11am · locked in',              dot: C.accent },
-  { text: '$340 collected → Chloe B.',       sub: 'Balayage package · auto-receipt sent',         dot: C.green },
-  { text: 'New lead → Jamie (Instagram)',    sub: 'Auto-replied · appointment booked in 4 min',   dot: C.accent },
-  { text: 'Win-back → Marcus T.',            sub: '9 weeks no visit · offer sent · booked',      dot: C.green },
-  { text: 'Review received → Sophie T.',     sub: '5 stars · "Just keeps getting better"',       dot: C.accent },
-  { text: '$178 collected → Lauren B.',      sub: 'Toner refresh · auto-receipt sent',           dot: C.green },
-]
-
-function LiveFeed() {
-  const [items, setItems] = useState(LIVE.slice(0,4))
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true })
-  const idx = useRef(4)
-  useEffect(() => {
-    if (!inView) return
-    const t = setInterval(() => {
-      setItems(prev => [LIVE[idx.current % LIVE.length], ...prev].slice(0,6))
-      idx.current++
-    }, 2000)
-    return () => clearInterval(t)
-  }, [inView])
-
+function BookingCTA() {
   return (
-    <section ref={ref} style={{ padding: 'clamp(4rem, 8vw, 6rem) 0', background: C.surface }}>
-      <div style={{ ...W, maxWidth: 800 }}>
+    <section style={{ padding: 'clamp(4rem, 8vw, 6rem) 0', background: C.bg }}>
+      <div style={W}>
         <FadeUp>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-            <div style={{ width: 8, height: 8, borderRadius: '50%', background: C.accent, animation: 'pulse 2s infinite' }} />
-            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: C.accent }}>Live · right now</span>
+          <div style={{ background: `linear-gradient(135deg, rgba(184,149,106,0.1) 0%, rgba(184,149,106,0.04) 100%)`, border: `1px solid ${C.borderHi}`, borderRadius: 32, padding: 'clamp(2.5rem, 6vw, 4rem)', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 500, height: 300, borderRadius: '50%', background: 'radial-gradient(circle, rgba(184,149,106,0.1) 0%, transparent 70%)', filter: 'blur(60px)', pointerEvents: 'none' }} />
+            <div style={{ position: 'relative', zIndex: 1 }}>
+              <div style={{ fontSize: 40, marginBottom: 16 }}>✂️</div>
+              <h2 style={{ fontSize: 'clamp(28px, 3.5vw, 48px)', fontWeight: 800, color: C.text, letterSpacing: '-0.04em', margin: '0 0 14px', lineHeight: 1.1 }}>
+                Ready for your transformation?
+              </h2>
+              <p style={{ fontSize: 17, color: C.muted, maxWidth: 500, margin: '0 auto 36px', lineHeight: 1.7 }}>
+                Book online in seconds. Choose your stylist, pick a time, and we&apos;ll take care of everything else.
+              </p>
+              <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 32 }}>
+                <button style={{ background: C.accent, color: '#fff', border: 'none', borderRadius: 100, padding: '16px 36px', fontSize: 15, fontWeight: 700, cursor: 'pointer', boxShadow: `0 8px 30px rgba(184,149,106,0.3)` }}>
+                  Book an Appointment →
+                </button>
+                <button style={{ background: 'transparent', color: C.muted, border: `1px solid ${C.border}`, borderRadius: 100, padding: '16px 32px', fontSize: 15, fontWeight: 500, cursor: 'pointer' }}>
+                  Call us · (02) 9327 5880
+                </button>
+              </div>
+              <div style={{ display: 'flex', gap: 24, justifyContent: 'center', flexWrap: 'wrap' }}>
+                {[
+                  { icon: '📍', text: 'Knox St, Double Bay NSW 2028' },
+                  { icon: '🕐', text: 'Mon–Sat · 9am–7pm' },
+                  { icon: '💳', text: 'All cards accepted' },
+                ].map((item, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: C.muted }}>
+                    <span>{item.icon}</span>
+                    <span>{item.text}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-          <h2 style={{ fontSize: 'clamp(24px, 2.5vw, 34px)', fontWeight: 800, color: C.text, letterSpacing: '-0.03em', margin: '0 0 8px' }}>The business, running itself</h2>
-          <p style={{ fontSize: 15, color: C.muted, margin: '0 0 32px' }}>While Emma&apos;s with a client, the system is doing all of this.</p>
         </FadeUp>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <AnimatePresence mode="popLayout">
-            {items.map((item,i) => (
-              <motion.div key={`${item.text}-${i}`} layout initial={{ opacity: 0, y: -16, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }} transition={{ duration: 0.4, ease: [0.22,1,0.36,1] }}
-                style={{ display: 'flex', alignItems: 'center', gap: 16, background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, padding: '16px 20px', boxShadow: '0 2px 10px rgba(28,21,16,0.05)' }}>
-                <div style={{ width: 8, height: 8, borderRadius: '50%', background: item.dot, flexShrink: 0 }} />
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 14, fontWeight: 600, color: C.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.text}</div>
-                  <div style={{ fontSize: 12, color: C.muted, marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.sub}</div>
-                </div>
-                <div style={{ fontSize: 12, color: C.subtle, flexShrink: 0 }}>just now</div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
       </div>
     </section>
   )
 }
 
-// ─── SM Reveal ────────────────────────────────────────────────────────────────
-
 function Reveal() {
   const ref = useRef(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
   const glow = useTransform(scrollYProgress, [0, 0.4], [0, 1])
-
   return (
-    <section ref={ref} style={{ position: 'relative', padding: 'clamp(5rem, 10vw, 8rem) 0', overflow: 'hidden', background: `linear-gradient(to bottom, ${C.surface} 0%, #030108 40%)` }}>
+    <section ref={ref} style={{ position: 'relative', padding: 'clamp(5rem, 10vw, 8rem) 0', overflow: 'hidden', background: `linear-gradient(to bottom, ${C.bg} 0%, #030108 40%)` }}>
       <motion.div style={{ opacity: glow, position: 'absolute', inset: 0, pointerEvents: 'none' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 700, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(107,53,245,0.2) 0%, transparent 70%)', filter: 'blur(80px)' }} />
         <div style={{ position: 'absolute', bottom: 0, right: 0, width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,235,193,0.06) 0%, transparent 70%)', filter: 'blur(60px)' }} />
       </motion.div>
-
       <div style={{ ...W, textAlign: 'center' }}>
         <FadeUp>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(107,53,245,0.08)', border: '1px solid rgba(107,53,245,0.25)', borderRadius: 100, padding: '7px 18px', marginBottom: 32 }}>
@@ -539,15 +544,15 @@ function Reveal() {
         </FadeUp>
         <FadeUp delay={0.16}>
           <p style={{ fontSize: 17, color: 'rgba(240,237,255,0.45)', maxWidth: 600, margin: '0 auto 56px', lineHeight: 1.7 }}>
-            Everything you just saw — the automated messages, the review generation, the full calendar, the live dashboard — is Shoulder Monkey, running silently underneath The Loft&apos;s brand.
+            Everything running seamlessly behind the scenes — booking confirmations, perfectly-timed reminders, review collection, full calendar — is Shoulder Monkey, running silently underneath The Loft&apos;s brand.
           </p>
         </FadeUp>
         <FadeUp delay={0.22}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 56, textAlign: 'left' }}>
             {[
-              { label: 'Automated SMS sequences', desc: 'Confirmation → reminder → review → rebook. Every time.' },
+              { label: 'Automated SMS sequences', desc: 'Confirmation → reminder → rebook. Every time, automatically.' },
               { label: 'Online booking system',   desc: '24/7 bookings. No phone calls. No double-bookings.' },
-              { label: 'Review generation',       desc: 'Sent 2 hours after every visit. 38% conversion rate.' },
+              { label: 'Review generation',       desc: 'Sent after every visit. Grows your reputation on autopilot.' },
               { label: 'Payments & invoicing',    desc: 'Cards on file. Auto-receipts. Zero chasing.' },
               { label: 'Rebooking campaigns',     desc: 'Win back lapsed clients before they go elsewhere.' },
               { label: 'Revenue dashboard',       desc: 'Every metric, in real time, on your phone.' },
@@ -584,19 +589,17 @@ function Reveal() {
   )
 }
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
-
 export default function SalonPage() {
   return (
     <div style={{ background: C.bg }}>
       <Nav />
       <Hero />
+      <Services />
+      <Team />
       <CinematicReel />
-      <Ticker />
-      <Metrics />
-      <Automation />
+      <Gallery />
       <Reviews />
-      <LiveFeed />
+      <BookingCTA />
       <Reveal />
     </div>
   )
