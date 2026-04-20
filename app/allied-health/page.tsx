@@ -3,37 +3,64 @@
 import { motion, useInView, animate, AnimatePresence } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 
+// ─── Tokens ───────────────────────────────────────────────────────────────────
+const C = {
+  bg:       '#f7fcfa',
+  surface:  '#edf7f4',
+  text:     '#0a1f1a',
+  muted:    'rgba(10,31,26,0.48)',
+  subtle:   'rgba(10,31,26,0.22)',
+  accent:   '#0d9488',
+  accentLt: 'rgba(13,148,136,0.08)',
+  border:   'rgba(13,148,136,0.18)',
+  borderHi: 'rgba(13,148,136,0.38)',
+  card:     'rgba(255,255,255,0.82)',
+  green:    '#166534',
+  greenBg:  'rgba(22,163,74,0.08)',
+  purple:   '#6b35f5',
+  cyan:     '#00ebc1',
+}
+
+const W: React.CSSProperties = {
+  width: '100%', maxWidth: 1240,
+  margin: '0 auto',
+  padding: '0 clamp(1.5rem, 4vw, 3rem)',
+}
+
+// ─── Data ─────────────────────────────────────────────────────────────────────
 interface Activity { text: string; sub: string; color: string }
-interface Review { name: string; initials: string; text: string; service: string; time: string; bg: string }
+interface Review { name: string; initials: string; text: string; plan: string; time: string; bg: string }
 
 const LIVE_ACTIVITY: Activity[] = [
-  { text: 'New referral → Dr Nguyen', sub: 'Knee rehab · 8-session program · auto-intake sent', color: '#f97316' },
-  { text: 'Progress report sent → Michael T.', sub: 'Week 4 update · shared with GP automatically', color: '#10b981' },
-  { text: '5-star review → Karen L.', sub: '"Back to running in 6 weeks. Incredible." ⭐⭐⭐⭐⭐', color: '#f59e0b' },
-  { text: 'Recall booked → Sandra M.', sub: 'Post-treatment check-in · 3 months overdue · booked', color: '#f97316' },
-  { text: '$420 collected → James B.', sub: 'Private health processed · gap payment auto-collected', color: '#10b981' },
-  { text: 'Lapsed patient re-engaged → Chris W.', sub: 'No visit in 8 weeks · win-back offer sent · booked', color: '#f97316' },
-  { text: 'New patient onboarded → Aisha K.', sub: 'Intake form + health history collected before arrival', color: '#10b981' },
-  { text: 'Review received → Peter S.', sub: '"Finally fixed my shoulder after 2 years." ⭐⭐⭐⭐⭐', color: '#f59e0b' },
+  { text: 'New referral → Emma T.', sub: 'GP referral received · intake form sent · appointment confirmed', color: C.accent },
+  { text: 'Progress report sent → Jack M.', sub: 'Week 6 physio progress · shared with referring GP', color: '#3b82f6' },
+  { text: 'Appointment reminder → Yuki S.', sub: 'Tomorrow 10am · pre-session instructions attached', color: C.accent },
+  { text: 'NDIS claim lodged → Peter R.', sub: '$420 · processed automatically · receipt sent', color: '#22c55e' },
+  { text: '5-star review → Natasha B.', sub: '"I can walk without pain for the first time in years"', color: '#f59e0b' },
+  { text: 'Discharge planning → David L.', sub: 'Goal achieved · home exercise program sent · 6wk check-in scheduled', color: C.accent },
+  { text: 'Home exercise reminder → Maria C.', sub: 'Day 3 of recovery plan · "How are you feeling?" sent', color: '#3b82f6' },
+  { text: 'New DVA client → Robert H.', sub: 'DVA referral · eligibility checked · priority booking offered', color: '#22c55e' },
 ]
 
 const REVIEWS: Review[] = [
-  { name: 'Karen L.', initials: 'KL', bg: '#ea580c', service: 'Sports Physiotherapy', time: '2 days ago', text: "I was told I'd be out of running for 6 months. Restore had me back in 6 weeks. The progress updates they send each week kept me motivated and my GP in the loop." },
-  { name: 'Michael T.', initials: 'MT', bg: '#047857', service: 'Post-Surgery Rehab', time: '5 days ago', text: "Best healthcare experience I've ever had. They followed up after every single session, my exercises were sent to my phone, and the communication was just flawless." },
-  { name: 'Sandra M.', initials: 'SM', bg: '#7c3aed', service: 'Pilates + Osteo', time: '1 week ago', text: "They reached out 3 months after finishing my program just to check in. I didn't even know I needed another session until they mentioned it. Exactly what healthcare should be." },
-  { name: 'James B.', initials: 'JB', bg: '#b45309', service: 'Remedial Massage', time: '2 weeks ago', text: "The private health claiming is seamless — I don't have to do anything. Book, show up, get treated, they handle the rest. I've referred my entire family here." },
-  { name: 'Aisha K.', initials: 'AK', bg: '#0e7490', service: 'Exercise Physiology', time: '3 weeks ago', text: "First appointment and they already had my full history from the intake form. My therapist walked in knowing exactly what I needed. That level of preparation is rare." },
-  { name: 'Peter S.', initials: 'PS', bg: '#be123c', service: 'Shoulder Rehab', time: '1 month ago', text: "I'd been to 3 different physios for my shoulder in 2 years. None of them followed up. Restore sent me exercises, checked in weekly, and fixed a problem I'd given up on." },
+  { name: 'Emma T.', initials: 'ET', bg: '#0d9488', plan: 'Post-Surgery Rehab', time: '2 days ago', text: "After my knee surgery, I was terrified I wouldn't get back to hiking. The team at Restore had a program set up before my first session, sent home exercises after every appointment, and checked in every few days. 4 months later I finished a 20km trail. I'm in tears writing this." },
+  { name: 'Jack M.', initials: 'JM', bg: '#059669', plan: 'Sports Physio', time: '4 days ago', text: "The communication is what sets Restore apart. I get a recap after every session, a progress update every two weeks, and my exercises come through as videos I can actually follow. I've never been this consistent with rehab in my life." },
+  { name: 'Natasha B.', initials: 'NB', bg: '#7c3aed', plan: 'Chronic Pain', time: '1 week ago', text: "I'd been managing back pain for 6 years. Three physios before Restore. The difference? They actually followed a plan and checked in between appointments. I can walk without pain for the first time in years. That's not nothing — that's everything." },
+  { name: 'Peter R.', initials: 'PR', bg: '#b45309', plan: 'NDIS Client', time: '1 week ago', text: "Navigating NDIS funding was overwhelming until Restore. They handled everything — the forms, the claims, the reporting. I just focused on my recovery. The monthly NDIS reports made it easy for my support coordinator too." },
+  { name: 'Yuki S.', initials: 'YS', bg: '#0e7490', plan: 'Occupational Therapy', time: '2 weeks ago', text: "The work injury process was stressful enough without admin chaos. Restore handled my insurer paperwork, kept my employer updated on my capacity, and never made me feel like a case number. I genuinely felt cared for." },
+  { name: 'Maria C.', initials: 'MC', bg: '#be123c', plan: 'Pilates + Physio', time: '3 weeks ago', text: "The combination of clinical physio and the pilates program is exactly what my body needed. And the home exercise reminders actually make me do them. I've been coming here for 8 months and the improvement has been extraordinary." },
 ]
 
-const PATIENT_JOURNEY = [
-  { time: 'Mon 2:14pm', label: 'GP referral received', icon: '📋', message: `Hi Michael! Restore Allied Health here 👋\n\nDr Chen has referred you for post-surgery knee rehabilitation. We're ready to get you started.\n\nHere are our next available times:\n📅 Tue 22 Apr at 10am with Jake\n📅 Wed 23 Apr at 2pm with Lily\n\nReply with your preference or book here: [link]` },
-  { time: 'Mon 2:16pm', label: 'Booking confirmed + intake sent', icon: '✅', message: `Hi Michael! Your initial assessment is confirmed:\n\n📅 Wed 23 Apr at 2:00pm with Jake Morrison\n📍 Suite 3, 88 Pacific Hwy, Crows Nest\n\nPlease complete your health history form before arriving — it only takes 5 minutes and means Jake can start treatment straight away:\n→ Complete intake form [link]` },
-  { time: 'Wed 1:00pm', label: '1h before appointment', icon: '📍', message: `Hi Michael! See you in 1 hour 🙌\n\n📍 Suite 3, 88 Pacific Hwy, Crows Nest\n🅿️ Free 2-hour parking on Hume St\n\nRemember to bring: referral letter + any scans if you have them.\n\nJake is looking forward to meeting you!` },
-  { time: 'Wed 5:00pm', label: 'Post-session summary', icon: '📊', message: `Hi Michael! Great first session with Jake today 💪\n\nYour personalised exercise program is now in your app:\n→ View exercises [link]\n\nJake has recommended 8 sessions over 6 weeks. Your next appointment is Mon 28 Apr at 2pm.\n\nAny questions? Just reply here!` },
-  { time: 'Weekly · Mon 8am', label: 'Weekly progress check-in', icon: '📈', message: `Hi Michael! Week 3 check-in from Jake 👋\n\nHow's the knee tracking this week? Rate your pain (1-10) and reply and we'll adjust your program if needed.\n\nYour GP progress report will be sent automatically at the end of Week 4.` },
-  { time: '3 months later', label: 'Post-discharge recall', icon: '🔔', message: `Hi Michael! It's been 3 months since you completed your knee rehab with Jake 🎉\n\nHow's everything feeling? We'd love to do a quick follow-up assessment — it's complimentary and only 20 minutes.\n\n→ Book your check-up [link]` },
+const SEQUENCE = [
+  { time: 'Mon 11:22am', label: 'GP referral received', icon: '📋', message: `Hi Emma! Welcome to Restore Allied Health 🌿\n\nWe've received your referral from Dr Williams and would love to support your recovery.\n\nBefore your first session, could you complete our intake form? It only takes 5 minutes.\n\n→ Complete your intake [link]` },
+  { time: 'Mon 11:45am', label: 'Appointment confirmed', icon: '✅', message: `Emma, you're all booked! 😊\n\n📅 Wednesday 23 Apr at 9:00am\n👤 Sam Chen — Senior Physiotherapist\n📍 5 Hume St, Crows Nest\n\nPlease wear comfortable clothing. We'll have your full treatment plan ready to discuss.\n\nSee you Wednesday!` },
+  { time: 'Tue 9:00am', label: 'Pre-session prep', icon: '🧘', message: `Hi Emma! Your first session with Sam is tomorrow at 9am.\n\nA few things to bring:\n✓ Your referral (already in our system!)\n✓ Medicare card\n✓ Any previous scans or reports\n\nSam will do a full assessment and design a recovery plan just for you 🙂` },
+  { time: 'Wed 11:30am', label: '2.5 hours post-session', icon: '💬', message: `Hi Emma! Hope your first session went well 🌿\n\nSam has put together your personalised exercise program:\n\n→ View your exercises (with videos) [link]\n\nAim to do these once today and twice tomorrow. I'll check in with you on Friday.\n\n— The Restore Team` },
+  { time: 'Fri 9:00am', label: 'Check-in day', icon: '🔍', message: `Morning Emma! How's the knee feeling? 🙂\n\nQuick check-in after your first exercises:\n\n1. Any pain or discomfort? (reply YES or NO)\n2. Were the exercises clear and manageable?\n\nSam will review your response before your next session. We want to make sure the plan is working for you.` },
+  { time: '+6 weeks', label: 'Progress review', icon: '📊', message: `Emma — 6-week progress milestone! 🎉\n\nSam has updated your progress report. Key highlights:\n\n✓ ROM improved 40°\n✓ Pain score: 7/10 → 3/10\n✓ Walking distance: 200m → 1.2km\n\n→ View full report [link]\n\nYou're on track. 4 more sessions and we'll hit your hiking goal 🏔️` },
 ]
+
+// ─── Primitives ───────────────────────────────────────────────────────────────
 
 function Counter({ to, prefix = '', suffix = '' }: { to: number; prefix?: string; suffix?: string }) {
   const [val, setVal] = useState(0)
@@ -47,12 +74,12 @@ function Counter({ to, prefix = '', suffix = '' }: { to: number; prefix?: string
   return <span ref={ref}>{prefix}{val.toLocaleString()}{suffix}</span>
 }
 
-function Reveal({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
+function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
   return (
-    <motion.div ref={ref} className={className}
-      initial={{ opacity: 0, y: 40 }}
+    <motion.div ref={ref}
+      initial={{ opacity: 0, y: 36 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.75, delay, ease: [0.22, 1, 0.36, 1] }}
     >{children}</motion.div>
@@ -61,7 +88,7 @@ function Reveal({ children, delay = 0, className = '' }: { children: React.React
 
 function Stars() {
   return (
-    <div className="flex gap-0.5">
+    <div style={{ display: 'flex', gap: 2 }}>
       {[0,1,2,3,4].map(i => (
         <svg key={i} width="14" height="14" viewBox="0 0 14 14" fill="#f59e0b">
           <path d="M7 1l1.5 3.5 3.5.5-2.5 2.5.5 3.5L7 9.5 4 11l.5-3.5L2 5l3.5-.5z" />
@@ -70,6 +97,8 @@ function Stars() {
     </div>
   )
 }
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function AlliedHealthPage() {
   const [liveItems, setLiveItems] = useState<Activity[]>(LIVE_ACTIVITY.slice(0, 3))
@@ -85,415 +114,414 @@ export default function AlliedHealthPage() {
     const interval = setInterval(() => {
       setLiveItems(prev => [LIVE_ACTIVITY[liveIndex.current % LIVE_ACTIVITY.length], ...prev].slice(0, 6))
       liveIndex.current++
-    }, 2100)
+    }, 2000)
     return () => clearInterval(interval)
   }, [liveInView])
 
   useEffect(() => {
     if (!reviewInView) return
-    const timers = [1200, 2500, 3800].map((ms) =>
+    const timers = [1400, 2800, 4200].map((ms) =>
       setTimeout(() => setReviewsVisible(v => Math.min(v + 1, REVIEWS.length)), ms)
     )
     return () => timers.forEach(clearTimeout)
   }, [reviewInView])
 
   return (
-    <div style={{ cursor: 'auto' }} className="min-h-screen">
-      <style>{`.allied * { cursor: auto !important; } .allied a, .allied button { cursor: pointer !important; }`}</style>
-      <div className="allied">
+    <div style={{ background: C.bg, minHeight: '100vh', fontFamily: 'system-ui, sans-serif' }}>
 
-        {/* Nav */}
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-orange-50 shadow-sm">
-          <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#f97316] flex items-center justify-center">
-                <span className="text-white text-xs font-bold">RA</span>
-              </div>
-              <div>
-                <div className="font-bold text-gray-900 text-sm">Restore Allied Health</div>
-                <div className="text-gray-400 text-xs">Crows Nest, Sydney · Physio & Rehab</div>
-              </div>
+      {/* ── Nav ──────────────────────────────────────────────────────────── */}
+      <nav style={{
+        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
+        background: 'rgba(247,252,250,0.95)', backdropFilter: 'blur(12px)',
+        borderBottom: `1px solid ${C.border}`,
+      }}>
+        <div style={{ ...W, height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: C.accent, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontSize: 18 }}>🌿</span>
             </div>
-            <div className="hidden md:flex items-center gap-8 text-sm text-gray-500">
-              <a href="#" className="hover:text-gray-900 transition-colors">Services</a>
-              <a href="#" className="hover:text-gray-900 transition-colors">Our Team</a>
-              <a href="#" className="hover:text-gray-900 transition-colors">Referrals</a>
+            <div>
+              <div style={{ fontWeight: 800, color: C.text, fontSize: 14 }}>Restore</div>
+              <div style={{ color: C.muted, fontSize: 11 }}>Allied Health · Crows Nest</div>
             </div>
-            <button className="bg-[#f97316] text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-[#ea580c] transition-colors">
-              Book Now
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
+            <div style={{ display: 'flex', gap: 28, fontSize: 13 }}>
+              {['Services', 'Our Team', 'NDIS', 'Referrals'].map(l => (
+                <a key={l} href="#" style={{ color: C.muted, textDecoration: 'none' }}>{l}</a>
+              ))}
+            </div>
+            <button style={{
+              background: C.accent, color: '#fff', fontSize: 13, fontWeight: 700,
+              padding: '10px 22px', borderRadius: 10, border: 'none', cursor: 'pointer',
+            }}>
+              Book a Session
             </button>
           </div>
-        </nav>
+        </div>
+      </nav>
 
-        {/* Hero */}
-        <section className="relative min-h-screen flex items-center pt-16 overflow-hidden bg-gradient-to-br from-[#fff7ed] via-white to-[#f0fdf4]">
-          <div className="absolute top-20 right-0 w-[500px] h-[500px] rounded-full bg-[#f97316]/8 blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-80 h-80 rounded-full bg-[#10b981]/8 blur-3xl" />
+      {/* ── Hero ─────────────────────────────────────────────────────────── */}
+      <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', paddingTop: 64, overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(135deg, ${C.bg} 0%, #d1f5ee 50%, ${C.bg} 100%)` }} />
+        <div style={{ position: 'absolute', top: '-10%', right: '0%', width: 500, height: 500, borderRadius: '50%', background: 'rgba(13,148,136,0.07)', filter: 'blur(80px)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: '0%', left: '10%', width: 400, height: 400, borderRadius: '50%', background: 'rgba(13,148,136,0.05)', filter: 'blur(80px)', pointerEvents: 'none' }} />
 
-          <div className="relative max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center w-full py-20">
-            <div>
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
-                className="inline-flex items-center gap-2 bg-[#f97316]/10 border border-[#f97316]/20 rounded-full px-4 py-1.5 mb-6">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#f97316] animate-pulse" />
-                <span className="text-[#f97316] text-xs font-semibold tracking-wide">Accepting referrals · Crows Nest, Sydney</span>
-              </motion.div>
+        <div style={{ ...W, position: 'relative', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 'clamp(3rem, 5vw, 6rem)', alignItems: 'center', padding: `clamp(5rem, 10vw, 8rem) clamp(1.5rem, 4vw, 3rem)` }}>
 
-              <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1 }}
-                className="text-5xl md:text-6xl font-bold text-gray-900 leading-[1.1] tracking-tight mb-4"
-                style={{ fontFamily: 'var(--font-syne)' }}>
-                Restore<br />
-                <span className="text-[#f97316]">Allied Health</span>
-              </motion.h1>
+          {/* Left copy */}
+          <div>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: C.accentLt, border: `1px solid ${C.border}`, borderRadius: 999, padding: '6px 16px', marginBottom: 24 }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.accent, display: 'inline-block' }} />
+              <span style={{ color: C.accent, fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Accepting new referrals · Crows Nest, Sydney</span>
+            </motion.div>
 
-              <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.2 }}
-                className="text-gray-500 text-lg leading-relaxed mb-8 max-w-md">
-                Physiotherapy, osteopathy, remedial massage, and exercise physiology in Crows Nest. Where recovery happens, and doesn&apos;t stop between sessions.
-              </motion.p>
+            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1 }}
+              style={{ fontSize: 'clamp(2.8rem, 5.5vw, 4.2rem)', fontWeight: 900, color: C.text, lineHeight: 1.08, letterSpacing: '-0.02em', marginBottom: 20 }}>
+              Where recovery<br />
+              <span style={{ color: C.accent }}>actually happens.</span>
+            </motion.h1>
 
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.3 }}
-                className="flex flex-wrap gap-4 mb-10">
-                <button className="bg-[#f97316] text-white font-semibold px-8 py-4 rounded-xl text-sm hover:bg-[#ea580c] transition-all hover:scale-105">
-                  Book an appointment
-                </button>
-                <button className="border border-gray-200 text-gray-600 font-medium px-8 py-4 rounded-xl text-sm hover:bg-gray-50 transition-colors">
-                  Send a referral
-                </button>
-              </motion.div>
+            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.2 }}
+              style={{ color: C.muted, fontSize: 17, lineHeight: 1.7, marginBottom: 32, maxWidth: 440 }}>
+              Physiotherapy, occupational therapy, and pilates in Crows Nest — with follow-up that&apos;s genuinely there for you between sessions.
+            </motion.p>
 
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7, delay: 0.5 }}
-                className="flex flex-wrap gap-6">
-                {[
-                  { icon: '⭐', stat: '4.9', label: '504 Google reviews' },
-                  { icon: '🏥', stat: '5', label: 'allied health services' },
-                  { icon: '💪', stat: '320+', label: 'active patients' },
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-2">
-                    <span className="text-lg">{item.icon}</span>
-                    <span className="font-bold text-gray-900">{item.stat}</span>
-                    <span className="text-gray-400 text-sm">{item.label}</span>
-                  </div>
-                ))}
-              </motion.div>
-            </div>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.3 }}
+              style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 40 }}>
+              <button style={{ background: C.accent, color: '#fff', fontWeight: 800, padding: '14px 32px', borderRadius: 12, border: 'none', cursor: 'pointer', fontSize: 14 }}>
+                Book a Session
+              </button>
+              <button style={{ border: `1px solid ${C.border}`, color: C.text, fontWeight: 500, padding: '14px 32px', borderRadius: 12, background: 'none', cursor: 'pointer', fontSize: 14 }}>
+                GP Referrals
+              </button>
+            </motion.div>
 
-            {/* Progress tracker mockup */}
-            <motion.div initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.9, delay: 0.3 }}>
-              <div className="bg-white rounded-2xl shadow-xl shadow-[#f97316]/10 p-8 border border-orange-50">
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <div className="font-bold text-gray-900">Michael T. — Recovery Progress</div>
-                    <div className="text-gray-400 text-sm">Post-surgery knee rehab · Week 4 of 8</div>
-                  </div>
-                  <div className="bg-[#10b981]/10 text-[#10b981] text-xs font-semibold px-3 py-1 rounded-full">On track ✓</div>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7, delay: 0.5 }}
+              style={{ display: 'flex', gap: 28, flexWrap: 'wrap' }}>
+              {[
+                { icon: '⭐', stat: '4.9', label: '628 Google reviews' },
+                { icon: '🌿', stat: '11yr', label: 'in Crows Nest' },
+                { icon: '❤️', stat: '92%', label: 'goal achievement rate' },
+              ].map((item, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ fontSize: 18 }}>{item.icon}</span>
+                  <span style={{ fontWeight: 800, color: C.text }}>{item.stat}</span>
+                  <span style={{ color: C.muted, fontSize: 13 }}>{item.label}</span>
                 </div>
-                <div className="mb-6">
-                  <div className="flex justify-between text-sm mb-2">
-                    <span className="text-gray-500">Recovery progress</span>
-                    <span className="text-[#f97316] font-bold">52%</span>
-                  </div>
-                  <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: '52%' }}
-                      transition={{ duration: 1.5, delay: 1, ease: 'easeOut' }}
-                      className="h-full rounded-full"
-                      style={{ background: 'linear-gradient(90deg, #f97316, #10b981)' }}
-                    />
-                  </div>
-                </div>
-                <div className="space-y-3 mb-6">
-                  {[
-                    { label: 'Pain level', before: '8/10', now: '3/10', trend: '↓ 63%' },
-                    { label: 'Range of motion', before: '45°', now: '112°', trend: '↑ 149%' },
-                    { label: 'Sessions completed', before: '0', now: '4', trend: '50% done' },
-                  ].map((m, i) => (
-                    <div key={i} className="flex items-center justify-between bg-gray-50 rounded-xl px-4 py-3">
-                      <span className="text-gray-500 text-sm">{m.label}</span>
-                      <div className="flex items-center gap-3 text-xs">
-                        <span className="text-gray-400">{m.before}</span>
-                        <span className="text-gray-300">→</span>
-                        <span className="font-bold text-gray-900">{m.now}</span>
-                        <span className="text-[#10b981] font-semibold bg-[#10b981]/10 px-2 py-0.5 rounded-full">{m.trend}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="bg-[#f97316]/5 border border-[#f97316]/10 rounded-xl p-4 text-sm text-gray-600">
-                  <span className="font-semibold text-[#f97316]">Jake says: </span>
-                  Excellent progress this week Michael. Add 2 sets of the terminal knee extension today. See you Monday! 💪
-                </div>
-              </div>
-
-              <motion.div initial={{ opacity: 0, scale: 0.8, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ delay: 1.5 }}
-                className="mt-3 bg-gray-900 rounded-xl p-4 flex items-start gap-3">
-                <div className="text-2xl">📋</div>
-                <div>
-                  <div className="text-white text-xs font-semibold mb-0.5">Progress report sent to GP</div>
-                  <div className="text-gray-400 text-xs">Week 4 update automatically shared with Dr Chen — no admin required</div>
-                </div>
-              </motion.div>
+              ))}
             </motion.div>
           </div>
-        </section>
 
-        {/* Ticker */}
-        <div className="overflow-hidden bg-[#f97316] py-3">
-          <motion.div animate={{ x: ['0%', '-50%'] }} transition={{ duration: 32, repeat: Infinity, ease: 'linear' }}
-            className="flex whitespace-nowrap">
-            {[1,2,3,4].map(i => (
-              <span key={i} className="text-white text-sm font-semibold tracking-widest uppercase mr-8">
-                320+ active patients  ·  4.9 stars · 504 reviews  ·  $44,800 monthly revenue  ·  89% patient retention  ·  0 referrals missed  ·  weekly GP reports auto-sent  ·
-              </span>
-            ))}
+          {/* Right — recovery progress card */}
+          <motion.div initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.9, delay: 0.3 }}>
+            <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 24, padding: 28, boxShadow: '0 8px 40px rgba(13,148,136,0.08)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+                <div style={{ color: C.muted, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>Practice Overview · April</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: C.accentLt, border: `1px solid ${C.border}`, borderRadius: 999, padding: '4px 12px' }}>
+                  <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e' }} />
+                  <span style={{ color: C.accent, fontSize: 11, fontWeight: 700 }}>Open now</span>
+                </div>
+              </div>
+              {[
+                { label: 'Active patients', value: '184', sub: 'across physio, OT, and pilates', bar: 80 },
+                { label: 'Goal achievement rate', value: '92%', sub: 'patients reaching recovery goals', bar: 92 },
+                { label: 'Avg sessions per patient', value: '8.4', sub: 'full recovery programs', bar: 70 },
+                { label: 'NDIS & DVA claims', value: '47', sub: 'this month · 100% processed', bar: 100 },
+              ].map((stat, i) => (
+                <div key={i} style={{ marginBottom: i < 3 ? 18 : 0 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 6 }}>
+                    <span style={{ color: C.muted, fontSize: 12 }}>{stat.label}</span>
+                    <span style={{ color: C.accent, fontWeight: 800, fontSize: 13 }}>{stat.value}</span>
+                  </div>
+                  <div style={{ height: 4, background: 'rgba(13,148,136,0.08)', borderRadius: 999, overflow: 'hidden' }}>
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${stat.bar}%` }}
+                      transition={{ duration: 1.5, delay: 0.8 + i * 0.12, ease: 'easeOut' }}
+                      style={{ height: '100%', background: C.accent, borderRadius: 999 }}
+                    />
+                  </div>
+                  <div style={{ color: C.subtle, fontSize: 11, marginTop: 4 }}>{stat.sub}</div>
+                </div>
+              ))}
+            </div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 1.4 }}
+              style={{ marginTop: 12, background: C.card, border: `1px solid ${C.border}`, borderRadius: 16, padding: '14px 18px', display: 'flex', alignItems: 'center', gap: 14, boxShadow: '0 4px 16px rgba(13,148,136,0.06)' }}>
+              <span style={{ fontSize: 20 }}>🎉</span>
+              <div>
+                <div style={{ color: C.accent, fontSize: 12, fontWeight: 700 }}>Goal achieved!</div>
+                <div style={{ color: C.muted, fontSize: 12, marginTop: 2 }}>Emma T. — 6-week post-surgery check — walking 1.2km pain-free</div>
+              </div>
+            </motion.div>
           </motion.div>
         </div>
+      </section>
 
-        {/* Metrics */}
-        <section className="bg-white py-20 px-6">
-          <div className="max-w-6xl mx-auto">
-            <Reveal>
-              <div className="text-center mb-12">
-                <div className="text-[#f97316] text-sm font-semibold tracking-widest uppercase mb-3">April 2025</div>
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-syne)' }}>Restore Allied Health this month</h2>
-              </div>
-            </Reveal>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
-              {[
-                { label: 'Monthly Revenue', value: 44800, prefix: '$', change: '+17% vs last month' },
-                { label: 'Active Patients', value: 320, prefix: '', suffix: '', change: '+28 this month' },
-                { label: 'Patient Retention', value: 89, prefix: '', suffix: '%', change: 'industry avg 54%' },
-                { label: 'GP Referrals', value: 34, prefix: '', suffix: '', change: 'this month' },
-              ].map((s, i) => (
-                <Reveal key={i} delay={i * 0.1}>
-                  <div className="bg-[#fff7ed] rounded-2xl p-6 border border-orange-100">
-                    <div className="text-gray-400 text-xs font-medium uppercase tracking-wide mb-3">{s.label}</div>
-                    <div className="text-3xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'var(--font-syne)' }}>
-                      <Counter to={s.value} prefix={s.prefix} suffix={s.suffix || ''} />
+      {/* ── Ticker ───────────────────────────────────────────────────────── */}
+      <div style={{ overflow: 'hidden', background: C.accent, padding: '10px 0' }}>
+        <motion.div animate={{ x: ['0%', '-50%'] }} transition={{ duration: 35, repeat: Infinity, ease: 'linear' }}
+          style={{ display: 'flex', whiteSpace: 'nowrap' }}>
+          {[1,2,3,4].map(i => (
+            <span key={i} style={{ color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginRight: 48 }}>
+              92% goal achievement  ·  184 active patients  ·  NDIS & DVA registered  ·  4.9 ★ Google  ·  11 years Crows Nest  ·  same-week bookings available  ·
+            </span>
+          ))}
+        </motion.div>
+      </div>
+
+      {/* ── Metrics ──────────────────────────────────────────────────────── */}
+      <section style={{ background: C.surface, padding: 'clamp(4rem, 8vw, 6rem) 0' }}>
+        <div style={W}>
+          <Reveal>
+            <div style={{ textAlign: 'center', marginBottom: 48 }}>
+              <div style={{ color: C.accent, fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 12 }}>April 2025</div>
+              <h2 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)', fontWeight: 900, color: C.text, margin: 0 }}>Restore this month</h2>
+            </div>
+          </Reveal>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
+            {[
+              { label: 'Active Patients', value: 184, change: '+22 this month' },
+              { label: 'Goal Achievement', value: 92, suffix: '%', change: 'industry avg 71%' },
+              { label: 'NDIS Claims', value: 47, change: '100% processed' },
+              { label: 'Google Rating', value: 49, change: '628 reviews' },
+            ].map((s, i) => (
+              <Reveal key={i} delay={i * 0.08}>
+                <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 20, padding: 24, boxShadow: '0 4px 20px rgba(13,148,136,0.04)' }}>
+                  <div style={{ color: C.muted, fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>{s.label}</div>
+                  <div style={{ fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', fontWeight: 900, color: C.text, marginBottom: 10 }}>
+                    {s.label === 'Google Rating'
+                      ? <span>4.9</span>
+                      : <Counter to={s.value} suffix={s.suffix || ''} />
+                    }
+                  </div>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: C.accent, background: C.accentLt, padding: '3px 10px', borderRadius: 999 }}>{s.change}</span>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Recovery Journey ─────────────────────────────────────────────── */}
+      <section style={{ background: C.bg, padding: 'clamp(4rem, 8vw, 6rem) 0' }}>
+        <div style={W}>
+          <Reveal>
+            <div style={{ textAlign: 'center', marginBottom: 48 }}>
+              <div style={{ color: C.accent, fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 12 }}>Patient Journey</div>
+              <h2 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.4rem)', fontWeight: 900, color: C.text, marginBottom: 14 }}>
+                From referral to recovery, we&apos;re with you
+              </h2>
+              <p style={{ color: C.muted, maxWidth: 480, margin: '0 auto' }}>
+                Every patient gets a personalised program, home exercise reminders, progress tracking, and check-ins between sessions — automatically.
+              </p>
+            </div>
+          </Reveal>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 56, alignItems: 'start' }}>
+            {/* Sequence */}
+            <div>
+              {SEQUENCE.map((step, i) => (
+                <Reveal key={i} delay={i * 0.07}>
+                  <div style={{ display: 'flex', gap: 16 }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                      <div style={{ width: 36, height: 36, borderRadius: 10, background: C.accentLt, border: `1px solid ${C.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0 }}>
+                        {step.icon}
+                      </div>
+                      {i < SEQUENCE.length - 1 && <div style={{ width: 1, flex: 1, background: C.border, margin: '4px 0', minHeight: 40 }} />}
                     </div>
-                    <span className="text-xs font-semibold text-[#f97316] bg-[#f97316]/10 px-2 py-0.5 rounded-full">{s.change}</span>
+                    <div style={{ paddingBottom: 24, flex: 1 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                        <span style={{ color: C.muted, fontSize: 11, fontWeight: 700 }}>{step.time}</span>
+                        <span style={{ background: C.accentLt, color: C.accent, fontSize: 11, padding: '2px 10px', borderRadius: 999, fontWeight: 600 }}>{step.label}</span>
+                      </div>
+                      <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: '16px 16px 16px 4px', padding: '12px 16px', maxWidth: 320, boxShadow: '0 2px 12px rgba(13,148,136,0.05)' }}>
+                        <div style={{ color: C.muted, fontSize: 12, lineHeight: 1.65, whiteSpace: 'pre-line' }}>{step.message}</div>
+                      </div>
+                    </div>
                   </div>
                 </Reveal>
               ))}
             </div>
-          </div>
-        </section>
 
-        {/* Patient Journey */}
-        <section className="bg-[#fafafa] py-20 px-6">
-          <div className="max-w-6xl mx-auto">
-            <Reveal>
-              <div className="text-center mb-12">
-                <div className="text-[#f97316] text-sm font-semibold tracking-widest uppercase mb-3">Patient Journey</div>
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'var(--font-syne)' }}>
-                  Recovery that doesn&apos;t stop between sessions
-                </h2>
-                <p className="text-gray-500 max-w-lg mx-auto">From GP referral to post-discharge recall — every patient gets the follow-up they deserve, automatically.</p>
-              </div>
-            </Reveal>
-
-            <div className="grid lg:grid-cols-2 gap-12 items-start">
-              <div>
-                {PATIENT_JOURNEY.map((step, i) => (
-                  <Reveal key={i} delay={i * 0.07}>
-                    <div className="flex gap-4">
-                      <div className="flex flex-col items-center">
-                        <div className="w-9 h-9 rounded-full bg-[#f97316]/10 border border-[#f97316]/20 flex items-center justify-center text-base shrink-0">
-                          {step.icon}
-                        </div>
-                        {i < PATIENT_JOURNEY.length - 1 && <div className="w-px flex-1 bg-[#f97316]/15 my-1 min-h-[40px]" />}
-                      </div>
-                      <div className="pb-6 flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <span className="text-gray-500 text-xs font-bold">{step.time}</span>
-                          <span className="bg-[#f97316]/10 text-[#f97316] text-xs px-2.5 py-0.5 rounded-full font-medium">{step.label}</span>
-                        </div>
-                        <div className="bg-white rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm border border-gray-100 max-w-xs">
-                          <div className="text-gray-600 text-xs leading-relaxed whitespace-pre-line">{step.message}</div>
-                        </div>
-                      </div>
+            {/* Stats panel */}
+            <div style={{ position: 'sticky', top: 96 }}>
+              <Reveal delay={0.2}>
+                <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 20, padding: 24, marginBottom: 16, boxShadow: '0 4px 20px rgba(13,148,136,0.05)' }}>
+                  <div style={{ color: C.accent, fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 16 }}>Patient Outcomes</div>
+                  {[
+                    { label: 'Goal achievement rate', value: '92%' },
+                    { label: 'Avg sessions to milestone', value: '4.2' },
+                    { label: 'Home exercise adherence', value: '81%' },
+                    { label: 'Patient satisfaction score', value: '4.9 / 5.0' },
+                    { label: 'Readmission within 3mo', value: '3.4%' },
+                  ].map((item, i) => (
+                    <div key={i} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: i < 4 ? `1px solid ${C.border}` : 'none', paddingBottom: i < 4 ? 12 : 0, marginBottom: i < 4 ? 12 : 0 }}>
+                      <span style={{ color: C.muted, fontSize: 13 }}>{item.label}</span>
+                      <span style={{ color: C.accent, fontWeight: 800, fontSize: 13 }}>{item.value}</span>
                     </div>
-                  </Reveal>
-                ))}
-              </div>
-
-              <div className="lg:sticky lg:top-24 space-y-4">
-                <Reveal delay={0.2}>
-                  <div className="bg-gray-900 rounded-2xl p-6 text-white">
-                    <div className="text-[#f97316] text-xs font-semibold tracking-widest uppercase mb-4">Program Outcomes</div>
-                    <div className="space-y-3">
-                      {[
-                        { label: 'Avg program completion rate', value: '91%' },
-                        { label: 'No-show rate (with reminders)', value: '3.8%' },
-                        { label: 'GP referrals from existing patients', value: '18%' },
-                        { label: 'Post-discharge recall conversion', value: '62%' },
-                        { label: 'Hours saved on admin/week', value: '21hrs' },
-                      ].map((item, i) => (
-                        <div key={i} className="flex justify-between border-b border-white/10 pb-2.5 last:border-0 last:pb-0">
-                          <span className="text-gray-400 text-sm">{item.label}</span>
-                          <span className="text-[#f97316] font-bold text-sm">{item.value}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </Reveal>
-                <Reveal delay={0.3}>
-                  <div className="bg-[#f97316] rounded-2xl p-6 text-white">
-                    <div className="text-white/70 text-xs font-bold tracking-widest uppercase mb-2">Revenue from recall campaigns</div>
-                    <div className="text-4xl font-bold mb-1" style={{ fontFamily: 'var(--font-syne)' }}>$96K</div>
-                    <div className="text-white/70 text-sm">in 12 months from patients who otherwise would have been lost</div>
-                  </div>
-                </Reveal>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Reviews */}
-        <section ref={reviewRef} className="bg-white py-20 px-6">
-          <div className="max-w-6xl mx-auto">
-            <Reveal>
-              <div className="text-center mb-12">
-                <div className="text-[#f97316] text-sm font-semibold tracking-widest uppercase mb-3">Patient Reviews</div>
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'var(--font-syne)' }}>504 recoveries, 504 stories</h2>
-                <div className="flex items-center justify-center gap-3">
-                  <Stars />
-                  <span className="font-bold text-gray-900">4.9</span>
-                  <span className="text-gray-400 text-sm">· 504 Google reviews</span>
+                  ))}
                 </div>
-              </div>
-            </Reveal>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-              <AnimatePresence>
-                {REVIEWS.slice(0, reviewsVisible).map((r) => (
-                  <motion.div key={r.name} layout
-                    initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }}
-                    transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                    className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ background: r.bg }}>
-                          {r.initials}
-                        </div>
-                        <div>
-                          <div className="font-semibold text-gray-900 text-sm">{r.name}</div>
-                          <div className="text-gray-400 text-xs">{r.service}</div>
-                        </div>
-                      </div>
-                      <svg width="20" height="20" viewBox="0 0 24 24">
-                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-                      </svg>
-                    </div>
-                    <Stars />
-                    <p className="text-gray-600 text-sm leading-relaxed mt-3">&ldquo;{r.text}&rdquo;</p>
-                    <div className="text-gray-300 text-xs mt-3">{r.time}</div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
+              </Reveal>
+              <Reveal delay={0.3}>
+                <div style={{ background: C.accent, borderRadius: 20, padding: 24, color: '#fff' }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', opacity: 0.75, marginBottom: 8 }}>Goals achieved this month</div>
+                  <div style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', fontWeight: 900, marginBottom: 4 }}><Counter to={54} /></div>
+                  <div style={{ fontSize: 13, opacity: 0.85 }}>patients reached their recovery milestone</div>
+                </div>
+              </Reveal>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Live feed */}
-        <section ref={liveRef} className="bg-[#030108] py-20 px-6">
-          <div className="max-w-4xl mx-auto">
-            <Reveal>
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-2 h-2 rounded-full bg-[#f97316] animate-pulse" />
-                <div className="text-[#f97316] text-sm font-semibold tracking-widest uppercase">Live right now</div>
+      {/* ── Reviews ──────────────────────────────────────────────────────── */}
+      <section ref={reviewRef} style={{ background: C.surface, padding: 'clamp(4rem, 8vw, 6rem) 0' }}>
+        <div style={W}>
+          <Reveal>
+            <div style={{ textAlign: 'center', marginBottom: 48 }}>
+              <div style={{ color: C.accent, fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 12 }}>Patient Stories</div>
+              <h2 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.4rem)', fontWeight: 900, color: C.text, marginBottom: 14 }}>Real recoveries, real results</h2>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
+                <Stars />
+                <span style={{ fontWeight: 800, color: C.text }}>4.9</span>
+                <span style={{ color: C.muted, fontSize: 13 }}>· 628 Google reviews · North Sydney&apos;s highest-rated allied health clinic</span>
               </div>
-              <h2 className="text-2xl font-bold text-white mb-8" style={{ fontFamily: 'var(--font-syne)' }}>The practice, running between sessions</h2>
-            </Reveal>
-            <div className="space-y-3">
-              <AnimatePresence mode="popLayout">
-                {liveItems.map((item, i) => (
-                  <motion.div key={`${item.text}-${i}`} layout
-                    initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                    transition={{ duration: 0.4 }}
-                    className="bg-[#0f0a1e] border border-[#f97316]/15 rounded-xl px-5 py-4 flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="w-2 h-2 rounded-full shrink-0" style={{ background: item.color }} />
+            </div>
+          </Reveal>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 18 }}>
+            <AnimatePresence>
+              {REVIEWS.slice(0, reviewsVisible).map((r) => (
+                <motion.div key={r.name} layout
+                  initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                  style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 20, padding: 24, boxShadow: '0 4px 20px rgba(13,148,136,0.04)' }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 14 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                      <div style={{ width: 40, height: 40, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 12, fontWeight: 700, background: r.bg, flexShrink: 0 }}>
+                        {r.initials}
+                      </div>
                       <div>
-                        <div className="text-white text-sm font-medium">{item.text}</div>
-                        <div className="text-white/30 text-xs mt-0.5">{item.sub}</div>
+                        <div style={{ fontWeight: 600, color: C.text, fontSize: 13 }}>{r.name}</div>
+                        <div style={{ color: C.muted, fontSize: 11 }}>{r.plan}</div>
                       </div>
                     </div>
-                    <div className="text-white/20 text-xs ml-4 whitespace-nowrap">just now</div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </div>
-          </div>
-        </section>
-
-        {/* SM Reveal */}
-        <section className="bg-[#030108] py-24 px-6 relative overflow-hidden">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full bg-[#6b35f5]/8 blur-3xl" />
-            <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full bg-[#f97316]/5 blur-3xl" />
-          </div>
-          <div className="relative max-w-4xl mx-auto text-center">
-            <Reveal>
-              <div className="inline-flex items-center gap-2 bg-[#6b35f5]/10 border border-[#6b35f5]/30 rounded-full px-5 py-2 mb-8">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#6b35f5]" />
-                <span className="text-[#a673ff] text-xs font-semibold tracking-widest uppercase">The system behind Restore Allied Health</span>
-              </div>
-            </Reveal>
-            <Reveal delay={0.1}>
-              <p className="text-[#f0edff]/40 text-lg mb-4">Restore doesn&apos;t just treat patients.</p>
-              <h2 className="text-5xl md:text-7xl font-bold leading-tight mb-6" style={{ fontFamily: 'var(--font-syne)' }}>
-                <span className="text-[#f0edff]">It runs on</span>{' '}
-                <span style={{ background: 'linear-gradient(135deg, #a673ff 0%, #844bfe 50%, #00ebc1 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-                  Shoulder Monkey.
-                </span>
-              </h2>
-            </Reveal>
-            <Reveal delay={0.2}>
-              <p className="text-[#f0edff]/50 text-lg max-w-2xl mx-auto mb-14 leading-relaxed">
-                Every referral captured. Every patient kept on track. Every GP report sent automatically. Every lapsed patient re-engaged. The whole practice, running between sessions.
-              </p>
-            </Reveal>
-            <Reveal delay={0.3}>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-14 text-left">
-                {[
-                  { icon: '📋', label: 'Referral management', desc: 'GP referrals captured, acknowledged, and booked automatically' },
-                  { icon: '📱', label: 'Patient progress tracking', desc: 'Weekly check-ins and exercise delivery via SMS' },
-                  { icon: '📊', label: 'Automated GP reports', desc: 'Progress reports sent to referring doctors at key milestones' },
-                  { icon: '🔔', label: 'Discharge recalls', desc: '3, 6, and 12-month post-discharge check-in campaigns' },
-                  { icon: '💰', label: 'Private health billing', desc: 'Gap payments auto-collected, Medicare processed seamlessly' },
-                  { icon: '⭐', label: 'Review generation', desc: 'Sent after milestones — not just at discharge' },
-                ].map((f, i) => (
-                  <div key={i} className="bg-[#0f0a1e] border border-[#6b35f5]/20 rounded-2xl p-5 hover:border-[#6b35f5]/50 transition-colors">
-                    <div className="text-2xl mb-3">{f.icon}</div>
-                    <div className="text-[#f0edff] text-sm font-semibold mb-1">{f.label}</div>
-                    <div className="text-[#f0edff]/40 text-xs leading-relaxed">{f.desc}</div>
+                    <svg width="20" height="20" viewBox="0 0 24 24">
+                      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                    </svg>
                   </div>
-                ))}
-              </div>
-            </Reveal>
-            <Reveal delay={0.4}>
-              <div className="bg-gradient-to-br from-[#1a0a3e] to-[#0a0612] border border-[#6b35f5]/30 rounded-3xl p-10">
-                <div className="text-[#f0edff] text-2xl font-bold mb-3" style={{ fontFamily: 'var(--font-syne)' }}>
-                  Ready to build this for your practice?
-                </div>
-                <p className="text-[#f0edff]/50 mb-8 max-w-lg mx-auto">
-                  Full setup in 7 days. Australian Privacy Act compliant. Your practitioners stay clinical — we handle everything else.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <a href="https://www.shouldermonkey.co" className="inline-flex items-center justify-center gap-2 bg-[#6b35f5] hover:bg-[#844bfe] text-white font-semibold px-8 py-4 rounded-full transition-all hover:scale-105 hover:shadow-lg hover:shadow-[#6b35f5]/30">
-                    Book a free strategy call →
-                  </a>
-                  <a href="https://www.shouldermonkey.co" className="inline-flex items-center justify-center border border-[#6b35f5]/40 text-[#a673ff] font-medium px-8 py-4 rounded-full hover:bg-[#6b35f5]/10 transition-colors">
-                    See pricing
-                  </a>
-                </div>
-              </div>
-            </Reveal>
+                  <Stars />
+                  <p style={{ color: C.muted, fontSize: 13, lineHeight: 1.65, marginTop: 12 }}>&ldquo;{r.text}&rdquo;</p>
+                  <div style={{ color: C.subtle, fontSize: 11, marginTop: 12 }}>{r.time}</div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
+
+      {/* ── Live Feed ────────────────────────────────────────────────────── */}
+      <section ref={liveRef} style={{ background: C.bg, padding: 'clamp(4rem, 8vw, 6rem) 0' }}>
+        <div style={{ ...W, maxWidth: 860 }}>
+          <Reveal>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+              <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e' }} />
+              <div style={{ color: C.accent, fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase' }}>Live Activity</div>
+            </div>
+            <h2 style={{ fontSize: 'clamp(1.4rem, 2.5vw, 1.8rem)', fontWeight: 900, color: C.text, marginBottom: 32 }}>Supporting patients right now</h2>
+          </Reveal>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <AnimatePresence mode="popLayout">
+              {liveItems.map((item, i) => (
+                <motion.div key={`${item.text}-${i}`} layout
+                  initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                  transition={{ duration: 0.4 }}
+                  style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 2px 12px rgba(13,148,136,0.04)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: item.color, flexShrink: 0 }} />
+                    <div>
+                      <div style={{ color: C.text, fontSize: 13, fontWeight: 600 }}>{item.text}</div>
+                      <div style={{ color: C.muted, fontSize: 12, marginTop: 2 }}>{item.sub}</div>
+                    </div>
+                  </div>
+                  <div style={{ color: C.subtle, fontSize: 12, marginLeft: 16, whiteSpace: 'nowrap' }}>just now</div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+        </div>
+      </section>
+
+      {/* ── SM Reveal ────────────────────────────────────────────────────── */}
+      <section style={{ background: `linear-gradient(to bottom, ${C.surface} 0%, #030108 50%)`, padding: 'clamp(5rem, 10vw, 8rem) 0', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 800, height: 400, borderRadius: '50%', background: 'rgba(107,53,245,0.14)', filter: 'blur(80px)' }} />
+          <div style={{ position: 'absolute', bottom: 0, right: 0, width: 400, height: 400, borderRadius: '50%', background: 'rgba(13,148,136,0.05)', filter: 'blur(80px)' }} />
+        </div>
+        <div style={{ ...W, maxWidth: 860, textAlign: 'center', position: 'relative' }}>
+          <Reveal>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(107,53,245,0.1)', border: '1px solid rgba(107,53,245,0.3)', borderRadius: 999, padding: '8px 20px', marginBottom: 32 }}>
+              <div style={{ width: 6, height: 6, borderRadius: '50%', background: C.purple }} />
+              <span style={{ color: '#a673ff', fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>The system behind Restore</span>
+            </div>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <p style={{ color: 'rgba(240,237,255,0.4)', fontSize: 18, marginBottom: 16 }}>Restore doesn&apos;t just treat patients. It supports them between every session.</p>
+            <h2 style={{ fontSize: 'clamp(2.8rem, 6vw, 5rem)', fontWeight: 900, lineHeight: 1.05, marginBottom: 24, letterSpacing: '-0.02em' }}>
+              <span style={{ color: '#f0edff' }}>It runs on </span>
+              <span style={{ background: 'linear-gradient(135deg, #a673ff 0%, #844bfe 40%, #00ebc1 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+                Shoulder Monkey.
+              </span>
+            </h2>
+          </Reveal>
+          <Reveal delay={0.2}>
+            <p style={{ color: 'rgba(240,237,255,0.5)', fontSize: 17, maxWidth: 600, margin: '0 auto 56px', lineHeight: 1.7 }}>
+              Every referral followed up. Every exercise program sent. Every progress update tracked. Every NDIS claim lodged. All automatic — so therapists focus on patients, not paperwork.
+            </p>
+          </Reveal>
+          <Reveal delay={0.3}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 56, textAlign: 'left' }}>
+              {[
+                { icon: '📋', label: 'Referral intake', desc: 'GP referrals accepted and confirmed automatically — no phone tag' },
+                { icon: '🧘', label: 'Home exercise delivery', desc: 'Video programs sent after every session with check-in reminders' },
+                { icon: '📊', label: 'Progress reporting', desc: 'Milestone reports sent to patients, GPs, and insurers automatically' },
+                { icon: '💳', label: 'NDIS & DVA billing', desc: 'Claims lodged, processed, and receipts issued without staff effort' },
+                { icon: '⭐', label: 'Review generation', desc: 'Requested at recovery milestones — when patients feel the win' },
+                { icon: '🔁', label: 'Discharge & recall', desc: 'Home programs on discharge, 3-month check-ins to prevent relapse' },
+              ].map((f, i) => (
+                <div key={i} style={{ background: 'rgba(15,10,30,0.8)', border: '1px solid rgba(107,53,245,0.2)', borderRadius: 20, padding: 20 }}>
+                  <div style={{ fontSize: 24, marginBottom: 12 }}>{f.icon}</div>
+                  <div style={{ color: '#f0edff', fontSize: 13, fontWeight: 700, marginBottom: 6 }}>{f.label}</div>
+                  <div style={{ color: 'rgba(240,237,255,0.4)', fontSize: 12, lineHeight: 1.5 }}>{f.desc}</div>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+          <Reveal delay={0.4}>
+            <div style={{ background: 'linear-gradient(135deg, #1a0a3e, #0a0612)', border: '1px solid rgba(107,53,245,0.3)', borderRadius: 28, padding: 'clamp(2rem, 5vw, 3rem)' }}>
+              <div style={{ color: '#f0edff', fontSize: 'clamp(1.2rem, 2.5vw, 1.6rem)', fontWeight: 800, marginBottom: 12 }}>
+                Ready to transform your allied health practice?
+              </div>
+              <p style={{ color: 'rgba(240,237,255,0.5)', marginBottom: 32, maxWidth: 480, margin: '0 auto 32px' }}>
+                Setup in 7 days. Better outcomes, less admin, more time for patients.
+              </p>
+              <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
+                <a href="https://www.shouldermonkey.co" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: C.purple, color: '#fff', fontWeight: 700, padding: '14px 32px', borderRadius: 999, textDecoration: 'none', fontSize: 14 }}>
+                  Book a free strategy call →
+                </a>
+                <a href="https://www.shouldermonkey.co" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, border: '1px solid rgba(107,53,245,0.4)', color: '#a673ff', fontWeight: 600, padding: '14px 32px', borderRadius: 999, textDecoration: 'none', fontSize: 14 }}>
+                  See pricing
+                </a>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
     </div>
   )
 }

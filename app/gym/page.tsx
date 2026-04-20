@@ -3,17 +3,40 @@
 import { motion, useInView, animate, AnimatePresence } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 
+// ─── Tokens ───────────────────────────────────────────────────────────────────
+const C = {
+  bg:       '#07090a',
+  surface:  '#0d1210',
+  text:     '#f0fff4',
+  muted:    'rgba(240,255,244,0.45)',
+  subtle:   'rgba(240,255,244,0.22)',
+  accent:   '#22c55e',
+  accentLt: 'rgba(34,197,94,0.08)',
+  border:   'rgba(34,197,94,0.15)',
+  borderHi: 'rgba(34,197,94,0.35)',
+  card:     'rgba(34,197,94,0.04)',
+  purple:   '#6b35f5',
+  cyan:     '#00ebc1',
+}
+
+const W: React.CSSProperties = {
+  width: '100%', maxWidth: 1240,
+  margin: '0 auto',
+  padding: '0 clamp(1.5rem, 4vw, 3rem)',
+}
+
+// ─── Data ─────────────────────────────────────────────────────────────────────
 interface Activity { text: string; sub: string; color: string }
 interface Review { name: string; initials: string; text: string; plan: string; time: string; bg: string }
 
 const LIVE_ACTIVITY: Activity[] = [
-  { text: 'Trial booked → Jess W.', sub: 'Instagram DM → auto-replied → booked in 4 min', color: '#22c55e' },
+  { text: 'Trial booked → Jess W.', sub: 'Instagram DM → auto-replied → booked in 4 min', color: C.accent },
   { text: 'Membership renewed → Tom H.', sub: '$89/mo · card on file · auto-receipt sent', color: '#3b82f6' },
   { text: 'No-show follow-up → Ryan K.', sub: '"We missed you — rebook your session" sent', color: '#f59e0b' },
-  { text: 'New lead → Marcus B.', sub: 'Google search → form → SMS reply in 90 seconds', color: '#22c55e' },
+  { text: 'New lead → Marcus B.', sub: 'Google search → form → SMS reply in 90 seconds', color: C.accent },
   { text: '5-star review → Priya M.', sub: '"The progress tracking is next level" ⭐⭐⭐⭐⭐', color: '#f59e0b' },
-  { text: 'Lapsed member re-engaged → Sam T.', sub: 'Hadn\'t visited in 3 weeks · win-back offer accepted', color: '#3b82f6' },
-  { text: '$189 collected → Chloe R.', sub: '3-month program · payment plan · auto-scheduled', color: '#22c55e' },
+  { text: 'Lapsed member re-engaged → Sam T.', sub: "Hadn't visited in 3 weeks · win-back offer accepted", color: '#3b82f6' },
+  { text: '$189 collected → Chloe R.', sub: '3-month program · payment plan · auto-scheduled', color: C.accent },
   { text: 'PT session booked → Daniel L.', sub: 'Automated availability check → confirmed instantly', color: '#3b82f6' },
 ]
 
@@ -28,12 +51,14 @@ const REVIEWS: Review[] = [
 
 const SEQUENCE = [
   { time: 'Mon 6:32pm', label: 'Lead submits form', icon: '📥', message: `Hi Jess! 👋 Thanks for your interest in Apex Performance.\n\nWe'd love to show you around. When works best for a free tour?\n\n→ Book your visit [link]\n\nOr reply with a time and we'll lock it in!` },
-  { time: 'Mon 6:33pm', label: '90 seconds later (auto)', icon: '⚡', message: `Hey Jess! Quick one — your free tour at Apex is confirmed:\n\n📅 Tomorrow, Tue 22 Apr at 10am\n📍 Shop 2, Hall St, Bondi Beach\n\nBring your gym gear — we'll get you started on the gym floor 💪` },
+  { time: 'Mon 6:33pm', label: '90 seconds later (auto)', icon: '⚡', message: `Hey Jess! Quick one — your free tour at Apex is confirmed:\n\n📅 Tomorrow, Tue 22 Apr at 10am\n📍 Shop 2, Hall St, Bondi Beach\n\nBring your gym gear — we'll get you started on the floor 💪` },
   { time: 'Tue 8:00am', label: 'Morning of tour', icon: '🗺️', message: `Morning Jess! See you at 10am today 🙌\n\n📍 Shop 2, Hall St, Bondi Beach\n🚗 Parking on Campbell Pde\n\nAsk for Jake at reception — he'll take great care of you!` },
   { time: 'Tue 1:30pm', label: '3 hours after tour', icon: '💬', message: `Hi Jess! So great meeting you today 💪\n\nIf you're ready to get started, here's your sign-up link — 7 day free trial, no lock-in:\n\n→ Start your trial [link]\n\nAny questions? Just reply here!` },
   { time: 'Wed 9:00am', label: 'If no signup yet', icon: '🔁', message: `Hey Jess! Jake here from Apex 👋\n\nJust wanted to check in — did you get a chance to look at the trial?\n\nWe're running a special this week: first month half price if you start before Friday.\n\n→ Claim offer [link]` },
   { time: 'Fri 10:00am', label: 'Last chance offer', icon: '⏰', message: `Hi Jess — last reminder about the half-price first month at Apex 🏋️\n\nOffer closes tonight at midnight.\n\n→ Grab it now [link]\n\nEither way, it was great meeting you. Hope to see you on the floor!` },
 ]
+
+// ─── Primitives ───────────────────────────────────────────────────────────────
 
 function Counter({ to, prefix = '', suffix = '' }: { to: number; prefix?: string; suffix?: string }) {
   const [val, setVal] = useState(0)
@@ -47,29 +72,31 @@ function Counter({ to, prefix = '', suffix = '' }: { to: number; prefix?: string
   return <span ref={ref}>{prefix}{val.toLocaleString()}{suffix}</span>
 }
 
-function Reveal({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
+function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
   return (
-    <motion.div ref={ref} className={className}
-      initial={{ opacity: 0, y: 40 }}
+    <motion.div ref={ref}
+      initial={{ opacity: 0, y: 36 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.75, delay, ease: [0.22, 1, 0.36, 1] }}
     >{children}</motion.div>
   )
 }
 
-function Stars({ color = '#f59e0b' }: { color?: string }) {
+function Stars() {
   return (
-    <div className="flex gap-0.5">
+    <div style={{ display: 'flex', gap: 2 }}>
       {[0,1,2,3,4].map(i => (
-        <svg key={i} width="14" height="14" viewBox="0 0 14 14" fill={color}>
+        <svg key={i} width="14" height="14" viewBox="0 0 14 14" fill="#f59e0b">
           <path d="M7 1l1.5 3.5 3.5.5-2.5 2.5.5 3.5L7 9.5 4 11l.5-3.5L2 5l3.5-.5z" />
         </svg>
       ))}
     </div>
   )
 }
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function GymPage() {
   const [liveItems, setLiveItems] = useState<Activity[]>(LIVE_ACTIVITY.slice(0, 3))
@@ -91,391 +118,403 @@ export default function GymPage() {
 
   useEffect(() => {
     if (!reviewInView) return
-    const timers = [1400, 2800, 4200].map((ms, i) =>
-      setTimeout(() => setReviewsVisible(v => Math.min(v + 1, REVIEWS.length)), ms)
+    const timers = [1400, 2800, 4200].map((_, i) =>
+      setTimeout(() => setReviewsVisible(v => Math.min(v + 1, REVIEWS.length)), [1400, 2800, 4200][i])
     )
     return () => timers.forEach(clearTimeout)
   }, [reviewInView])
 
   return (
-    <div style={{ cursor: 'auto' }} className="min-h-screen bg-[#0a0a0a]">
-      <style>{`.gym * { cursor: auto !important; } .gym a, .gym button { cursor: pointer !important; }`}</style>
-      <div className="gym">
+    <div style={{ background: C.bg, minHeight: '100vh', fontFamily: 'system-ui, sans-serif' }}>
 
-        {/* Nav */}
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a]/90 backdrop-blur-sm border-b border-white/5">
-          <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded bg-[#22c55e] flex items-center justify-center">
-                <span className="text-black text-xs font-black">AP</span>
-              </div>
-              <div>
-                <div className="font-bold text-white text-sm tracking-wider">APEX</div>
-                <div className="text-white/40 text-xs">Performance Gym · Bondi</div>
-              </div>
+      {/* ── Nav ──────────────────────────────────────────────────────────── */}
+      <nav style={{
+        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
+        background: 'rgba(7,9,10,0.92)', backdropFilter: 'blur(12px)',
+        borderBottom: `1px solid ${C.border}`,
+      }}>
+        <div style={{ ...W, height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ width: 32, height: 32, borderRadius: 8, background: C.accent, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ color: '#000', fontSize: 11, fontWeight: 900 }}>AP</span>
             </div>
-            <div className="hidden md:flex items-center gap-8 text-sm text-white/50">
-              <a href="#" className="hover:text-white transition-colors">Training</a>
-              <a href="#" className="hover:text-white transition-colors">Coaches</a>
-              <a href="#" className="hover:text-white transition-colors">Memberships</a>
+            <div>
+              <div style={{ fontWeight: 900, color: C.text, fontSize: 13, letterSpacing: '0.12em' }}>APEX</div>
+              <div style={{ color: C.muted, fontSize: 11 }}>Performance Gym · Bondi</div>
             </div>
-            <button className="bg-[#22c55e] text-black text-sm font-bold px-5 py-2.5 rounded-lg hover:bg-[#16a34a] transition-colors">
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
+            <div style={{ display: 'flex', gap: 28, color: C.muted, fontSize: 13 }}>
+              {['Training', 'Coaches', 'Memberships'].map(l => (
+                <a key={l} href="#" style={{ color: C.muted, textDecoration: 'none' }}>{l}</a>
+              ))}
+            </div>
+            <button style={{
+              background: C.accent, color: '#000', fontSize: 13, fontWeight: 800,
+              padding: '10px 22px', borderRadius: 10, border: 'none', cursor: 'pointer',
+            }}>
               Free Trial →
             </button>
           </div>
-        </nav>
+        </div>
+      </nav>
 
-        {/* Hero */}
-        <section className="relative min-h-screen flex items-center pt-16 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#0a1a0a] via-[#0a0a0a] to-[#0a0a12]" />
-          <div className="absolute top-1/3 right-0 w-[600px] h-[600px] rounded-full bg-[#22c55e]/5 blur-3xl" />
-          <div className="absolute bottom-0 left-1/4 w-96 h-96 rounded-full bg-[#22c55e]/5 blur-3xl" />
+      {/* ── Hero ─────────────────────────────────────────────────────────── */}
+      <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', paddingTop: 64, overflow: 'hidden' }}>
+        {/* bg gradients */}
+        <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(135deg, #071a07 0%, ${C.bg} 50%, #07090f 100%)` }} />
+        <div style={{ position: 'absolute', top: '30%', right: 0, width: 600, height: 600, borderRadius: '50%', background: 'rgba(34,197,94,0.04)', filter: 'blur(80px)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: 0, left: '25%', width: 400, height: 400, borderRadius: '50%', background: 'rgba(34,197,94,0.04)', filter: 'blur(80px)', pointerEvents: 'none' }} />
 
-          <div className="relative max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center w-full py-20">
-            <div>
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
-                className="inline-flex items-center gap-2 bg-[#22c55e]/10 border border-[#22c55e]/30 rounded-full px-4 py-1.5 mb-6">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#22c55e] animate-pulse" />
-                <span className="text-[#22c55e] text-xs font-semibold tracking-wide">Now accepting members · Bondi Beach, Sydney</span>
-              </motion.div>
+        <div style={{ ...W, position: 'relative', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 'clamp(3rem, 5vw, 6rem)', alignItems: 'center', padding: `clamp(5rem, 10vw, 8rem) clamp(1.5rem, 4vw, 3rem)` }}>
 
-              <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1 }}
-                className="text-6xl md:text-7xl font-black text-white leading-[1.0] tracking-tight mb-4"
-                style={{ fontFamily: 'var(--font-syne)' }}>
-                APEX<br />
-                <span className="text-[#22c55e]">Performance</span><br />
-                Gym
-              </motion.h1>
+          {/* Left copy */}
+          <div>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(34,197,94,0.08)', border: `1px solid rgba(34,197,94,0.28)`, borderRadius: 999, padding: '6px 16px', marginBottom: 24 }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.accent, display: 'inline-block', animation: 'pulse 2s infinite' }} />
+              <span style={{ color: C.accent, fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Now accepting members · Bondi Beach, Sydney</span>
+            </motion.div>
 
-              <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.2 }}
-                className="text-white/50 text-lg leading-relaxed mb-8 max-w-md">
-                Bondi&apos;s most results-driven gym. Personal training, group classes, and a system that actually keeps you accountable.
-              </motion.p>
+            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1 }}
+              style={{ fontSize: 'clamp(3.5rem, 7vw, 5.5rem)', fontWeight: 900, color: C.text, lineHeight: 1.0, letterSpacing: '-0.02em', marginBottom: 16 }}>
+              APEX<br />
+              <span style={{ color: C.accent }}>Performance</span><br />
+              Gym
+            </motion.h1>
 
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.3 }}
-                className="flex flex-wrap gap-4 mb-10">
-                <button className="bg-[#22c55e] text-black font-black px-8 py-4 rounded-lg text-sm hover:bg-[#16a34a] transition-all duration-300 hover:scale-105">
-                  Start Free Trial
-                </button>
-                <button className="border border-white/10 text-white font-medium px-8 py-4 rounded-lg text-sm hover:bg-white/5 transition-colors">
-                  View Memberships
-                </button>
-              </motion.div>
+            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.2 }}
+              style={{ color: C.muted, fontSize: 17, lineHeight: 1.65, marginBottom: 32, maxWidth: 420 }}>
+              Bondi&apos;s most results-driven gym. Personal training, group classes, and a system that actually keeps you accountable.
+            </motion.p>
 
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7, delay: 0.5 }}
-                className="flex flex-wrap gap-6">
-                {[
-                  { icon: '⭐', stat: '4.9', label: '612 Google reviews' },
-                  { icon: '💪', stat: '340+', label: 'active members' },
-                  { icon: '🏆', stat: '8', label: 'certified coaches' },
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-2">
-                    <span className="text-lg">{item.icon}</span>
-                    <span className="font-bold text-white">{item.stat}</span>
-                    <span className="text-white/40 text-sm">{item.label}</span>
-                  </div>
-                ))}
-              </motion.div>
-            </div>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.3 }}
+              style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 36 }}>
+              <button style={{ background: C.accent, color: '#000', fontWeight: 900, padding: '14px 32px', borderRadius: 12, border: 'none', cursor: 'pointer', fontSize: 13 }}>
+                Start Free Trial
+              </button>
+              <button style={{ border: `1px solid rgba(240,255,244,0.12)`, color: C.text, fontWeight: 500, padding: '14px 32px', borderRadius: 12, background: 'none', cursor: 'pointer', fontSize: 13 }}>
+                View Memberships
+              </button>
+            </motion.div>
 
-            {/* Stats card */}
-            <motion.div initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.9, delay: 0.3 }}>
-              <div className="bg-[#111] border border-white/10 rounded-2xl p-6">
-                <div className="text-white/40 text-xs font-semibold tracking-widest uppercase mb-4">Member Dashboard · Live</div>
-                {[
-                  { label: 'Sessions this week', value: '847', unit: 'total across all members', bar: 85 },
-                  { label: 'New member trials', value: '24', unit: 'this month · 71% converted', bar: 71 },
-                  { label: 'Avg member retention', value: '11.4', unit: 'months', bar: 95 },
-                  { label: 'Revenue this month', value: '$31,200', unit: 'recurring memberships', bar: 78 },
-                ].map((stat, i) => (
-                  <div key={i} className="mb-5 last:mb-0">
-                    <div className="flex justify-between items-baseline mb-1.5">
-                      <span className="text-white/50 text-xs">{stat.label}</span>
-                      <span className="text-[#22c55e] font-bold text-sm">{stat.value}</span>
-                    </div>
-                    <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${stat.bar}%` }}
-                        transition={{ duration: 1.5, delay: 0.8 + i * 0.1, ease: 'easeOut' }}
-                        className="h-full bg-[#22c55e] rounded-full"
-                      />
-                    </div>
-                    <div className="text-white/25 text-xs mt-1">{stat.unit}</div>
-                  </div>
-                ))}
-              </div>
-
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 1.4 }}
-                className="mt-3 bg-[#22c55e]/10 border border-[#22c55e]/20 rounded-xl px-4 py-3 flex items-center gap-3">
-                <span className="text-xl">⚡</span>
-                <div>
-                  <div className="text-[#22c55e] text-xs font-semibold">New lead just replied</div>
-                  <div className="text-white/40 text-xs">Marcus B. — auto-replied in 90 seconds, tour booked</div>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7, delay: 0.5 }}
+              style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
+              {[
+                { icon: '⭐', stat: '4.9', label: '612 Google reviews' },
+                { icon: '💪', stat: '340+', label: 'active members' },
+                { icon: '🏆', stat: '8', label: 'certified coaches' },
+              ].map((item, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ fontSize: 18 }}>{item.icon}</span>
+                  <span style={{ fontWeight: 800, color: C.text }}>{item.stat}</span>
+                  <span style={{ color: C.muted, fontSize: 13 }}>{item.label}</span>
                 </div>
-              </motion.div>
+              ))}
             </motion.div>
           </div>
-        </section>
 
-        {/* Ticker */}
-        <div className="overflow-hidden bg-[#22c55e] py-3">
-          <motion.div animate={{ x: ['0%', '-50%'] }} transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
-            className="flex whitespace-nowrap">
-            {[1,2,3,4].map(i => (
-              <span key={i} className="text-black text-sm font-black tracking-widest uppercase mr-8">
-                340+ active members  ·  71% trial-to-member rate  ·  $31,200 MRR  ·  11.4mo avg retention  ·  0 leads left uncontacted  ·
-              </span>
-            ))}
+          {/* Right — dashboard */}
+          <motion.div initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.9, delay: 0.3 }}>
+            <div style={{ background: '#0d1210', border: `1px solid ${C.border}`, borderRadius: 20, padding: 24 }}>
+              <div style={{ color: C.muted, fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 16 }}>
+                Member Dashboard · Live
+              </div>
+              {[
+                { label: 'Sessions this week', value: '847', unit: 'total across all members', bar: 85 },
+                { label: 'New member trials', value: '24', unit: 'this month · 71% converted', bar: 71 },
+                { label: 'Avg member retention', value: '11.4', unit: 'months', bar: 95 },
+                { label: 'Revenue this month', value: '$47,200', unit: 'recurring memberships', bar: 78 },
+              ].map((stat, i) => (
+                <div key={i} style={{ marginBottom: i < 3 ? 20 : 0 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 6 }}>
+                    <span style={{ color: C.muted, fontSize: 12 }}>{stat.label}</span>
+                    <span style={{ color: C.accent, fontWeight: 800, fontSize: 13 }}>{stat.value}</span>
+                  </div>
+                  <div style={{ height: 4, background: 'rgba(240,255,244,0.06)', borderRadius: 999, overflow: 'hidden' }}>
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${stat.bar}%` }}
+                      transition={{ duration: 1.5, delay: 0.8 + i * 0.1, ease: 'easeOut' }}
+                      style={{ height: '100%', background: C.accent, borderRadius: 999 }}
+                    />
+                  </div>
+                  <div style={{ color: C.subtle, fontSize: 11, marginTop: 4 }}>{stat.unit}</div>
+                </div>
+              ))}
+            </div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 1.4 }}
+              style={{ marginTop: 12, background: 'rgba(34,197,94,0.08)', border: `1px solid rgba(34,197,94,0.18)`, borderRadius: 16, padding: '14px 18px', display: 'flex', alignItems: 'center', gap: 14 }}>
+              <span style={{ fontSize: 20 }}>⚡</span>
+              <div>
+                <div style={{ color: C.accent, fontSize: 12, fontWeight: 700 }}>New lead just replied</div>
+                <div style={{ color: C.muted, fontSize: 12, marginTop: 2 }}>Marcus B. — auto-replied in 90 seconds, tour booked</div>
+              </div>
+            </motion.div>
           </motion.div>
         </div>
+      </section>
 
-        {/* Metrics */}
-        <section className="bg-[#0f0f0f] py-20 px-6">
-          <div className="max-w-6xl mx-auto">
-            <Reveal>
-              <div className="text-center mb-12">
-                <div className="text-[#22c55e] text-sm font-semibold tracking-widest uppercase mb-3">April 2025</div>
-                <h2 className="text-3xl md:text-4xl font-black text-white" style={{ fontFamily: 'var(--font-syne)' }}>Apex this month</h2>
-              </div>
-            </Reveal>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
-              {[
-                { label: 'Monthly Revenue', value: 31200, prefix: '$', change: '+22%' },
-                { label: 'Active Members', value: 340, prefix: '', suffix: '', change: '+41 this month' },
-                { label: 'Trial Conversion', value: 71, prefix: '', suffix: '%', change: 'industry avg 45%' },
-                { label: 'Avg Retention', value: 11, prefix: '', suffix: '.4mo', change: 'industry avg 4.2mo' },
-              ].map((s, i) => (
-                <Reveal key={i} delay={i * 0.1}>
-                  <div className="bg-[#111] rounded-2xl p-6 border border-white/5">
-                    <div className="text-white/30 text-xs font-medium uppercase tracking-wide mb-3">{s.label}</div>
-                    <div className="text-3xl font-black text-white mb-2" style={{ fontFamily: 'var(--font-syne)' }}>
-                      <Counter to={s.value} prefix={s.prefix} suffix={s.suffix || ''} />
+      {/* ── Ticker ───────────────────────────────────────────────────────── */}
+      <div style={{ overflow: 'hidden', background: C.accent, padding: '12px 0' }}>
+        <motion.div animate={{ x: ['0%', '-50%'] }} transition={{ duration: 32, repeat: Infinity, ease: 'linear' }}
+          style={{ display: 'flex', whiteSpace: 'nowrap' }}>
+          {[1,2,3,4].map(i => (
+            <span key={i} style={{ color: '#000', fontSize: 12, fontWeight: 900, letterSpacing: '0.12em', textTransform: 'uppercase', marginRight: 48 }}>
+              340+ active members  ·  73% trial-to-member rate  ·  $47,200 MRR  ·  11.4mo avg retention  ·  0 leads left uncontacted  ·
+            </span>
+          ))}
+        </motion.div>
+      </div>
+
+      {/* ── Metrics ──────────────────────────────────────────────────────── */}
+      <section style={{ background: C.surface, padding: 'clamp(4rem, 8vw, 6rem) 0' }}>
+        <div style={W}>
+          <Reveal>
+            <div style={{ textAlign: 'center', marginBottom: 48 }}>
+              <div style={{ color: C.accent, fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 12 }}>April 2025</div>
+              <h2 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)', fontWeight: 900, color: C.text, margin: 0 }}>Apex this month</h2>
+            </div>
+          </Reveal>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
+            {[
+              { label: 'Monthly Revenue', value: 47200, prefix: '$', change: '+22%' },
+              { label: 'Active Members', value: 340, change: '+41 this month' },
+              { label: 'Trial Conversion', value: 73, suffix: '%', change: 'industry avg 45%' },
+              { label: 'Avg Retention', value: 11, suffix: '.4mo', change: 'industry avg 4.2mo' },
+            ].map((s, i) => (
+              <Reveal key={i} delay={i * 0.08}>
+                <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 20, padding: 24 }}>
+                  <div style={{ color: C.muted, fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>{s.label}</div>
+                  <div style={{ fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', fontWeight: 900, color: C.text, marginBottom: 10 }}>
+                    <Counter to={s.value} prefix={s.prefix || ''} suffix={s.suffix || ''} />
+                  </div>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: C.accent, background: C.accentLt, padding: '3px 10px', borderRadius: 999 }}>{s.change}</span>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Lead sequence ────────────────────────────────────────────────── */}
+      <section style={{ background: C.bg, padding: 'clamp(4rem, 8vw, 6rem) 0' }}>
+        <div style={W}>
+          <Reveal>
+            <div style={{ textAlign: 'center', marginBottom: 48 }}>
+              <div style={{ color: C.accent, fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 12 }}>Lead Conversion</div>
+              <h2 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.4rem)', fontWeight: 900, color: C.text, marginBottom: 14 }}>
+                From enquiry to member, automatically
+              </h2>
+              <p style={{ color: C.muted, maxWidth: 480, margin: '0 auto' }}>
+                Every lead gets a personal response in under 2 minutes — no matter when they enquire.
+              </p>
+            </div>
+          </Reveal>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 56, alignItems: 'start' }}>
+            {/* Sequence */}
+            <div>
+              {SEQUENCE.map((step, i) => (
+                <Reveal key={i} delay={i * 0.07}>
+                  <div style={{ display: 'flex', gap: 16 }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                      <div style={{ width: 36, height: 36, borderRadius: 10, background: C.accentLt, border: `1px solid rgba(34,197,94,0.28)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0 }}>
+                        {step.icon}
+                      </div>
+                      {i < SEQUENCE.length - 1 && <div style={{ width: 1, flex: 1, background: 'rgba(34,197,94,0.12)', margin: '4px 0', minHeight: 40 }} />}
                     </div>
-                    <span className="text-xs font-semibold text-[#22c55e] bg-[#22c55e]/10 px-2 py-0.5 rounded-full">{s.change}</span>
+                    <div style={{ paddingBottom: 24, flex: 1 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                        <span style={{ color: C.muted, fontSize: 11, fontWeight: 700 }}>{step.time}</span>
+                        <span style={{ background: C.accentLt, color: C.accent, fontSize: 11, padding: '2px 10px', borderRadius: 999, fontWeight: 600 }}>{step.label}</span>
+                      </div>
+                      <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: '16px 16px 16px 4px', padding: '12px 16px', maxWidth: 300 }}>
+                        <div style={{ color: C.muted, fontSize: 12, lineHeight: 1.6, whiteSpace: 'pre-line' }}>{step.message}</div>
+                      </div>
+                    </div>
                   </div>
                 </Reveal>
               ))}
             </div>
-          </div>
-        </section>
 
-        {/* Lead sequence */}
-        <section className="bg-[#0a0a0a] py-20 px-6">
-          <div className="max-w-6xl mx-auto">
-            <Reveal>
-              <div className="text-center mb-12">
-                <div className="text-[#22c55e] text-sm font-semibold tracking-widest uppercase mb-3">Lead Conversion</div>
-                <h2 className="text-3xl md:text-4xl font-black text-white mb-4" style={{ fontFamily: 'var(--font-syne)' }}>
-                  From enquiry to member, automatically
-                </h2>
-                <p className="text-white/40 max-w-lg mx-auto">Every lead gets a personal response in under 2 minutes — no matter when they enquire.</p>
-              </div>
-            </Reveal>
-
-            <div className="grid lg:grid-cols-2 gap-12 items-start">
-              <div className="space-y-0">
-                {SEQUENCE.map((step, i) => (
-                  <Reveal key={i} delay={i * 0.07}>
-                    <div className="flex gap-4">
-                      <div className="flex flex-col items-center">
-                        <div className="w-9 h-9 rounded-lg bg-[#22c55e]/10 border border-[#22c55e]/30 flex items-center justify-center text-base shrink-0">
-                          {step.icon}
-                        </div>
-                        {i < SEQUENCE.length - 1 && <div className="w-px flex-1 bg-[#22c55e]/15 my-1 min-h-[40px]" />}
-                      </div>
-                      <div className="pb-6 flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <span className="text-white/60 text-xs font-bold">{step.time}</span>
-                          <span className="bg-[#22c55e]/10 text-[#22c55e] text-xs px-2.5 py-0.5 rounded-full font-medium">{step.label}</span>
-                        </div>
-                        <div className="bg-[#111] border border-white/5 rounded-2xl rounded-tl-sm px-4 py-3 max-w-xs">
-                          <div className="text-white/60 text-xs leading-relaxed whitespace-pre-line">{step.message}</div>
-                        </div>
-                      </div>
+            {/* Stats panel */}
+            <div style={{ position: 'sticky', top: 96 }}>
+              <Reveal delay={0.2}>
+                <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 20, padding: 24, marginBottom: 16 }}>
+                  <div style={{ color: C.accent, fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 16 }}>Conversion Results</div>
+                  {[
+                    { label: 'Avg response time', value: '90 sec' },
+                    { label: 'Trial bookings from leads', value: '68%' },
+                    { label: 'Trial-to-member rate', value: '73%' },
+                    { label: 'Revenue per lead', value: '$214' },
+                    { label: 'Staff time on follow-up', value: '0 hours' },
+                  ].map((item, i) => (
+                    <div key={i} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: i < 4 ? `1px solid ${C.border}` : 'none', paddingBottom: i < 4 ? 12 : 0, marginBottom: i < 4 ? 12 : 0 }}>
+                      <span style={{ color: C.muted, fontSize: 13 }}>{item.label}</span>
+                      <span style={{ color: C.accent, fontWeight: 800, fontSize: 13 }}>{item.value}</span>
                     </div>
-                  </Reveal>
-                ))}
-              </div>
-
-              <div className="lg:sticky lg:top-24 space-y-4">
-                <Reveal delay={0.2}>
-                  <div className="bg-[#111] border border-white/5 rounded-2xl p-6">
-                    <div className="text-[#22c55e] text-xs font-semibold tracking-widest uppercase mb-4">Conversion Results</div>
-                    <div className="space-y-4">
-                      {[
-                        { label: 'Avg response time', value: '90 sec' },
-                        { label: 'Trial bookings from leads', value: '68%' },
-                        { label: 'Trial-to-member rate', value: '71%' },
-                        { label: 'Revenue per lead', value: '$214' },
-                        { label: 'Staff time on follow-up', value: '0 hours' },
-                      ].map((item, i) => (
-                        <div key={i} className="flex justify-between border-b border-white/5 pb-3 last:border-0 last:pb-0">
-                          <span className="text-white/40 text-sm">{item.label}</span>
-                          <span className="text-[#22c55e] font-bold text-sm">{item.value}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </Reveal>
-                <Reveal delay={0.3}>
-                  <div className="bg-[#22c55e] rounded-2xl p-6 text-black">
-                    <div className="text-black/60 text-xs font-bold tracking-widest uppercase mb-2">Members added this month</div>
-                    <div className="text-5xl font-black mb-1" style={{ fontFamily: 'var(--font-syne)' }}><Counter to={41} /></div>
-                    <div className="text-black/70 text-sm">from automated lead sequences alone</div>
-                  </div>
-                </Reveal>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Reviews */}
-        <section ref={reviewRef} className="bg-[#0f0f0f] py-20 px-6">
-          <div className="max-w-6xl mx-auto">
-            <Reveal>
-              <div className="text-center mb-12">
-                <div className="text-[#22c55e] text-sm font-semibold tracking-widest uppercase mb-3">Social Proof</div>
-                <h2 className="text-3xl md:text-4xl font-black text-white mb-4" style={{ fontFamily: 'var(--font-syne)' }}>612 reasons to join</h2>
-                <div className="flex items-center justify-center gap-3">
-                  <Stars />
-                  <span className="font-bold text-white">4.9</span>
-                  <span className="text-white/30 text-sm">· 612 Google reviews · growing daily</span>
+                  ))}
                 </div>
-              </div>
-            </Reveal>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-              <AnimatePresence>
-                {REVIEWS.slice(0, reviewsVisible).map((r) => (
-                  <motion.div key={r.name} layout
-                    initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }}
-                    transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                    className="bg-[#111] rounded-2xl p-6 border border-white/5">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ background: r.bg }}>
-                          {r.initials}
-                        </div>
-                        <div>
-                          <div className="font-semibold text-white text-sm">{r.name}</div>
-                          <div className="text-white/30 text-xs">{r.plan}</div>
-                        </div>
-                      </div>
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="#4285F4">
-                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-                      </svg>
-                    </div>
-                    <Stars />
-                    <p className="text-white/60 text-sm leading-relaxed mt-3">&ldquo;{r.text}&rdquo;</p>
-                    <div className="text-white/20 text-xs mt-3">{r.time}</div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
+              </Reveal>
+              <Reveal delay={0.3}>
+                <div style={{ background: C.accent, borderRadius: 20, padding: 24, color: '#000' }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', opacity: 0.6, marginBottom: 8 }}>Members added this month</div>
+                  <div style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', fontWeight: 900, marginBottom: 4 }}><Counter to={41} /></div>
+                  <div style={{ fontSize: 13, opacity: 0.7 }}>from automated lead sequences alone</div>
+                </div>
+              </Reveal>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Live feed */}
-        <section ref={liveRef} className="bg-[#0a0a0a] py-20 px-6">
-          <div className="max-w-4xl mx-auto">
-            <Reveal>
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-2 h-2 rounded-full bg-[#22c55e] animate-pulse" />
-                <div className="text-[#22c55e] text-sm font-semibold tracking-widest uppercase">Live Activity</div>
+      {/* ── Reviews ──────────────────────────────────────────────────────── */}
+      <section ref={reviewRef} style={{ background: C.surface, padding: 'clamp(4rem, 8vw, 6rem) 0' }}>
+        <div style={W}>
+          <Reveal>
+            <div style={{ textAlign: 'center', marginBottom: 48 }}>
+              <div style={{ color: C.accent, fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 12 }}>Social Proof</div>
+              <h2 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.4rem)', fontWeight: 900, color: C.text, marginBottom: 14 }}>612 reasons to join</h2>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
+                <Stars />
+                <span style={{ fontWeight: 800, color: C.text }}>4.9</span>
+                <span style={{ color: C.muted, fontSize: 13 }}>· 612 Google reviews · growing daily</span>
               </div>
-              <h2 className="text-2xl font-black text-white mb-8" style={{ fontFamily: 'var(--font-syne)' }}>Running in the background, right now</h2>
-            </Reveal>
-            <div className="space-y-3">
-              <AnimatePresence mode="popLayout">
-                {liveItems.map((item, i) => (
-                  <motion.div key={`${item.text}-${i}`} layout
-                    initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                    transition={{ duration: 0.4 }}
-                    className="bg-[#111] border border-white/5 rounded-xl px-5 py-4 flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="w-2 h-2 rounded-full shrink-0" style={{ background: item.color }} />
+            </div>
+          </Reveal>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 18 }}>
+            <AnimatePresence>
+              {REVIEWS.slice(0, reviewsVisible).map((r) => (
+                <motion.div key={r.name} layout
+                  initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                  style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 20, padding: 24 }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 14 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                      <div style={{ width: 40, height: 40, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 12, fontWeight: 700, background: r.bg, flexShrink: 0 }}>
+                        {r.initials}
+                      </div>
                       <div>
-                        <div className="text-white text-sm font-medium">{item.text}</div>
-                        <div className="text-white/30 text-xs mt-0.5">{item.sub}</div>
+                        <div style={{ fontWeight: 600, color: C.text, fontSize: 13 }}>{r.name}</div>
+                        <div style={{ color: C.muted, fontSize: 11 }}>{r.plan}</div>
                       </div>
                     </div>
-                    <div className="text-white/20 text-xs ml-4 whitespace-nowrap">just now</div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </div>
-          </div>
-        </section>
-
-        {/* SM Reveal */}
-        <section className="bg-[#030108] py-24 px-6 relative overflow-hidden">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full bg-[#6b35f5]/10 blur-3xl" />
-            <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full bg-[#22c55e]/5 blur-3xl" />
-          </div>
-          <div className="relative max-w-4xl mx-auto text-center">
-            <Reveal>
-              <div className="inline-flex items-center gap-2 bg-[#6b35f5]/10 border border-[#6b35f5]/30 rounded-full px-5 py-2 mb-8">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#6b35f5]" />
-                <span className="text-[#a673ff] text-xs font-semibold tracking-widest uppercase">The system behind Apex</span>
-              </div>
-            </Reveal>
-            <Reveal delay={0.1}>
-              <p className="text-[#f0edff]/40 text-lg mb-4">Apex doesn&apos;t run on hustle.</p>
-              <h2 className="text-5xl md:text-7xl font-black leading-tight mb-6" style={{ fontFamily: 'var(--font-syne)' }}>
-                <span className="text-[#f0edff]">It runs on</span>{' '}
-                <span style={{ background: 'linear-gradient(135deg, #a673ff 0%, #844bfe 50%, #00ebc1 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-                  Shoulder Monkey.
-                </span>
-              </h2>
-            </Reveal>
-            <Reveal delay={0.2}>
-              <p className="text-[#f0edff]/50 text-lg max-w-2xl mx-auto mb-14 leading-relaxed">
-                Every lead followed up. Every member retained. Every review generated. Every payment collected. All automatic — so your team focuses on coaching, not admin.
-              </p>
-            </Reveal>
-            <Reveal delay={0.3}>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-14 text-left">
-                {[
-                  { icon: '⚡', label: '90-second lead response', desc: 'Every enquiry answered instantly, day or night' },
-                  { icon: '🔄', label: 'Trial-to-member sequences', desc: 'Automated nurture from first visit to signed member' },
-                  { icon: '💰', label: 'Recurring billing', desc: 'Cards on file, auto-retry, zero chasing payments' },
-                  { icon: '⭐', label: 'Review generation', desc: 'Sent at the perfect moment after every session' },
-                  { icon: '📊', label: 'Member health tracking', desc: 'Attendance, churn risk, revenue — all in real time' },
-                  { icon: '🔁', label: 'Win-back campaigns', desc: 'Lapsed members re-engaged automatically' },
-                ].map((f, i) => (
-                  <div key={i} className="bg-[#0f0a1e] border border-[#6b35f5]/20 rounded-2xl p-5 hover:border-[#6b35f5]/50 transition-colors">
-                    <div className="text-2xl mb-3">{f.icon}</div>
-                    <div className="text-[#f0edff] text-sm font-semibold mb-1">{f.label}</div>
-                    <div className="text-[#f0edff]/40 text-xs leading-relaxed">{f.desc}</div>
+                    <svg width="20" height="20" viewBox="0 0 24 24">
+                      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                    </svg>
                   </div>
-                ))}
-              </div>
-            </Reveal>
-            <Reveal delay={0.4}>
-              <div className="bg-gradient-to-br from-[#1a0a3e] to-[#0a0612] border border-[#6b35f5]/30 rounded-3xl p-10">
-                <div className="text-[#f0edff] text-2xl font-bold mb-3" style={{ fontFamily: 'var(--font-syne)' }}>
-                  Ready to build this for your gym?
-                </div>
-                <p className="text-[#f0edff]/50 mb-8 max-w-lg mx-auto">
-                  We handle the entire setup in 7 days. You keep focusing on your members.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <a href="https://www.shouldermonkey.co" className="inline-flex items-center justify-center gap-2 bg-[#6b35f5] hover:bg-[#844bfe] text-white font-semibold px-8 py-4 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#6b35f5]/30">
-                    Book a free strategy call →
-                  </a>
-                  <a href="https://www.shouldermonkey.co" className="inline-flex items-center justify-center gap-2 border border-[#6b35f5]/40 text-[#a673ff] font-medium px-8 py-4 rounded-full hover:bg-[#6b35f5]/10 transition-colors">
-                    See pricing
-                  </a>
-                </div>
-              </div>
-            </Reveal>
+                  <Stars />
+                  <p style={{ color: C.muted, fontSize: 13, lineHeight: 1.65, marginTop: 12 }}>&ldquo;{r.text}&rdquo;</p>
+                  <div style={{ color: C.subtle, fontSize: 11, marginTop: 12 }}>{r.time}</div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
+
+      {/* ── Live Feed ────────────────────────────────────────────────────── */}
+      <section ref={liveRef} style={{ background: C.bg, padding: 'clamp(4rem, 8vw, 6rem) 0' }}>
+        <div style={{ ...W, maxWidth: 860 }}>
+          <Reveal>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+              <div style={{ width: 8, height: 8, borderRadius: '50%', background: C.accent }} />
+              <div style={{ color: C.accent, fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase' }}>Live Activity</div>
+            </div>
+            <h2 style={{ fontSize: 'clamp(1.4rem, 2.5vw, 1.8rem)', fontWeight: 900, color: C.text, marginBottom: 32 }}>Running in the background, right now</h2>
+          </Reveal>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <AnimatePresence mode="popLayout">
+              {liveItems.map((item, i) => (
+                <motion.div key={`${item.text}-${i}`} layout
+                  initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                  transition={{ duration: 0.4 }}
+                  style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 14, padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: item.color, flexShrink: 0 }} />
+                    <div>
+                      <div style={{ color: C.text, fontSize: 13, fontWeight: 600 }}>{item.text}</div>
+                      <div style={{ color: C.muted, fontSize: 12, marginTop: 2 }}>{item.sub}</div>
+                    </div>
+                  </div>
+                  <div style={{ color: C.subtle, fontSize: 12, marginLeft: 16, whiteSpace: 'nowrap' }}>just now</div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+        </div>
+      </section>
+
+      {/* ── SM Reveal ────────────────────────────────────────────────────── */}
+      <section style={{ background: `linear-gradient(to bottom, ${C.surface} 0%, #030108 50%)`, padding: 'clamp(5rem, 10vw, 8rem) 0', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 800, height: 400, borderRadius: '50%', background: 'rgba(107,53,245,0.14)', filter: 'blur(80px)' }} />
+          <div style={{ position: 'absolute', bottom: 0, right: 0, width: 400, height: 400, borderRadius: '50%', background: 'rgba(34,197,94,0.04)', filter: 'blur(80px)' }} />
+        </div>
+        <div style={{ ...W, maxWidth: 860, textAlign: 'center', position: 'relative' }}>
+          <Reveal>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(107,53,245,0.1)', border: '1px solid rgba(107,53,245,0.3)', borderRadius: 999, padding: '8px 20px', marginBottom: 32 }}>
+              <div style={{ width: 6, height: 6, borderRadius: '50%', background: C.purple }} />
+              <span style={{ color: '#a673ff', fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>The system behind Apex</span>
+            </div>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <p style={{ color: 'rgba(240,237,255,0.4)', fontSize: 18, marginBottom: 16 }}>Apex doesn&apos;t run on hustle.</p>
+            <h2 style={{ fontSize: 'clamp(2.8rem, 6vw, 5rem)', fontWeight: 900, lineHeight: 1.05, marginBottom: 24, letterSpacing: '-0.02em' }}>
+              <span style={{ color: '#f0edff' }}>It runs on </span>
+              <span style={{ background: 'linear-gradient(135deg, #a673ff 0%, #844bfe 40%, #00ebc1 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+                Shoulder Monkey.
+              </span>
+            </h2>
+          </Reveal>
+          <Reveal delay={0.2}>
+            <p style={{ color: 'rgba(240,237,255,0.5)', fontSize: 17, maxWidth: 600, margin: '0 auto 56px', lineHeight: 1.7 }}>
+              Every lead followed up. Every member retained. Every review generated. Every payment collected. All automatic — so your team focuses on coaching, not admin.
+            </p>
+          </Reveal>
+          <Reveal delay={0.3}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 56, textAlign: 'left' }}>
+              {[
+                { icon: '⚡', label: '90-second lead response', desc: 'Every enquiry answered instantly, day or night' },
+                { icon: '🔄', label: 'Trial-to-member sequences', desc: 'Automated nurture from first visit to signed member' },
+                { icon: '💰', label: 'Recurring billing', desc: 'Cards on file, auto-retry, zero chasing payments' },
+                { icon: '⭐', label: 'Review generation', desc: 'Sent at the perfect moment after every session' },
+                { icon: '📊', label: 'Member health tracking', desc: 'Attendance, churn risk, revenue — all in real time' },
+                { icon: '🔁', label: 'Win-back campaigns', desc: 'Lapsed members re-engaged automatically' },
+              ].map((f, i) => (
+                <div key={i} style={{ background: 'rgba(15,10,30,0.8)', border: '1px solid rgba(107,53,245,0.2)', borderRadius: 20, padding: 20 }}>
+                  <div style={{ fontSize: 24, marginBottom: 12 }}>{f.icon}</div>
+                  <div style={{ color: '#f0edff', fontSize: 13, fontWeight: 700, marginBottom: 6 }}>{f.label}</div>
+                  <div style={{ color: 'rgba(240,237,255,0.4)', fontSize: 12, lineHeight: 1.5 }}>{f.desc}</div>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+          <Reveal delay={0.4}>
+            <div style={{ background: 'linear-gradient(135deg, #1a0a3e, #0a0612)', border: '1px solid rgba(107,53,245,0.3)', borderRadius: 28, padding: 'clamp(2rem, 5vw, 3rem)' }}>
+              <div style={{ color: '#f0edff', fontSize: 'clamp(1.2rem, 2.5vw, 1.6rem)', fontWeight: 800, marginBottom: 12 }}>
+                Ready to build this for your gym?
+              </div>
+              <p style={{ color: 'rgba(240,237,255,0.5)', marginBottom: 32, maxWidth: 480, margin: '0 auto 32px' }}>
+                We handle the entire setup in 7 days. You keep focusing on your members.
+              </p>
+              <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
+                <a href="https://www.shouldermonkey.co" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: C.purple, color: '#fff', fontWeight: 700, padding: '14px 32px', borderRadius: 999, textDecoration: 'none', fontSize: 14 }}>
+                  Book a free strategy call →
+                </a>
+                <a href="https://www.shouldermonkey.co" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, border: '1px solid rgba(107,53,245,0.4)', color: '#a673ff', fontWeight: 600, padding: '14px 32px', borderRadius: 999, textDecoration: 'none', fontSize: 14 }}>
+                  See pricing
+                </a>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
     </div>
   )
 }
