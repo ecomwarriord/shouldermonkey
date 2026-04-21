@@ -81,6 +81,7 @@ async function buildSystemPrompt(): Promise<string> {
 }
 
 export async function POST(req: NextRequest) {
+  let chatId: number | null = null
   try {
     const body = await req.json()
     const message = body.message ?? body.edited_message
@@ -88,7 +89,7 @@ export async function POST(req: NextRequest) {
     // Drop anything that's not a message we can handle
     if (!message) return NextResponse.json({ ok: true })
 
-    const chatId: number = message.chat.id
+    chatId = message.chat.id as number
 
     // Security — only respond to Dee
     const allowedId = process.env.TELEGRAM_ALLOWED_CHAT_ID
@@ -181,6 +182,12 @@ export async function POST(req: NextRequest) {
       const parts: ContentPart[] = []
 
       if (hasDocument) {
+        // Reject files over 15MB — large PDFs exceed Claude's 200k token limit
+        const fileSize: number = message.document.file_size ?? 0
+        if (fileSize > 15 * 1024 * 1024) {
+          await sendTelegram(chatId, `That PDF is too large for me to read in one go (${Math.round(fileSize / 1024 / 1024)}MB). Send me the specific pages or paste the key sections as text.`)
+          return NextResponse.json({ ok: true })
+        }
         const fileUrl = await getTelegramFileUrl(message.document.file_id)
         const { base64 } = await fetchFileAsBase64(fileUrl)
         const fileName = message.document.file_name ?? 'document'
@@ -241,8 +248,12 @@ export async function POST(req: NextRequest) {
     await sendTelegram(chatId, reply)
     return NextResponse.json({ ok: true })
 
-  } catch (err) {
+  } catch (err: unknown) {
     console.error('[JARVIS]', err)
+    const msg = err instanceof Error ? err.message : ''
+    if (msg.includes('prompt is too long') && chatId) {
+      await sendTelegram(chatId, `That file is too large for me to process. Send me the specific pages or paste the key sections as text.`)
+    }
     return NextResponse.json({ ok: true })
   }
 }
