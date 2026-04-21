@@ -201,7 +201,6 @@ export async function POST(req: NextRequest) {
         const mimeType: string = (rawMime && rawMime !== 'application/octet-stream')
           ? rawMime
           : (EXT_MAP[ext] ?? 'application/pdf')
-        console.log(`[JARVIS] document: name=${fileName} rawMime=${rawMime} ext=${ext} resolved=${mimeType}`)
         parts.push({ type: 'text', text: userText ? userText : `Analyse this file: ${fileName}` })
         parts.push({ type: 'file', data: base64, mediaType: mimeType })
       } else if (hasPhoto) {
