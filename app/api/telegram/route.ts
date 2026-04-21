@@ -234,7 +234,11 @@ export async function POST(req: NextRequest) {
           { role: 'user' as const, content: userContent },
         ]
 
-    history.push({ role: 'user', content: typeof userContent === 'string' ? userContent : JSON.stringify(userContent) })
+    // Never store file content in history — store a placeholder instead
+    const historyUserContent = isFileSend
+      ? `[File sent: ${hasDocument ? (message.document.file_name ?? 'document') : 'photo'}]${userText ? ` — "${userText}"` : ''}`
+      : userText
+    history.push({ role: 'user', content: historyUserContent })
 
     const { text: reply } = await generateText({
       model: anthropic('claude-sonnet-4-5'),
