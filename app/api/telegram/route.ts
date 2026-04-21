@@ -184,8 +184,23 @@ export async function POST(req: NextRequest) {
         const fileUrl = await getTelegramFileUrl(message.document.file_id)
         const { base64 } = await fetchFileAsBase64(fileUrl)
         const fileName = message.document.file_name ?? 'document'
-        // Use Telegram's mime_type — file server always returns application/octet-stream
-        const mimeType: string = message.document.mime_type ?? 'application/pdf'
+        // Telegram sometimes sets mime_type to octet-stream — infer from extension instead
+        const rawMime: string = message.document.mime_type ?? ''
+        const ext = (fileName.split('.').pop() ?? '').toLowerCase()
+        const EXT_MAP: Record<string, string> = {
+          pdf: 'application/pdf',
+          png: 'image/png',
+          jpg: 'image/jpeg',
+          jpeg: 'image/jpeg',
+          gif: 'image/gif',
+          webp: 'image/webp',
+          txt: 'text/plain',
+          csv: 'text/csv',
+          docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        }
+        const mimeType: string = (rawMime && rawMime !== 'application/octet-stream')
+          ? rawMime
+          : (EXT_MAP[ext] ?? 'application/pdf')
         parts.push({ type: 'text', text: userText ? userText : `Analyse this file: ${fileName}` })
         parts.push({ type: 'file', data: base64, mediaType: mimeType })
       } else if (hasPhoto) {
