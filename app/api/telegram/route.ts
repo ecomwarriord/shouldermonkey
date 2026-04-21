@@ -182,8 +182,10 @@ export async function POST(req: NextRequest) {
 
       if (hasDocument) {
         const fileUrl = await getTelegramFileUrl(message.document.file_id)
-        const { base64, mimeType } = await fetchFileAsBase64(fileUrl)
+        const { base64 } = await fetchFileAsBase64(fileUrl)
         const fileName = message.document.file_name ?? 'document'
+        // Use Telegram's mime_type — file server always returns application/octet-stream
+        const mimeType: string = message.document.mime_type ?? 'application/pdf'
         parts.push({ type: 'text', text: userText ? userText : `Analyse this file: ${fileName}` })
         parts.push({ type: 'file', data: base64, mediaType: mimeType })
       } else if (hasPhoto) {
