@@ -217,15 +217,22 @@ export async function POST(req: NextRequest) {
       userContent = userText
     }
 
+    const isFileSend = hasDocument || hasPhoto
+
+    // Files eat most of the context window — skip history to avoid 200k token limit
+    const messagesForApi = isFileSend
+      ? [{ role: 'user' as const, content: userContent }]
+      : [
+          ...history.slice(-29).map(m => ({ role: m.role as 'user' | 'assistant', content: m.content })),
+          { role: 'user' as const, content: userContent },
+        ]
+
     history.push({ role: 'user', content: typeof userContent === 'string' ? userContent : JSON.stringify(userContent) })
 
     const { text: reply } = await generateText({
       model: anthropic('claude-sonnet-4-5'),
       system: systemPrompt,
-      messages: [
-        ...history.slice(-29).map(m => ({ role: m.role, content: m.content })),
-        { role: 'user', content: userContent },
-      ],
+      messages: messagesForApi,
     })
 
     history.push({ role: 'assistant', content: reply })
