@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { generateText } from 'ai'
+import { anthropic } from '@ai-sdk/anthropic'
 import { Redis } from '@upstash/redis'
 
 const redis = new Redis({
@@ -136,7 +137,7 @@ export async function POST(req: NextRequest) {
         .join('\n\n')
 
       const { text: summary } = await generateText({
-        model: 'anthropic/claude-sonnet-4.6',
+        model: anthropic('claude-sonnet-4-5'),
         prompt: `Extract the key decisions, new information, and important context from this conversation. Format as tight bullet points. Focus only on things that matter for business execution — decisions made, new information shared, tasks agreed, context that wasn't previously known. Skip small talk. Be concise and factual.\n\nConversation:\n${transcript}`,
       })
       await redis.set('jarvis:briefing', { summary, timestamp: new Date().toISOString() })
@@ -202,7 +203,7 @@ export async function POST(req: NextRequest) {
     history.push({ role: 'user', content: typeof userContent === 'string' ? userContent : JSON.stringify(userContent) })
 
     const { text: reply } = await generateText({
-      model: 'anthropic/claude-sonnet-4.6',
+      model: anthropic('claude-sonnet-4-5'),
       system: systemPrompt,
       messages: [
         ...history.slice(-29).map(m => ({ role: m.role, content: m.content })),
