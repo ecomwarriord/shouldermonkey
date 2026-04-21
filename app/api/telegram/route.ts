@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { generateText } from 'ai'
-import { anthropic } from '@ai-sdk/anthropic'
 import { Redis } from '@upstash/redis'
 
 const redis = new Redis({
@@ -60,6 +59,20 @@ async function sendTelegram(chatId: number, text: string) {
   })
 }
 
+async function getTelegramFileUrl(fileId: string): Promise<string> {
+  const res = await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/getFile?file_id=${fileId}`)
+  const data = await res.json()
+  return `https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${data.result.file_path}`
+}
+
+async function fetchFileAsBase64(url: string): Promise<{ base64: string; mimeType: string }> {
+  const res = await fetch(url)
+  const buffer = await res.arrayBuffer()
+  const base64 = Buffer.from(buffer).toString('base64')
+  const mimeType = res.headers.get('content-type') ?? 'application/octet-stream'
+  return { base64, mimeType }
+}
+
 async function buildSystemPrompt(): Promise<string> {
   const context = await redis.get<string>('jarvis:context')
   if (!context) return SYSTEM_PROMPT
@@ -70,10 +83,11 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
     const message = body.message ?? body.edited_message
-    if (!message?.text) return NextResponse.json({ ok: true })
+
+    // Drop anything that's not a message we can handle
+    if (!message) return NextResponse.json({ ok: true })
 
     const chatId: number = message.chat.id
-    const userText: string = message.text
 
     // Security — only respond to Dee
     const allowedId = process.env.TELEGRAM_ALLOWED_CHAT_ID
@@ -81,7 +95,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true })
     }
 
-    // Built-in commands
+    const userText: string = message.text ?? message.caption ?? ''
+    const hasDocument = !!message.document
+    const hasPhoto = !!message.photo
+
+    // Must have at least text, a document, or a photo
+    if (!userText && !hasDocument && !hasPhoto) return NextResponse.json({ ok: true })
+
+    // Built-in commands (text only)
     if (userText === '/start') {
       await sendTelegram(chatId, `*JARVIS online.*\n\nAll systems ready. What do you need, Dee?`)
       return NextResponse.json({ ok: true })
@@ -115,7 +136,7 @@ export async function POST(req: NextRequest) {
         .join('\n\n')
 
       const { text: summary } = await generateText({
-        model: anthropic('claude-sonnet-4-6'),
+        model: 'anthropic/claude-sonnet-4.6',
         prompt: `Extract the key decisions, new information, and important context from this conversation. Format as tight bullet points. Focus only on things that matter for business execution — decisions made, new information shared, tasks agreed, context that wasn't previously known. Skip small talk. Be concise and factual.\n\nConversation:\n${transcript}`,
       })
       await redis.set('jarvis:briefing', { summary, timestamp: new Date().toISOString() })
@@ -147,12 +168,46 @@ export async function POST(req: NextRequest) {
       buildSystemPrompt(),
     ])
 
-    history.push({ role: 'user', content: userText })
+    // Build the user message — text or multimodal (file/photo)
+    type ContentPart =
+      | { type: 'text'; text: string }
+      | { type: 'file'; data: string; mediaType: string }
+      | { type: 'image'; image: string; mediaType: string }
+
+    let userContent: string | ContentPart[]
+
+    if (hasDocument || hasPhoto) {
+      const parts: ContentPart[] = []
+
+      if (hasDocument) {
+        const fileUrl = await getTelegramFileUrl(message.document.file_id)
+        const { base64, mimeType } = await fetchFileAsBase64(fileUrl)
+        const fileName = message.document.file_name ?? 'document'
+        parts.push({ type: 'text', text: userText ? userText : `Analyse this file: ${fileName}` })
+        parts.push({ type: 'file', data: base64, mediaType: mimeType })
+      } else if (hasPhoto) {
+        // Telegram sends multiple sizes — take the largest
+        const photo = message.photo[message.photo.length - 1]
+        const fileUrl = await getTelegramFileUrl(photo.file_id)
+        const { base64, mimeType } = await fetchFileAsBase64(fileUrl)
+        parts.push({ type: 'text', text: userText ? userText : 'What do you see in this image?' })
+        parts.push({ type: 'image', image: base64, mediaType: mimeType })
+      }
+
+      userContent = parts
+    } else {
+      userContent = userText
+    }
+
+    history.push({ role: 'user', content: typeof userContent === 'string' ? userContent : JSON.stringify(userContent) })
 
     const { text: reply } = await generateText({
-      model: anthropic('claude-sonnet-4-6'),
+      model: 'anthropic/claude-sonnet-4.6',
       system: systemPrompt,
-      messages: history.slice(-30),
+      messages: [
+        ...history.slice(-29).map(m => ({ role: m.role, content: m.content })),
+        { role: 'user', content: userContent },
+      ],
     })
 
     history.push({ role: 'assistant', content: reply })
