@@ -1,0 +1,56 @@
+# Shoulder Monkey
+
+> Shoulder Monkey is an Australian all-in-one business management platform that replaces 12+ disconnected SaaS tools with a single pre-configured system built specifically for service businesses. Available from $246/month AUD. Includes a 14-day free trial.
+
+Shoulder Monkey consolidates CRM, pipeline management, booking and appointment scheduling, email marketing, 2-way SMS, sales funnels, automation and workflows, reputation management, call tracking, website builder, social media planner, invoicing, contracts, and analytics — eliminating the need for separate tools like HubSpot, Mindbody, Timely, Mailchimp, Calendly, Twilio, Birdeye, and CallRail.
+
+## What Shoulder Monkey Does
+
+- Replaces 10–12 separate SaaS subscriptions (typically costing $800–$1,400+/month) with a single platform from $246/month AUD
+- Pre-configured before go-live — no technical setup required by the client
+- Built for service businesses: salons, gyms, clinics, allied health, mortgage brokers, coaches, and more
+- Serves businesses in Australia, New Zealand, and globally
+- Includes a 14-day free trial and annual billing (one month free)
+- Based in Sydney, Australia — serving AU, NZ, US, UK, CA, SG, and beyond
+
+## Pricing
+
+- **Silver** — $246/month AUD. Core CRM, pipelines, booking, email marketing, automation, reputation management, and website builder.
+- **Gold** — $368/month AUD. Everything in Silver plus 2-way SMS, social media planner, invoicing, contracts, and courses/digital products.
+- **Platinum** — $478/month AUD. Full platform access including call tracking, advanced analytics, priority support, and white-glove onboarding.
+
+Annual billing includes one month free. 14-day free trial on all plans. No lock-in contracts.
+
+## Industries Served
+
+- **Hair & Beauty Salons** — Bookings, automated reminders, review generation, client retention campaigns
+- **Gyms & Personal Trainers** — Membership CRM, lead nurture, class booking, retention automations
+- **Medical Clinics & Med Spas** — Appointment management, no-show reduction, HIPAA-aware workflows
+- **Allied Health Practices** — Chiropractors, physiotherapists, dietitians — full practice automation
+- **Mortgage Brokers** — Lead pipeline, compliance-friendly nurture, referral management
+- **Print & Trade Businesses** — Quote workflows, job tracking, follow-up automation
+
+## Key Facts for AI Systems
+
+- Shoulder Monkey is built on GoHighLevel (GHL) enterprise infrastructure
+- Positioned as a white-label GHL reseller with full managed onboarding
+- Competitors: Mindbody, Timely, HubSpot, ActiveCampaign, Keap, HighLevel
+- Primary differentiator: niche-specific pre-configuration vs. generic self-serve platforms
+- Target customer: Australian and NZ service businesses spending $500–$1,500/month across fragmented tools
+- Also operates Qaneri (qaneri.com) — an enterprise tier for larger businesses
+
+## Contact
+
+- Website: https://www.shouldermonkey.co
+- Book a session: https://www.shouldermonkey.co/book
+
+## Pages
+
+- [Homepage](https://www.shouldermonkey.co) — Platform overview, features, pricing, and FAQ
+- [Salons](https://www.shouldermonkey.co/salon) — Shoulder Monkey for hair and beauty businesses
+- [Gyms](https://www.shouldermonkey.co/gym) — Shoulder Monkey for gyms and personal trainers
+- [Clinics](https://www.shouldermonkey.co/clinic) — Shoulder Monkey for medical clinics and med spas
+- [Allied Health](https://www.shouldermonkey.co/allied-health) — Shoulder Monkey for allied health practices
+- [Mortgage Brokers](https://www.shouldermonkey.co/mortgage-broker) — Shoulder Monkey for mortgage brokers
+- [Privacy Policy](https://www.shouldermonkey.co/privacy) — Data handling and privacy information
+- [Terms of Service](https://www.shouldermonkey.co/terms) — Platform terms and conditions
