@@ -595,6 +595,8 @@ function Reveal() {
   )
 }
 
+import { NicheEnquiryForm } from '../../components/NicheEnquiryForm'
+
 export default function SalonPage() {
   return (
     <div style={{ background: C.bg }}>
@@ -606,6 +608,7 @@ export default function SalonPage() {
       <Gallery />
       <Reviews />
       <BookingCTA />
+      <NicheEnquiryForm niche="salon" />
       <Reveal />
     </div>
   )

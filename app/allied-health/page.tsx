@@ -1,6 +1,7 @@
 'use client'
 
 import { motion, useInView, animate, AnimatePresence } from 'framer-motion'
+import { NicheEnquiryForm } from '../../components/NicheEnquiryForm'
 import { useEffect, useRef, useState } from 'react'
 
 // ─── Tokens ───────────────────────────────────────────────────────────────────
@@ -522,6 +523,7 @@ export default function AlliedHealthPage() {
           </Reveal>
         </div>
       </section>
+      <NicheEnquiryForm niche="allied-health" />
     </div>
   )
 }
