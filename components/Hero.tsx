@@ -584,7 +584,7 @@ export default function Hero() {
         >
           <div style={{
             maxWidth: '1280px', margin: '0 auto', padding: '1.5rem 2rem',
-            display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem',
+            display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: '1rem',
           }}>
             {[
               { value: '12+',    label: 'Tools replaced' },

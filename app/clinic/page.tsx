@@ -102,6 +102,7 @@ function Stars() {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function ClinicPage() {
+  const [navOpen, setNavOpen] = useState(false)
   const [liveItems, setLiveItems] = useState<Activity[]>(LIVE_ACTIVITY.slice(0, 3))
   const [reviewsVisible, setReviewsVisible] = useState(3)
   const liveRef = useRef(null)
@@ -148,20 +149,28 @@ export default function ClinicPage() {
               <div style={{ color: C.muted, fontSize: 11 }}>Private Medical · North Sydney</div>
             </div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
+          <div className="sm-desktop-only" style={{ alignItems: 'center', gap: 32 }}>
             <div style={{ display: 'flex', gap: 28, fontSize: 13 }}>
               {['Our Doctors', 'Services', 'Pathology', 'Contact'].map(l => (
                 <a key={l} href="#" style={{ color: C.muted, textDecoration: 'none' }}>{l}</a>
               ))}
             </div>
-            <button style={{
-              background: C.accent, color: '#fff', fontSize: 13, fontWeight: 700,
-              padding: '10px 22px', borderRadius: 10, border: 'none', cursor: 'pointer',
-            }}>
+            <button style={{ background: C.accent, color: '#fff', fontSize: 13, fontWeight: 700, padding: '10px 22px', borderRadius: 10, border: 'none', cursor: 'pointer' }}>
               Book Appointment
             </button>
           </div>
+          <button className="sm-mobile-only" onClick={() => setNavOpen(v => !v)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 8, flexDirection: 'column', gap: 5 }}>
+            {[0,1,2].map(i => <span key={i} style={{ display: 'block', width: 22, height: 2, borderRadius: 2, background: C.text, transition: 'all 0.2s', transform: navOpen && i === 0 ? 'translateY(7px) rotate(45deg)' : navOpen && i === 2 ? 'translateY(-7px) rotate(-45deg)' : 'none', opacity: navOpen && i === 1 ? 0 : 1 }} />)}
+          </button>
         </div>
+        {navOpen && (
+          <div style={{ background: 'rgba(248,250,255,0.98)', borderTop: `1px solid ${C.border}`, padding: '1.5rem clamp(1.5rem, 4vw, 3rem)' }}>
+            {['Our Doctors', 'Services', 'Pathology', 'Contact'].map(l => (
+              <a key={l} href="#" onClick={() => setNavOpen(false)} style={{ display: 'block', color: C.text, textDecoration: 'none', fontSize: 16, fontWeight: 500, padding: '12px 0', borderBottom: `1px solid ${C.border}` }}>{l}</a>
+            ))}
+            <button style={{ marginTop: 20, background: C.accent, color: '#fff', border: 'none', borderRadius: 10, padding: '14px 28px', fontSize: 15, fontWeight: 700, cursor: 'pointer', width: '100%' }}>Book Appointment</button>
+          </div>
+        )}
       </nav>
 
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
@@ -170,7 +179,7 @@ export default function ClinicPage() {
         <div style={{ position: 'absolute', top: '-20%', right: '-10%', width: 600, height: 600, borderRadius: '50%', background: 'rgba(2,132,199,0.06)', filter: 'blur(80px)', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', bottom: '-10%', left: '10%', width: 400, height: 400, borderRadius: '50%', background: 'rgba(2,132,199,0.05)', filter: 'blur(80px)', pointerEvents: 'none' }} />
 
-        <div style={{ ...W, position: 'relative', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 'clamp(3rem, 5vw, 6rem)', alignItems: 'center', padding: `clamp(5rem, 10vw, 8rem) clamp(1.5rem, 4vw, 3rem)` }}>
+        <div style={{ ...W, position: 'relative', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'clamp(3rem, 5vw, 6rem)', alignItems: 'center', padding: `clamp(5rem, 10vw, 8rem) clamp(1.5rem, 4vw, 3rem)` }}>
 
           {/* Left copy */}
           <div>

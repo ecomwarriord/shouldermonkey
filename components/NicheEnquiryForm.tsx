@@ -193,7 +193,7 @@ export function NicheEnquiryForm({ niche }: { niche: Niche }) {
               </motion.div>
             ) : (
               <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
                   <Field label="Your name *">
                     <input type="text" placeholder="Jane Smith" required style={INPUT_STYLE(config.accent, config.accentBorder)} value={form.name} onChange={set('name')} />
                   </Field>
@@ -201,7 +201,7 @@ export function NicheEnquiryForm({ niche }: { niche: Niche }) {
                     <input type="text" placeholder="Your business" required style={INPUT_STYLE(config.accent, config.accentBorder)} value={form.businessName} onChange={set('businessName')} />
                   </Field>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
                   <Field label="Email *">
                     <input type="email" placeholder="you@business.com" required style={INPUT_STYLE(config.accent, config.accentBorder)} value={form.email} onChange={set('email')} />
                   </Field>

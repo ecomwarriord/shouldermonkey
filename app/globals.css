@@ -214,3 +214,14 @@ body {
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   .no-print { display: none !important; }
 }
+
+/* ── Mobile responsive utilities ── */
+.sm-desktop-only { display: flex; }
+.sm-mobile-only  { display: none; }
+
+@media (max-width: 768px) {
+  .sm-desktop-only { display: none !important; }
+  .sm-mobile-only  { display: flex !important; }
+  .hero-grid       { grid-template-columns: 1fr !important; }
+  .hero-grid > *:last-child { display: none; }
+}

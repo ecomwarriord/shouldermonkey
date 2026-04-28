@@ -105,6 +105,7 @@ function Phone({ messages, title }: { messages: { text: string; from: 'salon'|'c
 }
 
 function Nav() {
+  const [open, setOpen] = useState(false)
   return (
     <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100, background: 'rgba(250,248,244,0.92)', backdropFilter: 'blur(20px)', borderBottom: `1px solid ${C.border}` }}>
       <div style={{ ...W, height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -115,15 +116,29 @@ function Nav() {
             <div style={{ fontSize: 10, color: C.muted }}>Salon & Spa · Double Bay</div>
           </div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 32, fontSize: 13 }}>
+        {/* Desktop links */}
+        <div className="sm-desktop-only" style={{ alignItems: 'center', gap: 32, fontSize: 13 }}>
           {[['Services','#services'],['Our Team','#team'],['Gallery','#gallery'],['Contact','#contact']].map(([l,h]) => (
             <a key={l} href={h} style={{ color: C.muted, textDecoration: 'none' }}>{l}</a>
           ))}
         </div>
-        <button style={{ background: C.accent, color: '#fff', border: 'none', borderRadius: 100, padding: '10px 22px', fontSize: 13, fontWeight: 700, cursor: 'pointer', boxShadow: `0 4px 20px rgba(184,149,106,0.3)` }}>
+        <button className="sm-desktop-only" style={{ background: C.accent, color: '#fff', border: 'none', borderRadius: 100, padding: '10px 22px', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
           Book Now
         </button>
+        {/* Hamburger */}
+        <button className="sm-mobile-only" onClick={() => setOpen(v => !v)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 8, flexDirection: 'column', gap: 5 }}>
+          {[0,1,2].map(i => <span key={i} style={{ display: 'block', width: 22, height: 2, borderRadius: 2, background: C.text, transition: 'all 0.2s', transform: open && i === 0 ? 'translateY(7px) rotate(45deg)' : open && i === 2 ? 'translateY(-7px) rotate(-45deg)' : 'none', opacity: open && i === 1 ? 0 : 1 }} />)}
+        </button>
       </div>
+      {/* Mobile menu */}
+      {open && (
+        <div style={{ background: 'rgba(250,248,244,0.98)', borderTop: `1px solid ${C.border}`, padding: '1.5rem clamp(1.5rem, 4vw, 3rem)' }}>
+          {[['Services','#services'],['Our Team','#team'],['Gallery','#gallery'],['Contact','#contact']].map(([l,h]) => (
+            <a key={l} href={h} onClick={() => setOpen(false)} style={{ display: 'block', color: C.text, textDecoration: 'none', fontSize: 16, fontWeight: 500, padding: '12px 0', borderBottom: `1px solid ${C.border}` }}>{l}</a>
+          ))}
+          <button style={{ marginTop: 20, background: C.accent, color: '#fff', border: 'none', borderRadius: 100, padding: '14px 28px', fontSize: 15, fontWeight: 700, cursor: 'pointer', width: '100%' }}>Book Now</button>
+        </div>
+      )}
     </nav>
   )
 }
