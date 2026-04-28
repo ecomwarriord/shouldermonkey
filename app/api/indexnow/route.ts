@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 
-const KEY = process.env.INDEXNOW_KEY ?? ''
+const KEY = 'ae611d30f99e489792f0b3222f2d2113'
 const HOST = 'www.shouldermonkey.co'
 const KEY_LOCATION = `https://${HOST}/${KEY}.txt`
 
