@@ -5,8 +5,14 @@ import { motion, useInView, animate, AnimatePresence } from 'framer-motion'
 import { NicheEnquiryForm } from '../../components/NicheEnquiryForm'
 import { DemoBookingModal } from '../../components/DemoBookingModal'
 import { useEffect, useRef, useState } from 'react'
+import dynamic from 'next/dynamic'
 
 const playfair = Playfair_Display({ subsets: ['latin'], weight: ['400','600','700','800'], display: 'swap' })
+
+const MortgageBrokerPlayer = dynamic(
+  () => import('../../components/MortgageBrokerPlayer').then(m => ({ default: m.MortgageBrokerPlayer })),
+  { ssr: false, loading: () => <div style={{ position: 'absolute', inset: 0, background: '#080d1a' }} /> }
+)
 
 // ─── Tokens ───────────────────────────────────────────────────────────────────
 const C = {
@@ -392,6 +398,30 @@ export default function MortgageBrokerPage() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* ── Cinematic Reel ───────────────────────────────────────────────── */}
+      <section style={{ padding: 'clamp(4rem, 8vw, 6rem) 0', background: C.bg }}>
+        <div style={W}>
+          <Reveal>
+            <div style={{ textAlign: 'center', marginBottom: 40 }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: C.accentLt, border: `1px solid ${C.border}`, borderRadius: 100, padding: '6px 16px', marginBottom: 16 }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.accent, display: 'inline-block', animation: 'pulse 2s infinite' }} />
+                <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: C.accent }}>The Atlas Experience</span>
+              </div>
+              <h2 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.4rem)', fontWeight: 800, color: C.text, margin: '0 0 12px' }}>See the system in action</h2>
+              <p style={{ fontSize: 16, color: C.muted, maxWidth: 480, margin: '0 auto' }}>From first enquiry to settlement — every client touchpoint handled.</p>
+            </div>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <div style={{ position: 'relative', maxWidth: 960, margin: '0 auto', borderRadius: 24, overflow: 'hidden', background: C.surface, aspectRatio: '16/9', boxShadow: `0 0 0 1px ${C.border}, 0 40px 80px rgba(0,0,0,0.25)` }}>
+              <div style={{ position: 'absolute', inset: 0 }}>
+                <MortgageBrokerPlayer />
+              </div>
+            </div>
+          </Reveal>
+        </div>
+        <style>{`@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}`}</style>
       </section>
 
       {/* ── Reviews ──────────────────────────────────────────────────────── */}
