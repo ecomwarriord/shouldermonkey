@@ -163,21 +163,21 @@ function Hero({ onBooking: _onBooking }: { onBooking: () => void }) {
     { from: 'salon' as const, delay: 3.8,  text: '🌿 Hi Sarah! Your keratin is due for a refresh — want to lock in a time? We have spots this week 💛' },
   ]
   return (
-    <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', background: C.bg, overflow: 'hidden', paddingTop: 64 }}>
-      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+    <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', background: C.bg, overflow: 'visible', paddingTop: 64 }}>
+      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
         <div style={{ position: 'absolute', top: '-10%', right: '-5%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(184,149,106,0.08) 0%, transparent 70%)', filter: 'blur(60px)' }} />
         <div style={{ position: 'absolute', bottom: '5%', left: '10%', width: 300, height: 300, borderRadius: '50%', background: 'radial-gradient(circle, rgba(184,149,106,0.05) 0%, transparent 70%)', filter: 'blur(40px)' }} />
       </div>
-      <div style={{ ...W, padding: 'clamp(4rem, 8vw, 6rem) clamp(1.5rem, 4vw, 3rem)' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '5fr 4fr', gap: 'clamp(3rem, 5vw, 6rem)', alignItems: 'center' }}>
-          <div>
+      <div style={{ width: '100%', maxWidth: 1440, margin: '0 auto', padding: 'clamp(4rem, 8vw, 6rem) 0' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '5fr 4fr', alignItems: 'center' }}>
+          <div style={{ paddingLeft: 'clamp(1.5rem, 5vw, 8rem)', paddingRight: 'clamp(2rem, 4vw, 5rem)' }}>
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.22,1,0.36,1] }}
               style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: C.accentLt, border: `1px solid ${C.border}`, borderRadius: 100, padding: '6px 16px', marginBottom: 28 }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.accent, display: 'inline-block' }} />
               <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: C.accent }}>Demo Salon Website</span>
             </motion.div>
 
-            <h1 style={{ margin: '0 0 20px', lineHeight: 0.92, letterSpacing: '-0.03em', fontFamily: cormorant.style.fontFamily }}>
+            <h1 style={{ margin: '0 0 20px', lineHeight: 0.92, letterSpacing: '-0.03em', fontFamily: cormorant.style.fontFamily, marginLeft: 'clamp(-1rem, -2.5vw, -3rem)' }}>
               <motion.span initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.08, ease: [0.22,1,0.36,1] }}
                 style={{ display: 'block', color: C.text, fontSize: 'clamp(64px, 7.5vw, 112px)', fontWeight: 700 }}>The Loft</motion.span>
               <motion.span initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.18, ease: [0.22,1,0.36,1] }}
@@ -224,7 +224,7 @@ function Hero({ onBooking: _onBooking }: { onBooking: () => void }) {
           </div>
 
           <motion.div initial={{ opacity: 0, x: 32, y: 16 }} animate={{ opacity: 1, x: 0, y: 0 }} transition={{ duration: 1, delay: 0.3, ease: [0.22,1,0.36,1] }}
-            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20, paddingRight: 0, transform: 'translateX(3vw)' }}>
             <div style={{ position: 'relative' }}>
               <div style={{ position: 'absolute', inset: '-15%', borderRadius: '50%', background: 'radial-gradient(circle, rgba(184,149,106,0.12) 0%, transparent 70%)', filter: 'blur(50px)', zIndex: 0 }} />
               <div style={{ position: 'relative', zIndex: 1 }}>

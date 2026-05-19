@@ -196,22 +196,24 @@ export default function ClinicPage() {
       </nav>
 
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
-      <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', paddingTop: 64, overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(135deg, ${C.bg} 0%, #dceeff 50%, ${C.bg} 100%)` }} />
-        <div style={{ position: 'absolute', top: '-20%', right: '-10%', width: 600, height: 600, borderRadius: '50%', background: 'rgba(2,132,199,0.06)', filter: 'blur(80px)', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', bottom: '-10%', left: '10%', width: 400, height: 400, borderRadius: '50%', background: 'rgba(2,132,199,0.05)', filter: 'blur(80px)', pointerEvents: 'none' }} />
+      <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', paddingTop: 64, overflow: 'visible' }}>
+        <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
+          <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(135deg, ${C.bg} 0%, #dceeff 50%, ${C.bg} 100%)` }} />
+          <div style={{ position: 'absolute', top: '-20%', right: '-10%', width: 600, height: 600, borderRadius: '50%', background: 'rgba(2,132,199,0.06)', filter: 'blur(80px)' }} />
+          <div style={{ position: 'absolute', bottom: '-10%', left: '10%', width: 400, height: 400, borderRadius: '50%', background: 'rgba(2,132,199,0.05)', filter: 'blur(80px)' }} />
+        </div>
 
-        <div style={{ ...W, position: 'relative', display: 'grid', gridTemplateColumns: '5fr 4fr', gap: 'clamp(3rem, 5vw, 6rem)', alignItems: 'center', padding: `clamp(5rem, 10vw, 8rem) clamp(1.5rem, 4vw, 3rem)` }}>
+        <div style={{ ...W, position: 'relative', display: 'grid', gridTemplateColumns: '5fr 4fr', gap: 'clamp(3rem, 5vw, 6rem)', alignItems: 'center', padding: `clamp(5rem, 10vw, 8rem) 0`, maxWidth: 1440 }}>
 
           {/* Left copy */}
-          <div>
+          <div style={{ paddingLeft: 'clamp(1.5rem, 5vw, 8rem)', paddingRight: 'clamp(2rem, 4vw, 5rem)' }}>
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
               style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: C.accentLt, border: `1px solid ${C.border}`, borderRadius: 999, padding: '6px 16px', marginBottom: 24 }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.accent, display: 'inline-block' }} />
               <span style={{ color: C.accent, fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Demo Clinic Website</span>
             </motion.div>
 
-            <h1 style={{ fontFamily: plusJakarta.style.fontFamily, fontSize: 'clamp(54px, 7vw, 104px)', fontWeight: 800, color: C.text, lineHeight: 0.92, letterSpacing: '-0.03em', marginBottom: 20 }}>
+            <h1 style={{ fontFamily: plusJakarta.style.fontFamily, fontSize: 'clamp(54px, 7vw, 104px)', fontWeight: 800, color: C.text, lineHeight: 0.92, letterSpacing: '-0.03em', marginBottom: 20, marginLeft: 'clamp(-1rem, -2.5vw, -3rem)' }}>
               <motion.span initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.08, ease: [0.22,1,0.36,1] }} style={{ display: 'block' }}>Pinnacle Health</motion.span>
               <motion.span initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.20, ease: [0.22,1,0.36,1] }} style={{ display: 'block', color: C.accent }}>North Sydney</motion.span>
             </h1>
@@ -255,7 +257,7 @@ export default function ClinicPage() {
           </div>
 
           {/* Right — patient portal card */}
-          <motion.div initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.9, delay: 0.3 }}>
+          <motion.div initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.9, delay: 0.3 }} style={{ transform: 'translateX(4vw)', paddingRight: 0 }}>
             <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 24, padding: 28, boxShadow: '0 8px 40px rgba(2,132,199,0.08)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
                 <div style={{ color: C.muted, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>Practice Overview · Today</div>
