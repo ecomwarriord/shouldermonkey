@@ -169,7 +169,7 @@ function Hero({ onBooking }: { onBooking: () => void }) {
         <div style={{ position: 'absolute', bottom: '5%', left: '10%', width: 300, height: 300, borderRadius: '50%', background: 'radial-gradient(circle, rgba(184,149,106,0.05) 0%, transparent 70%)', filter: 'blur(40px)' }} />
       </div>
       <div style={{ ...W, padding: 'clamp(4rem, 8vw, 6rem) clamp(1.5rem, 4vw, 3rem)' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 'clamp(3rem, 5vw, 6rem)', alignItems: 'center' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '5fr 4fr', gap: 'clamp(3rem, 5vw, 6rem)', alignItems: 'center' }}>
           <div>
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.22,1,0.36,1] }}
               style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: C.accentLt, border: `1px solid ${C.border}`, borderRadius: 100, padding: '6px 16px', marginBottom: 28 }}>
@@ -177,19 +177,20 @@ function Hero({ onBooking }: { onBooking: () => void }) {
               <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: C.accent }}>Demo Salon Website</span>
             </motion.div>
 
-            <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.08, ease: [0.22,1,0.36,1] }}
-              style={{ margin: '0 0 16px', lineHeight: 0.92, letterSpacing: '-0.03em', fontFamily: cormorant.style.fontFamily }}>
-              <span style={{ display: 'block', color: C.text, fontSize: 'clamp(64px, 7.5vw, 112px)', fontWeight: 700 }}>The Loft</span>
-              <span style={{ display: 'block', fontSize: 'clamp(64px, 7.5vw, 112px)', fontWeight: 700, background: `linear-gradient(135deg, ${C.accent} 0%, #9e7a50 100%)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Salon & Spa</span>
-            </motion.h1>
+            <h1 style={{ margin: '0 0 20px', lineHeight: 0.92, letterSpacing: '-0.03em', fontFamily: cormorant.style.fontFamily }}>
+              <motion.span initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.08, ease: [0.22,1,0.36,1] }}
+                style={{ display: 'block', color: C.text, fontSize: 'clamp(64px, 7.5vw, 112px)', fontWeight: 700 }}>The Loft</motion.span>
+              <motion.span initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.18, ease: [0.22,1,0.36,1] }}
+                style={{ display: 'block', fontSize: 'clamp(64px, 7.5vw, 112px)', fontWeight: 700, background: `linear-gradient(135deg, ${C.accent} 0%, #9e7a50 100%)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Salon & Spa</motion.span>
+            </h1>
 
-            <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.18, ease: [0.22,1,0.36,1] }}
-              style={{ fontSize: 16, lineHeight: 1.75, color: C.muted, margin: '0 0 10px', maxWidth: 420 }}>
-              Premium hair, skin &amp; nail services in the heart of Double Bay.
+            <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.28, ease: [0.22,1,0.36,1] }}
+              style={{ fontSize: 18, lineHeight: 1.6, fontWeight: 600, color: C.text, margin: '0 0 8px', maxWidth: 420 }}>
+              More bookings. Less no-shows. Running on autopilot.
             </motion.p>
-            <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.22, ease: [0.22,1,0.36,1] }}
-              style={{ fontSize: 13, lineHeight: 1.6, color: C.accent, margin: '0 0 32px', maxWidth: 420, fontWeight: 600 }}>
-              This is a demo — we can build your salon&apos;s version and have it live in 7 days.
+            <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.34, ease: [0.22,1,0.36,1] }}
+              style={{ fontSize: 14, lineHeight: 1.6, color: C.muted, margin: '0 0 32px', maxWidth: 420 }}>
+              Your salon could look exactly like this — and we&apos;ll have it live in 7 days.
             </motion.p>
 
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.26, ease: [0.22,1,0.36,1] }}
@@ -207,13 +208,13 @@ function Hero({ onBooking }: { onBooking: () => void }) {
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.4 }}
               style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
               {[
-                { icon: '⭐', value: '4.9', label: '847 Google reviews' },
-                { icon: '✂️', value: '6', label: 'master stylists' },
-                { icon: '📅', value: 'Open', label: 'until 7pm today' },
+                { value: '4.9', label: '847 Google reviews' },
+                { value: '6', label: 'master stylists' },
+                { value: 'Open', label: 'until 7pm today' },
               ].map((s,i) => (
                 <motion.div key={i} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.5 + i * 0.1 }}
                   style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: C.card, border: `1px solid ${C.border}`, borderRadius: 100, padding: '8px 16px', fontSize: 13, boxShadow: '0 2px 8px rgba(28,21,16,0.06)' }}>
-                  <span>{s.icon}</span>
+                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.accent, flexShrink: 0 }} />
                   <span style={{ fontWeight: 700, color: C.text }}>{s.value}</span>
                   <span style={{ color: C.muted }}>{s.label}</span>
                 </motion.div>
@@ -251,42 +252,42 @@ function Hero({ onBooking }: { onBooking: () => void }) {
 
 const SERVICES = [
   {
-    icon: '🎨',
+    abbr: 'CO',
     name: 'Colour',
     tagline: 'From soft balayage to bold transformations',
     items: ['Balayage from $180', 'Full Colour from $120', 'Highlights from $160', 'Toner Refresh from $60', 'Colour Correction POA'],
     bg: 'rgba(184,149,106,0.08)',
   },
   {
-    icon: '✂️',
+    abbr: 'CS',
     name: 'Cut & Style',
     tagline: 'Precision cuts for every hair type and texture',
     items: ["Women's Cut & Blowout from $95", "Men's Cut from $55", 'Fringe Trim from $25', 'Dry Cut from $75', 'Bridal Trial from $180'],
     bg: 'rgba(184,149,106,0.04)',
   },
   {
-    icon: '💆',
+    abbr: 'TX',
     name: 'Treatments',
     tagline: 'Repair, restore and strengthen from within',
     items: ['Keratin from $120', 'Brazilian Blowout from $220', 'Olaplex Treatment from $80', 'Scalp Ritual from $65', 'Bond Repair from $90'],
     bg: 'rgba(184,149,106,0.08)',
   },
   {
-    icon: '👰',
+    abbr: 'BR',
     name: 'Bridal & Occasions',
     tagline: 'Flawless looks for your most important days',
     items: ['Bridal Hair by consultation', 'Bridal Party packages', 'Formal Updo from $120', 'Blow Dry Bar from $55', 'Colour + Style packages'],
     bg: 'rgba(184,149,106,0.04)',
   },
   {
-    icon: '💅',
+    abbr: 'NA',
     name: 'Nails',
     tagline: 'Manicures, pedicures & gel sets',
     items: ['Gel Manicure from $60', 'Classic Manicure from $40', 'Gel Pedicure from $70', 'Classic Pedicure from $50', 'Nail Art from $15/nail'],
     bg: 'rgba(184,149,106,0.08)',
   },
   {
-    icon: '🌿',
+    abbr: 'EX',
     name: 'Extensions',
     tagline: 'Instant length and volume with a natural finish',
     items: ['Tape-In from $600', 'Micro-Link from $800', 'Sew-In from $700', 'Clip-In Fitting from $80', 'Extension Maintenance from $180'],
@@ -309,7 +310,7 @@ function Services({ onBooking }: { onBooking: () => void }) {
           {SERVICES.map((s, i) => (
             <FadeUp key={i} delay={i * 0.06}>
               <div style={{ background: s.bg, border: `1px solid ${C.border}`, borderRadius: 24, padding: '28px 24px', height: '100%', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
-                <div style={{ fontSize: 28, marginBottom: 14 }}>{s.icon}</div>
+                <div style={{ width: 44, height: 44, borderRadius: 12, background: C.accentLt, border: `1px solid ${C.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 800, color: C.accent, letterSpacing: '0.04em', marginBottom: 14 }}>{s.abbr}</div>
                 <div style={{ fontSize: 18, fontWeight: 800, color: C.text, letterSpacing: '-0.02em', marginBottom: 6 }}>{s.name}</div>
                 <div style={{ fontSize: 13, color: C.muted, marginBottom: 20, lineHeight: 1.5 }}>{s.tagline}</div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8, flex: 1 }}>
@@ -522,7 +523,6 @@ function BookingCTA({ onBooking }: { onBooking: () => void }) {
           <div style={{ background: `linear-gradient(135deg, rgba(184,149,106,0.1) 0%, rgba(184,149,106,0.04) 100%)`, border: `1px solid ${C.borderHi}`, borderRadius: 32, padding: 'clamp(2.5rem, 6vw, 4rem)', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 500, height: 300, borderRadius: '50%', background: 'radial-gradient(circle, rgba(184,149,106,0.1) 0%, transparent 70%)', filter: 'blur(60px)', pointerEvents: 'none' }} />
             <div style={{ position: 'relative', zIndex: 1 }}>
-              <div style={{ fontSize: 40, marginBottom: 16 }}>✂️</div>
               <h2 style={{ fontSize: 'clamp(28px, 3.5vw, 48px)', fontWeight: 800, color: C.text, letterSpacing: '-0.04em', margin: '0 0 14px', lineHeight: 1.1 }}>
                 Ready for your transformation?
               </h2>
@@ -628,23 +628,28 @@ import { NicheEnquiryForm } from '../../components/NicheEnquiryForm'
 
 export default function SalonPage() {
   const [bookingOpen, setBookingOpen] = useState(false)
+  const [stickyVisible, setStickyVisible] = useState(false)
   const openBooking = () => setBookingOpen(true)
+
+  useEffect(() => {
+    const onScroll = () => setStickyVisible(window.scrollY > window.innerHeight * 0.7)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  const scrollToEnquiry = () => {
+    const el = document.getElementById('enquiry')
+    if (el) el.scrollIntoView({ behavior: 'smooth' })
+  }
 
   return (
     <div style={{ background: C.bg }}>
+      <style>{`::selection { background: ${C.accent}; color: #fff; }`}</style>
       <Nav />
       <Hero onBooking={openBooking} />
-      <section style={{ padding: 'clamp(2rem, 4vw, 3rem) 0', background: C.surface }}>
-        <div style={{ maxWidth: 1240, margin: '0 auto', padding: '0 clamp(1.5rem, 4vw, 3rem)' }}>
-          <div style={{ borderRadius: 24, overflow: 'hidden', boxShadow: `0 0 0 1px ${C.border}, 0 32px 80px rgba(28,21,16,0.12)`, aspectRatio: '16/9', position: 'relative', background: C.bg }}>
-            <video
-              src="/videos/salon-hero.mp4"
-              autoPlay loop muted playsInline
-              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
-            />
-            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 60%, rgba(28,21,16,0.3) 100%)' }} />
-          </div>
-        </div>
+      <section style={{ overflow: 'hidden', background: C.surface, position: 'relative', maxHeight: '65vh', minHeight: 320 }}>
+        <video src="/videos/salon-hero.mp4" autoPlay loop muted playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', maxHeight: '65vh', minHeight: 320 }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(28,21,16,0.15) 0%, transparent 30%, transparent 65%, rgba(28,21,16,0.5) 100%)', pointerEvents: 'none' }} />
       </section>
       <Services onBooking={openBooking} />
       <Team />
@@ -657,6 +662,22 @@ export default function SalonPage() {
       </div>
       <Reveal />
       <DemoBookingModal open={bookingOpen} onClose={() => setBookingOpen(false)} />
+
+      <AnimatePresence>
+        {stickyVisible && (
+          <motion.div
+            initial={{ y: 80, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 80, opacity: 0 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            style={{ position: 'fixed', bottom: 24, left: '50%', transform: 'translateX(-50%)', zIndex: 300, display: 'flex', alignItems: 'center', gap: 14, background: C.text, borderRadius: 100, padding: '12px 14px 12px 22px', boxShadow: '0 16px 50px rgba(28,21,16,0.25)', whiteSpace: 'nowrap' }}>
+            <span style={{ fontSize: 14, color: 'rgba(250,248,244,0.7)', fontWeight: 500 }}>Like what you see?</span>
+            <button
+              onClick={scrollToEnquiry}
+              style={{ background: C.accent, color: '#fff', border: 'none', borderRadius: 100, padding: '10px 20px', fontSize: 13, fontWeight: 700, cursor: 'pointer', boxShadow: `0 4px 16px rgba(184,149,106,0.35)` }}>
+              Build yours in 7 days &rarr;
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

@@ -112,6 +112,12 @@ function Stars() {
 export default function GymPage() {
   const [navOpen, setNavOpen] = useState(false)
   const [bookingOpen, setBookingOpen] = useState(false)
+  const [stickyVisible, setStickyVisible] = useState(false)
+  useEffect(() => {
+    const onScroll = () => setStickyVisible(window.scrollY > window.innerHeight * 0.7)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
   const [liveItems, setLiveItems] = useState<Activity[]>(LIVE_ACTIVITY.slice(0, 3))
   const [reviewsVisible, setReviewsVisible] = useState(3)
   const liveRef = useRef(null)
@@ -139,6 +145,7 @@ export default function GymPage() {
 
   return (
     <div style={{ background: C.bg, minHeight: '100vh', fontFamily: 'system-ui, sans-serif' }}>
+      <style>{`::selection { background: ${C.accent}; color: #000; }`}</style>
 
       {/* ── Nav ──────────────────────────────────────────────────────────── */}
       <nav style={{
@@ -201,20 +208,19 @@ export default function GymPage() {
               <span style={{ color: C.accent, fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Demo Gym Website</span>
             </motion.div>
 
-            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1 }}
-              style={{ fontFamily: spaceGrotesk.style.fontFamily, fontSize: 'clamp(58px, 7.5vw, 108px)', fontWeight: 700, color: C.text, lineHeight: 0.92, letterSpacing: '-0.04em', marginBottom: 16 }}>
-              APEX<br />
-              <span style={{ color: C.accent }}>Performance</span><br />
-              Gym
-            </motion.h1>
+            <h1 style={{ fontFamily: spaceGrotesk.style.fontFamily, fontSize: 'clamp(58px, 7.5vw, 108px)', fontWeight: 700, color: C.text, lineHeight: 0.92, letterSpacing: '-0.04em', marginBottom: 20 }}>
+              <motion.span initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.08, ease: [0.22,1,0.36,1] }} style={{ display: 'block' }}>APEX</motion.span>
+              <motion.span initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.18, ease: [0.22,1,0.36,1] }} style={{ display: 'block', color: C.accent }}>Performance</motion.span>
+              <motion.span initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.28, ease: [0.22,1,0.36,1] }} style={{ display: 'block', color: C.subtle }}>Gym</motion.span>
+            </h1>
 
-            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.2 }}
-              style={{ color: C.muted, fontSize: 17, lineHeight: 1.65, marginBottom: 10, maxWidth: 420 }}>
-              Bondi&apos;s most results-driven gym. Personal training, group classes, and a system that actually keeps you accountable.
+            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.34, ease: [0.22,1,0.36,1] }}
+              style={{ color: C.text, fontSize: 18, lineHeight: 1.6, fontWeight: 600, marginBottom: 8, maxWidth: 420 }}>
+              More trials converted. More members retained. Running without you lifting a finger.
             </motion.p>
-            <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.25 }}
-              style={{ fontSize: 13, lineHeight: 1.6, color: '#22c55e', margin: '0 0 32px', maxWidth: 420, fontWeight: 600, opacity: 0.85 }}>
-              This is a demo — we can build your gym&apos;s version and have it live in 7 days.
+            <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.40, ease: [0.22,1,0.36,1] }}
+              style={{ fontSize: 14, lineHeight: 1.6, color: C.muted, margin: '0 0 32px', maxWidth: 420 }}>
+              Your gym could look exactly like this — and we&apos;ll have it live in 7 days.
             </motion.p>
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.3 }}
@@ -232,12 +238,12 @@ export default function GymPage() {
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7, delay: 0.5 }}
               style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
               {[
-                { icon: '⭐', stat: '4.9', label: '612 Google reviews' },
-                { icon: '💪', stat: '340+', label: 'active members' },
-                { icon: '🏆', stat: '8', label: 'certified coaches' },
+                { stat: '4.9', label: '612 Google reviews' },
+                { stat: '340+', label: 'active members' },
+                { stat: '8', label: 'certified coaches' },
               ].map((item, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ fontSize: 18 }}>{item.icon}</span>
+                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.accent, flexShrink: 0 }} />
                   <span style={{ fontWeight: 800, color: C.text }}>{item.stat}</span>
                   <span style={{ color: C.muted, fontSize: 13 }}>{item.label}</span>
                 </div>
@@ -288,13 +294,9 @@ export default function GymPage() {
       </section>
 
       {/* ── Brand video ──────────────────────────────────────────────────── */}
-      <section style={{ padding: 'clamp(2rem, 4vw, 3rem) 0', background: C.surface }}>
-        <div style={{ maxWidth: 1240, margin: '0 auto', padding: '0 clamp(1.5rem, 4vw, 3rem)' }}>
-          <div style={{ borderRadius: 24, overflow: 'hidden', boxShadow: `0 0 0 1px ${C.border}, 0 32px 80px rgba(0,0,0,0.3)`, aspectRatio: '16/9', position: 'relative', background: C.bg }}>
-            <video src="/videos/gym-hero.mp4" autoPlay loop muted playsInline style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
-            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 60%, rgba(7,9,10,0.4) 100%)' }} />
-          </div>
-        </div>
+      <section style={{ overflow: 'hidden', background: C.surface, position: 'relative', maxHeight: '65vh', minHeight: 320 }}>
+        <video src="/videos/gym-hero.mp4" autoPlay loop muted playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', maxHeight: '65vh', minHeight: 320 }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(7,9,10,0.2) 0%, transparent 30%, transparent 65%, rgba(7,9,10,0.55) 100%)', pointerEvents: 'none' }} />
       </section>
 
       {/* ── Ticker ───────────────────────────────────────────────────────── */}
@@ -584,6 +586,21 @@ export default function GymPage() {
         <NicheEnquiryForm niche="gym" />
       </div>
       <DemoBookingModal open={bookingOpen} onClose={() => setBookingOpen(false)} />
+
+      <AnimatePresence>
+        {stickyVisible && (
+          <motion.div
+            initial={{ y: 80, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 80, opacity: 0 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            style={{ position: 'fixed', bottom: 24, left: '50%', transform: 'translateX(-50%)', zIndex: 300, display: 'flex', alignItems: 'center', gap: 14, background: '#0d1210', borderRadius: 100, padding: '12px 14px 12px 22px', boxShadow: '0 16px 50px rgba(0,0,0,0.4)', whiteSpace: 'nowrap', border: `1px solid ${C.border}` }}>
+            <span style={{ fontSize: 14, color: C.muted, fontWeight: 500 }}>Like what you see?</span>
+            <button onClick={() => { const el = document.getElementById('enquiry'); if (el) el.scrollIntoView({ behavior: 'smooth' }) }}
+              style={{ background: C.accent, color: '#000', border: 'none', borderRadius: 100, padding: '10px 20px', fontSize: 13, fontWeight: 800, cursor: 'pointer' }}>
+              Build yours in 7 days &rarr;
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
