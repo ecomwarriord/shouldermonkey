@@ -90,7 +90,16 @@ SMS = {
 # ─── Email copy per vertical ──────────────────────────────────────────────────
 
 BOOKING_LINK = "https://api.shouldermonkey.co/widget/booking/8U5JLwmKnUeDVkD4ATNm"
-_F = "---\nShoulderMonkey | Sydney, NSW\n{unsubscribe}"
+_UTM = "utm_source=outreach&utm_medium=email"
+_F = '---\nShoulderMonkey | Sydney, NSW\n<a href="{unsubscribe}">Unsubscribe</a>'
+
+def _demo(path: str, campaign: str, email_num: int, label: str) -> str:
+    url = f"https://shouldermonkey.co/{path}?{_UTM}&utm_campaign={campaign}&utm_content=email{email_num}"
+    return f'<a href="{url}">{label}</a>'
+
+def _book(campaign: str, email_num: int) -> str:
+    url = f"{BOOKING_LINK}?{_UTM}&utm_campaign={campaign}&utm_content=email{email_num}"
+    return f'<a href="{url}">Book a 15-min call</a>'
 
 EMAIL = {
     "vertical:salons": {
@@ -99,11 +108,11 @@ EMAIL = {
             2: "Re: {company}", 3: "Re: {company}", 4: "Re: {company}", 5: "Re: {company}",
         },
         "bodies": {
-            1: "Hey,\n\nNoticed {company}'s website could be working a lot harder for you.\n\nHad a look and reckon we could do something much better — get a lot more customers finding you online.\n\nHere's what we built for a salon like yours: shouldermonkey.co/salon\n\nFlick me a text or WhatsApp if you want me to put something together specifically for {company}. 0424 841 204\n\nDee\n" + _F,
+            1: "Hey,\n\nNoticed {company}'s website could be working a lot harder for you.\n\nHad a look and reckon we could do something much better — get a lot more customers finding you online.\n\nHere's what we built for a salon like yours: " + _demo("salon","salons",1,"Salon Demo") + "\n\nFlick me a text or WhatsApp if you want me to put something together specifically for {company}. 0424 841 204\n\nDee\n" + _F,
             2: "Hey,\n\nReached out a few days ago about your website — have you had a chance to look at that demo I sent through?\n\nReckon you'd get a lot more out of your online presence. And it's not gonna break the bank either.\n\nLet me know what you think.\n\nDee 0424 841 204\n" + _F,
-            3: "Hey,\n\nQuick one — most people searching for a salon in {city} are doing it on their phone. If your site doesn't load well on mobile, they're bouncing straight to the next result.\n\nWorth a look at what we'd fix: shouldermonkey.co/salon\n\nText me if you want to chat. 0424 841 204\n\nDee\n" + _F,
-            4: f"Hey,\n\nLast one before I leave you alone.\n\nHappy to put together a free mock-up of what we'd build for {{company}} before you commit to anything. No strings attached.\n\nBook a quick 15 min chat here: {BOOKING_LINK}\n\nOr just text. 0424 841 204\n\nDee\n" + _F,
-            5: "Alright, I'll leave you to it.\n\nIf you ever want to see what a proper website could do for {company}, the demo's still there: shouldermonkey.co/salon\n\nAnd if you decide to go for it down the track, feel free to text anytime. 0424 841 204\n\nAll the best, Dee\n" + _F,
+            3: "Hey,\n\nQuick one — most people searching for a salon in {city} are doing it on their phone. If your site doesn't load well on mobile, they're bouncing straight to the next result.\n\nWorth a look at what we'd fix: " + _demo("salon","salons",3,"Salon Demo") + "\n\nText me if you want to chat. 0424 841 204\n\nDee\n" + _F,
+            4: "Hey,\n\nLast one before I leave you alone.\n\nHappy to put together a free mock-up of what we'd build for {company} before you commit to anything. No strings attached.\n\n" + _book("salons",4) + "\n\nOr just text. 0424 841 204\n\nDee\n" + _F,
+            5: "Alright, I'll leave you to it.\n\nIf you ever want to see what a proper website could do for {company}, the demo's still there: " + _demo("salon","salons",5,"Salon Demo") + "\n\nAnd if you decide to go for it down the track, feel free to text anytime. 0424 841 204\n\nAll the best, Dee\n" + _F,
         },
     },
     "vertical:gyms": {
@@ -111,11 +120,11 @@ EMAIL = {
             1: "{company}", 2: "Re: {company}", 3: "Re: {company}", 4: "Re: {company}", 5: "Re: {company}",
         },
         "bodies": {
-            1: "Hey,\n\nNoticed {company}'s website could be working a lot harder for you.\n\nHad a look and reckon we could do something much better — get a lot more members finding you online.\n\nHere's what we built for a gym like yours: shouldermonkey.co/gym\n\nFlick me a text or WhatsApp if you want me to put something together specifically for {company}. 0424 841 204\n\nDee\n" + _F,
+            1: "Hey,\n\nNoticed {company}'s website could be working a lot harder for you.\n\nHad a look and reckon we could do something much better — get a lot more members finding you online.\n\nHere's what we built for a gym like yours: " + _demo("gym","gyms",1,"Gym Demo") + "\n\nFlick me a text or WhatsApp if you want me to put something together specifically for {company}. 0424 841 204\n\nDee\n" + _F,
             2: "Hey,\n\nReached out a few days ago about your website — have you had a chance to look at that demo I sent through?\n\nReckon you'd get a lot more out of your online presence. And it's not gonna break the bank either.\n\nLet me know what you think.\n\nDee 0424 841 204\n" + _F,
-            3: "Hey,\n\nQuick one — most people searching for a gym in {city} are doing it on their phone. If your site doesn't load well on mobile, they're bouncing straight to the next result.\n\nWorth a look at what we'd fix: shouldermonkey.co/gym\n\nText me if you want to chat. 0424 841 204\n\nDee\n" + _F,
-            4: f"Hey,\n\nLast one before I leave you alone.\n\nHappy to put together a free mock-up of what we'd build for {{company}} before you commit to anything. No strings attached.\n\nBook a quick 15 min chat here: {BOOKING_LINK}\n\nOr just text. 0424 841 204\n\nDee\n" + _F,
-            5: "Alright, I'll leave you to it.\n\nIf you ever want to see what a proper website could do for {company}, the demo's still there: shouldermonkey.co/gym\n\nAnd if you decide to go for it down the track, feel free to text anytime. 0424 841 204\n\nAll the best, Dee\n" + _F,
+            3: "Hey,\n\nQuick one — most people searching for a gym in {city} are doing it on their phone. If your site doesn't load well on mobile, they're bouncing straight to the next result.\n\nWorth a look at what we'd fix: " + _demo("gym","gyms",3,"Gym Demo") + "\n\nText me if you want to chat. 0424 841 204\n\nDee\n" + _F,
+            4: "Hey,\n\nLast one before I leave you alone.\n\nHappy to put together a free mock-up of what we'd build for {company} before you commit to anything. No strings attached.\n\n" + _book("gyms",4) + "\n\nOr just text. 0424 841 204\n\nDee\n" + _F,
+            5: "Alright, I'll leave you to it.\n\nIf you ever want to see what a proper website could do for {company}, the demo's still there: " + _demo("gym","gyms",5,"Gym Demo") + "\n\nAnd if you decide to go for it down the track, feel free to text anytime. 0424 841 204\n\nAll the best, Dee\n" + _F,
         },
     },
     "vertical:clinics": {
@@ -123,11 +132,11 @@ EMAIL = {
             1: "{company} — your website", 2: "Re: {company}", 3: "Re: {company}", 4: "Re: {company}", 5: "Re: {company}",
         },
         "bodies": {
-            1: "Hi,\n\nNoticed {company}'s website could be working a lot harder for you.\n\nI help clinics and health practices in {city} build websites that bring in patients and build trust before the first appointment. Most practices I come across are leaving a lot on the table online.\n\nHere's an example of what we build for practices like yours: shouldermonkey.co/clinic\n\nHappy to answer any questions — feel free to text or reply. 0424 841 204\n\nDee\n" + _F,
+            1: "Hi,\n\nNoticed {company}'s website could be working a lot harder for you.\n\nI help clinics and health practices in {city} build websites that bring in patients and build trust before the first appointment. Most practices I come across are leaving a lot on the table online.\n\nHere's an example of what we build for practices like yours: " + _demo("clinic","clinics",1,"Clinic Demo") + "\n\nHappy to answer any questions — feel free to text or reply. 0424 841 204\n\nDee\n" + _F,
             2: "Hi,\n\nJust following up on the email I sent about your website — have you had a chance to take a look at the demo?\n\nA well-built site does a lot of the selling before a patient even calls. It's worth getting right, and it doesn't cost as much as most practices expect.\n\nLet me know if you'd like to talk it through.\n\nDee 0424 841 204\n" + _F,
-            3: "Hi,\n\nOne thing I see consistently with health practice websites — the majority of patients are now searching on mobile, but most sites are still built for desktop. If {company}'s site isn't optimised for mobile, a significant chunk of potential patients are going elsewhere.\n\nHere's how we address it: shouldermonkey.co/clinic\n\nHappy to walk you through it if that's helpful.\n\nDee 0424 841 204\n" + _F,
-            4: f"Hi,\n\nI'll keep this short — if you'd like to see what we'd actually build for {{company}} before making any decisions, I'm happy to put together a free mock-up. No obligation.\n\nBook a quick 15-minute call here: {BOOKING_LINK}\n\nOr text me directly. 0424 841 204\n\nDee\n" + _F,
-            5: "Hi,\n\nI'll leave it here — I've followed up a few times and don't want to take up more of your time.\n\nIf you'd like to revisit this at any point, the demo is still live: shouldermonkey.co/clinic\n\nAnd I'm easy to reach by text whenever it suits you. 0424 841 204\n\nBest, Dee\n" + _F,
+            3: "Hi,\n\nOne thing I see consistently with health practice websites — the majority of patients are now searching on mobile, but most sites are still built for desktop. If {company}'s site isn't optimised for mobile, a significant chunk of potential patients are going elsewhere.\n\nHere's how we address it: " + _demo("clinic","clinics",3,"Clinic Demo") + "\n\nHappy to walk you through it if that's helpful.\n\nDee 0424 841 204\n" + _F,
+            4: "Hi,\n\nI'll keep this short — if you'd like to see what we'd actually build for {company} before making any decisions, I'm happy to put together a free mock-up. No obligation.\n\n" + _book("clinics",4) + "\n\nOr text me directly. 0424 841 204\n\nDee\n" + _F,
+            5: "Hi,\n\nI'll leave it here — I've followed up a few times and don't want to take up more of your time.\n\nIf you'd like to revisit this at any point, the demo is still live: " + _demo("clinic","clinics",5,"Clinic Demo") + "\n\nAnd I'm easy to reach by text whenever it suits you. 0424 841 204\n\nBest, Dee\n" + _F,
         },
     },
     "vertical:allied_health": {
@@ -135,11 +144,11 @@ EMAIL = {
             1: "{company} — your website", 2: "Re: {company}", 3: "Re: {company}", 4: "Re: {company}", 5: "Re: {company}",
         },
         "bodies": {
-            1: "Hi,\n\nNoticed {company}'s website could be working a lot harder for you.\n\nI help allied health professionals in {city} build websites that bring in patients and build trust before the first appointment. Most practices I come across are leaving a lot on the table online.\n\nHere's an example of what we build: shouldermonkey.co/allied-health\n\nHappy to answer any questions — feel free to text or reply. 0424 841 204\n\nDee\n" + _F,
+            1: "Hi,\n\nNoticed {company}'s website could be working a lot harder for you.\n\nI help allied health professionals in {city} build websites that bring in patients and build trust before the first appointment. Most practices I come across are leaving a lot on the table online.\n\nHere's an example of what we build: " + _demo("allied-health","allied_health",1,"Allied Health Demo") + "\n\nHappy to answer any questions — feel free to text or reply. 0424 841 204\n\nDee\n" + _F,
             2: "Hi,\n\nJust following up on the email I sent about your website — have you had a chance to take a look at the demo?\n\nA well-built site does a lot of the selling before a patient even calls. It's worth getting right, and it doesn't cost as much as most practices expect.\n\nLet me know if you'd like to talk it through.\n\nDee 0424 841 204\n" + _F,
-            3: "Hi,\n\nOne thing I see consistently with allied health websites — the majority of patients are now searching on mobile, but most sites are still built for desktop. If {company}'s site isn't optimised for mobile, a significant chunk of potential patients — whether you're a physio, chiro, or osteo — are going elsewhere.\n\nHere's how we address it: shouldermonkey.co/allied-health\n\nHappy to walk you through it.\n\nDee 0424 841 204\n" + _F,
-            4: f"Hi,\n\nI'll keep this short — if you'd like to see what we'd actually build for {{company}} before making any decisions, I'm happy to put together a free mock-up. No obligation.\n\nBook a quick 15-minute call here: {BOOKING_LINK}\n\nOr text me directly. 0424 841 204\n\nDee\n" + _F,
-            5: "Hi,\n\nI'll leave it here — I've followed up a few times and don't want to take up more of your time.\n\nIf you'd like to revisit this at any point, the demo is still live: shouldermonkey.co/allied-health\n\nAnd I'm easy to reach by text whenever it suits you. 0424 841 204\n\nBest, Dee\n" + _F,
+            3: "Hi,\n\nOne thing I see consistently with allied health websites — the majority of patients are now searching on mobile, but most sites are still built for desktop. If {company}'s site isn't optimised for mobile, a significant chunk of potential patients — whether you're a physio, chiro, or osteo — are going elsewhere.\n\nHere's how we address it: " + _demo("allied-health","allied_health",3,"Allied Health Demo") + "\n\nHappy to walk you through it.\n\nDee 0424 841 204\n" + _F,
+            4: "Hi,\n\nI'll keep this short — if you'd like to see what we'd actually build for {company} before making any decisions, I'm happy to put together a free mock-up. No obligation.\n\n" + _book("allied_health",4) + "\n\nOr text me directly. 0424 841 204\n\nDee\n" + _F,
+            5: "Hi,\n\nI'll leave it here — I've followed up a few times and don't want to take up more of your time.\n\nIf you'd like to revisit this at any point, the demo is still live: " + _demo("allied-health","allied_health",5,"Allied Health Demo") + "\n\nAnd I'm easy to reach by text whenever it suits you. 0424 841 204\n\nBest, Dee\n" + _F,
         },
     },
     "vertical:mortgage_brokers": {
@@ -147,11 +156,11 @@ EMAIL = {
             1: "{company} — online presence", 2: "Re: {company}", 3: "Re: {company}", 4: "Re: {company}", 5: "Re: {company}",
         },
         "bodies": {
-            1: "Hi,\n\nNoticed {company}'s website could be working a lot harder for you.\n\nI work with mortgage brokers and financial professionals across {city} to build websites that establish credibility and convert online enquiries. For most brokers, the website is the first impression a prospective client gets — and it matters more than most realise.\n\nHere's an example of what we build for brokers in a similar position: shouldermonkey.co/mortgage-broker\n\nI'd be glad to discuss how this might apply to {company}.\n\nDee 0424 841 204\n" + _F,
+            1: "Hi,\n\nNoticed {company}'s website could be working a lot harder for you.\n\nI work with mortgage brokers and financial professionals across {city} to build websites that establish credibility and convert online enquiries. For most brokers, the website is the first impression a prospective client gets — and it matters more than most realise.\n\nHere's an example of what we build for brokers in a similar position: " + _demo("mortgage-broker","mortgage_brokers",1,"Broker Demo") + "\n\nI'd be glad to discuss how this might apply to {company}.\n\nDee 0424 841 204\n" + _F,
             2: "Hi,\n\nFollowing up on the email I sent regarding your website — have you had a chance to review the demo?\n\nA professional, well-structured website builds trust before you've had the first conversation with a client. It's one of the higher-return investments a broker can make, and typically costs far less than expected.\n\nLet me know if you'd like to discuss further.\n\nDee 0424 841 204\n" + _F,
-            3: "Hi,\n\nOne thing worth noting: prospective financial services clients consistently research their broker online before making contact. A site that looks dated or doesn't load correctly on mobile creates doubt before the relationship has started.\n\nHere's how we approach this for brokers: shouldermonkey.co/mortgage-broker\n\nHappy to walk through it with you.\n\nDee 0424 841 204\n" + _F,
-            4: f"Hi,\n\nOne final note — if you'd like to see a mock-up of what we'd build for {{company}} before committing to anything, I'm happy to provide that at no cost.\n\nA 15-minute call is all it takes: {BOOKING_LINK}\n\nAlternatively, feel free to text directly. 0424 841 204\n\nDee\n" + _F,
-            5: "Hi,\n\nI'll leave it there — I've reached out several times and don't want to take up more of your time.\n\nThe demo remains available if you'd like to revisit: shouldermonkey.co/mortgage-broker\n\nAnd I'm easy to reach whenever it suits. 0424 841 204\n\nBest regards, Dee\n" + _F,
+            3: "Hi,\n\nOne thing worth noting: prospective financial services clients consistently research their broker online before making contact. A site that looks dated or doesn't load correctly on mobile creates doubt before the relationship has started.\n\nHere's how we approach this for brokers: " + _demo("mortgage-broker","mortgage_brokers",3,"Broker Demo") + "\n\nHappy to walk through it with you.\n\nDee 0424 841 204\n" + _F,
+            4: "Hi,\n\nOne final note — if you'd like to see a mock-up of what we'd build for {company} before committing to anything, I'm happy to provide that at no cost.\n\n" + _book("mortgage_brokers",4) + "\n\nAlternatively, feel free to text directly. 0424 841 204\n\nDee\n" + _F,
+            5: "Hi,\n\nI'll leave it there — I've reached out several times and don't want to take up more of your time.\n\nThe demo remains available if you'd like to revisit: " + _demo("mortgage-broker","mortgage_brokers",5,"Broker Demo") + "\n\nAnd I'm easy to reach whenever it suits. 0424 841 204\n\nBest regards, Dee\n" + _F,
         },
     },
 }
