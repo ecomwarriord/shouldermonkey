@@ -91,7 +91,7 @@ SMS = {
 
 BOOKING_LINK = "https://api.shouldermonkey.co/widget/booking/8U5JLwmKnUeDVkD4ATNm"
 _UTM = "utm_source=outreach&utm_medium=email"
-_F = '---\nShoulderMonkey | Sydney, NSW\n<a href="{unsubscribe}">Unsubscribe</a>'
+_F = '---\nShoulderMonkey | Australia & NZ\n<a href="{unsubscribe}">Unsubscribe</a>'
 
 def _demo(path: str, campaign: str, email_num: int, label: str) -> str:
     url = f"https://shouldermonkey.co/{path}?{_UTM}&utm_campaign={campaign}&utm_content=email{email_num}"
