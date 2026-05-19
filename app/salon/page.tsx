@@ -645,9 +645,26 @@ export default function SalonPage() {
 
   return (
     <div style={{ background: C.bg }}>
-      <style>{`::selection { background: ${C.accent}; color: #fff; } * { cursor: auto !important; } button, a { cursor: pointer !important; }`}</style>
+      <style>{`::selection{background:${C.accent};color:#fff}*{cursor:auto!important}button,a{cursor:pointer!important}h2{font-family:${cormorant.style.fontFamily};letter-spacing:-0.03em}`}</style>
       <Nav />
       <Hero onBooking={openBooking} />
+
+      {/* ── Signature stat ── */}
+      <section style={{ padding: 'clamp(4rem, 8vw, 7rem) 0', background: C.text, overflow: 'hidden', position: 'relative' }}>
+        <div style={{ position: 'absolute', right: '-5%', top: '50%', transform: 'translateY(-50%)', fontSize: 'clamp(200px, 35vw, 400px)', fontWeight: 800, color: 'rgba(184,149,106,0.04)', fontFamily: cormorant.style.fontFamily, lineHeight: 1, pointerEvents: 'none', userSelect: 'none' }}>4.9</div>
+        <div style={{ maxWidth: 1240, margin: '0 auto', padding: '0 clamp(1.5rem, 4vw, 3rem)', display: 'flex', alignItems: 'flex-end', gap: 'clamp(2rem, 5vw, 5rem)', flexWrap: 'wrap' }}>
+          <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.9, ease: [0.22,1,0.36,1] }}>
+            <div style={{ fontFamily: cormorant.style.fontFamily, fontSize: 'clamp(80px, 16vw, 180px)', fontWeight: 700, color: C.accent, letterSpacing: '-0.04em', lineHeight: 0.85 }}>847</div>
+            <div style={{ fontSize: 13, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(250,248,244,0.35)', marginTop: 16 }}>Five-star Google reviews</div>
+          </motion.div>
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2, ease: [0.22,1,0.36,1] }}
+            style={{ paddingBottom: 'clamp(0.5rem, 2vw, 2rem)', maxWidth: 380 }}>
+            <div style={{ fontSize: 'clamp(22px, 3vw, 36px)', fontWeight: 700, color: 'rgba(250,248,244,0.9)', letterSpacing: '-0.02em', lineHeight: 1.25, marginBottom: 16, fontFamily: cormorant.style.fontFamily }}>The most loved salon in Double Bay — and your business could earn the same.</div>
+            <div style={{ fontSize: 14, color: 'rgba(250,248,244,0.4)', lineHeight: 1.65 }}>Every review driven by automated follow-up after every visit. Zero extra effort from the team.</div>
+          </motion.div>
+        </div>
+      </section>
+
       <section style={{ overflow: 'hidden', background: C.surface, position: 'relative', maxHeight: '65vh', minHeight: 320 }}>
         <video src="/videos/salon-hero.mp4" autoPlay loop muted playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', maxHeight: '65vh', minHeight: 320 }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(28,21,16,0.15) 0%, transparent 30%, transparent 65%, rgba(28,21,16,0.5) 100%)', pointerEvents: 'none' }} />

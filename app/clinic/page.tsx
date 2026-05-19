@@ -147,7 +147,7 @@ export default function ClinicPage() {
 
   return (
     <div style={{ background: C.bg, minHeight: '100vh', fontFamily: 'system-ui, sans-serif' }}>
-      <style>{`::selection { background: ${C.accent}; color: #fff; } * { cursor: auto !important; } button, a { cursor: pointer !important; }`}</style>
+      <style>{`::selection{background:${C.accent};color:#fff}*{cursor:auto!important}button,a{cursor:pointer!important}h2{font-family:${plusJakarta.style.fontFamily};letter-spacing:-0.03em;font-weight:800}`}</style>
 
       {/* ── Nav ──────────────────────────────────────────────────────────── */}
       <nav style={{
@@ -201,7 +201,7 @@ export default function ClinicPage() {
         <div style={{ position: 'absolute', top: '-20%', right: '-10%', width: 600, height: 600, borderRadius: '50%', background: 'rgba(2,132,199,0.06)', filter: 'blur(80px)', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', bottom: '-10%', left: '10%', width: 400, height: 400, borderRadius: '50%', background: 'rgba(2,132,199,0.05)', filter: 'blur(80px)', pointerEvents: 'none' }} />
 
-        <div style={{ ...W, position: 'relative', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'clamp(3rem, 5vw, 6rem)', alignItems: 'center', padding: `clamp(5rem, 10vw, 8rem) clamp(1.5rem, 4vw, 3rem)` }}>
+        <div style={{ ...W, position: 'relative', display: 'grid', gridTemplateColumns: '5fr 4fr', gap: 'clamp(3rem, 5vw, 6rem)', alignItems: 'center', padding: `clamp(5rem, 10vw, 8rem) clamp(1.5rem, 4vw, 3rem)` }}>
 
           {/* Left copy */}
           <div>
@@ -296,6 +296,22 @@ export default function ClinicPage() {
                 <div style={{ color: C.muted, fontSize: 12, marginTop: 2 }}>Linda R. — confirmed with Dr Chen, intake form sent</div>
               </div>
             </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── Signature stat ── */}
+      <section style={{ padding: 'clamp(4rem, 8vw, 7rem) 0', background: '#040d1a', overflow: 'hidden', position: 'relative' }}>
+        <div style={{ position: 'absolute', right: '-3%', top: '50%', transform: 'translateY(-50%)', fontSize: 'clamp(200px, 35vw, 400px)', fontWeight: 800, color: 'rgba(2,132,199,0.04)', fontFamily: plusJakarta.style.fontFamily, lineHeight: 1, pointerEvents: 'none', userSelect: 'none' }}>23</div>
+        <div style={{ maxWidth: 1240, margin: '0 auto', padding: '0 clamp(1.5rem, 4vw, 3rem)', display: 'flex', alignItems: 'flex-end', gap: 'clamp(2rem, 5vw, 5rem)', flexWrap: 'wrap' }}>
+          <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.9, ease: [0.22,1,0.36,1] }}>
+            <div style={{ fontFamily: plusJakarta.style.fontFamily, fontSize: 'clamp(80px, 16vw, 180px)', fontWeight: 800, color: C.accent, letterSpacing: '-0.05em', lineHeight: 0.85 }}>847</div>
+            <div style={{ fontSize: 13, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(240,244,255,0.3)', marginTop: 16 }}>Five-star Google reviews</div>
+          </motion.div>
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2, ease: [0.22,1,0.36,1] }}
+            style={{ paddingBottom: 'clamp(0.5rem, 2vw, 2rem)', maxWidth: 380 }}>
+            <div style={{ fontSize: 'clamp(20px, 2.5vw, 32px)', fontWeight: 800, color: 'rgba(240,244,255,0.9)', letterSpacing: '-0.02em', lineHeight: 1.3, marginBottom: 16, fontFamily: plusJakarta.style.fontFamily }}>23 years serving North Sydney. The reputation is built — the system keeps it growing.</div>
+            <div style={{ fontSize: 14, color: 'rgba(240,244,255,0.35)', lineHeight: 1.65 }}>Automated review requests after every visit. No awkward asks. Just consistent 5-star results.</div>
           </motion.div>
         </div>
       </section>

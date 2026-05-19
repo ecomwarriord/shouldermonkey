@@ -145,7 +145,7 @@ export default function MortgageBrokerPage() {
 
   return (
     <div style={{ background: C.bg, minHeight: '100vh', fontFamily: 'system-ui, sans-serif' }}>
-      <style>{`::selection { background: ${C.accent}; color: #fff; } * { cursor: auto !important; } button, a { cursor: pointer !important; }`}</style>
+      <style>{`::selection{background:${C.accent};color:#fff}*{cursor:auto!important}button,a{cursor:pointer!important}h2{font-family:${playfair.style.fontFamily};letter-spacing:-0.02em}`}</style>
 
       {/* ── Nav ──────────────────────────────────────────────────────────── */}
       <nav style={{
@@ -197,7 +197,7 @@ export default function MortgageBrokerPage() {
         <div style={{ position: 'absolute', top: '20%', right: '5%', width: 500, height: 500, borderRadius: '50%', background: 'rgba(212,160,74,0.06)', filter: 'blur(80px)', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', bottom: '10%', left: '15%', width: 400, height: 400, borderRadius: '50%', background: 'rgba(212,160,74,0.04)', filter: 'blur(80px)', pointerEvents: 'none' }} />
 
-        <div style={{ ...W, position: 'relative', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'clamp(3rem, 5vw, 6rem)', alignItems: 'center', padding: `clamp(5rem, 10vw, 8rem) clamp(1.5rem, 4vw, 3rem)` }}>
+        <div style={{ ...W, position: 'relative', display: 'grid', gridTemplateColumns: '5fr 4fr', gap: 'clamp(3rem, 5vw, 6rem)', alignItems: 'center', padding: `clamp(5rem, 10vw, 8rem) clamp(1.5rem, 4vw, 3rem)` }}>
 
           {/* Left copy */}
           <div>
@@ -289,6 +289,22 @@ export default function MortgageBrokerPage() {
                 <div style={{ color: C.muted, fontSize: 12, marginTop: 2 }}>The Nguyen Family — $1.24M in Crows Nest · 6.01% fixed 3yr</div>
               </div>
             </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── Signature stat ── */}
+      <section style={{ padding: 'clamp(4rem, 8vw, 7rem) 0', background: '#03060f', overflow: 'hidden', position: 'relative' }}>
+        <div style={{ position: 'absolute', right: '-2%', top: '50%', transform: 'translateY(-50%)', fontSize: 'clamp(120px, 22vw, 280px)', fontWeight: 800, color: 'rgba(212,160,74,0.04)', fontFamily: playfair.style.fontFamily, lineHeight: 1, pointerEvents: 'none', userSelect: 'none' }}>$2.8B</div>
+        <div style={{ maxWidth: 1240, margin: '0 auto', padding: '0 clamp(1.5rem, 4vw, 3rem)', display: 'flex', alignItems: 'flex-end', gap: 'clamp(2rem, 5vw, 5rem)', flexWrap: 'wrap' }}>
+          <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.9, ease: [0.22,1,0.36,1] }}>
+            <div style={{ fontFamily: playfair.style.fontFamily, fontSize: 'clamp(70px, 14vw, 160px)', fontWeight: 800, color: C.accent, letterSpacing: '-0.03em', lineHeight: 0.85 }}>$2.8B</div>
+            <div style={{ fontSize: 13, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(240,244,255,0.3)', marginTop: 16 }}>In loans settled</div>
+          </motion.div>
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2, ease: [0.22,1,0.36,1] }}
+            style={{ paddingBottom: 'clamp(0.5rem, 2vw, 2rem)', maxWidth: 380 }}>
+            <div style={{ fontSize: 'clamp(20px, 2.5vw, 32px)', fontWeight: 700, color: 'rgba(240,244,255,0.9)', letterSpacing: '-0.02em', lineHeight: 1.3, marginBottom: 16, fontFamily: playfair.style.fontFamily }}>$2.8 billion settled across 1,240 five-star clients. The pipeline that built it is now yours.</div>
+            <div style={{ fontSize: 14, color: 'rgba(240,244,255,0.35)', lineHeight: 1.65 }}>Every enquiry followed up in under 8 minutes. Every client milestone triggered automatically.</div>
           </motion.div>
         </div>
       </section>
