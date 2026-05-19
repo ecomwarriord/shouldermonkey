@@ -1,8 +1,16 @@
 'use client'
 
+import { Cormorant_Garamond } from 'next/font/google'
 import { motion, useInView, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
+import { DemoBookingModal } from '../../components/DemoBookingModal'
+
+const cormorant = Cormorant_Garamond({
+  subsets: ['latin'],
+  weight: ['400', '600', '700'],
+  display: 'swap',
+})
 
 const SalonPlayer = dynamic(
   () => import('../../components/SalonPlayer').then(m => ({ default: m.SalonPlayer })),
@@ -115,6 +123,10 @@ function Nav() {
             <div style={{ fontSize: 14, fontWeight: 700, color: C.text, letterSpacing: '-0.01em' }}>The Loft</div>
             <div style={{ fontSize: 10, color: C.muted }}>Salon & Spa · Double Bay</div>
           </div>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'rgba(107,53,245,0.08)', border: '1px solid rgba(107,53,245,0.22)', borderRadius: 100, padding: '3px 10px' }}>
+            <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#6b35f5', display: 'inline-block' }} />
+            <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#6b35f5' }}>Demo</span>
+          </div>
         </div>
         {/* Desktop links */}
         <div className="sm-desktop-only" style={{ alignItems: 'center', gap: 32, fontSize: 13 }}>
@@ -143,7 +155,7 @@ function Nav() {
   )
 }
 
-function Hero() {
+function Hero({ onBooking }: { onBooking: () => void }) {
   const msgs = [
     { from: 'salon' as const, delay: 0.6,  text: '✅ Confirmed! The Loft Salon & Spa\n\n📅 Wed 23 Apr · 2:00pm\n✂️ Balayage with Emma\n📍 Knox St, Double Bay' },
     { from: 'salon' as const, delay: 1.8,  text: '⏰ Hey Sarah! Just a reminder — see you tomorrow at 2pm with Emma. Need to move it? Reply CHANGE 💛' },
@@ -162,24 +174,30 @@ function Hero() {
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.22,1,0.36,1] }}
               style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: C.accentLt, border: `1px solid ${C.border}`, borderRadius: 100, padding: '6px 16px', marginBottom: 28 }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.accent, display: 'inline-block' }} />
-              <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: C.accent }}>Double Bay, Sydney · Est. 2018</span>
+              <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: C.accent }}>Demo Salon Website</span>
             </motion.div>
 
             <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.08, ease: [0.22,1,0.36,1] }}
-              style={{ margin: '0 0 20px', lineHeight: 0.95, letterSpacing: '-0.04em' }}>
-              <span style={{ display: 'block', color: C.text, fontSize: 'clamp(52px, 5.5vw, 80px)', fontWeight: 800 }}>The Loft</span>
-              <span style={{ display: 'block', fontSize: 'clamp(52px, 5.5vw, 80px)', fontWeight: 800, background: `linear-gradient(135deg, ${C.accent} 0%, #9e7a50 100%)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Salon & Spa</span>
+              style={{ margin: '0 0 16px', lineHeight: 0.92, letterSpacing: '-0.03em', fontFamily: cormorant.style.fontFamily }}>
+              <span style={{ display: 'block', color: C.text, fontSize: 'clamp(64px, 7.5vw, 112px)', fontWeight: 700 }}>The Loft</span>
+              <span style={{ display: 'block', fontSize: 'clamp(64px, 7.5vw, 112px)', fontWeight: 700, background: `linear-gradient(135deg, ${C.accent} 0%, #9e7a50 100%)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Salon & Spa</span>
             </motion.h1>
 
             <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.18, ease: [0.22,1,0.36,1] }}
-              style={{ fontSize: 17, lineHeight: 1.75, color: C.muted, margin: '0 0 36px', maxWidth: 400 }}>
-              Premium hair, skin & nail services in the heart of Double Bay. Come in for the experience. Leave looking — and feeling — your absolute best.
+              style={{ fontSize: 16, lineHeight: 1.75, color: C.muted, margin: '0 0 10px', maxWidth: 420 }}>
+              Premium hair, skin &amp; nail services in the heart of Double Bay.
+            </motion.p>
+            <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.22, ease: [0.22,1,0.36,1] }}
+              style={{ fontSize: 13, lineHeight: 1.6, color: C.accent, margin: '0 0 32px', maxWidth: 420, fontWeight: 600 }}>
+              This is a demo — we can build your salon&apos;s version and have it live in 7 days.
             </motion.p>
 
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.26, ease: [0.22,1,0.36,1] }}
               style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 40 }}>
-              <button style={{ background: C.accent, color: '#fff', border: 'none', borderRadius: 100, padding: '14px 28px', fontSize: 14, fontWeight: 700, cursor: 'pointer', boxShadow: `0 8px 30px rgba(184,149,106,0.3)` }}>
-                Book an Appointment
+              <button
+                onClick={() => { const el = document.getElementById('enquiry'); if (el) el.scrollIntoView({ behavior: 'smooth' }) }}
+                style={{ background: C.accent, color: '#fff', border: 'none', borderRadius: 100, padding: '14px 28px', fontSize: 14, fontWeight: 700, cursor: 'pointer', boxShadow: `0 8px 30px rgba(184,149,106,0.3)` }}>
+                Build mine &rarr;
               </button>
               <button style={{ background: 'transparent', color: C.muted, border: `1px solid ${C.border}`, borderRadius: 100, padding: '14px 28px', fontSize: 14, fontWeight: 500, cursor: 'pointer' }}>
                 View Services
@@ -276,7 +294,7 @@ const SERVICES = [
   },
 ]
 
-function Services() {
+function Services({ onBooking }: { onBooking: () => void }) {
   return (
     <section id="services" style={{ padding: 'clamp(4rem, 8vw, 6rem) 0', background: C.surface }}>
       <div style={W}>
@@ -302,8 +320,8 @@ function Services() {
                     </div>
                   ))}
                 </div>
-                <button style={{ marginTop: 24, background: 'transparent', border: `1px solid ${C.borderHi}`, borderRadius: 100, padding: '9px 18px', fontSize: 12, fontWeight: 700, color: C.accent, cursor: 'pointer', letterSpacing: '0.04em' }}>
-                  Book {s.name} →
+                <button onClick={onBooking} style={{ marginTop: 24, background: 'transparent', border: `1px solid ${C.borderHi}`, borderRadius: 100, padding: '9px 18px', fontSize: 12, fontWeight: 700, color: C.accent, cursor: 'pointer', letterSpacing: '0.04em' }}>
+                  Book {s.name} &rarr;
                 </button>
               </div>
             </FadeUp>
@@ -338,8 +356,8 @@ function Team() {
           {TEAM.map((member, i) => (
             <FadeUp key={i} delay={i * 0.08}>
               <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 24, padding: 24, textAlign: 'center', boxShadow: '0 4px 24px rgba(28,21,16,0.06)', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', boxSizing: 'border-box' }}>
-                <div style={{ width: 72, height: 72, borderRadius: '50%', background: `linear-gradient(135deg, ${C.accentLt} 0%, rgba(184,149,106,0.2) 100%)`, border: `2px solid ${C.borderHi}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, marginBottom: 16, flexShrink: 0 }}>
-                  {member.emoji}
+                <div style={{ width: 72, height: 72, borderRadius: '50%', background: `linear-gradient(135deg, ${C.accentLt} 0%, rgba(184,149,106,0.2) 100%)`, border: `2px solid ${C.borderHi}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 800, color: C.accent, letterSpacing: '0.02em', marginBottom: 16, flexShrink: 0 }}>
+                  {member.initials}
                 </div>
                 <div style={{ fontSize: 16, fontWeight: 800, color: C.text, letterSpacing: '-0.01em', marginBottom: 4 }}>{member.name}</div>
                 <div style={{ fontSize: 12, fontWeight: 700, color: C.accent, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>{member.role}</div>
@@ -496,7 +514,7 @@ function Reviews() {
   )
 }
 
-function BookingCTA() {
+function BookingCTA({ onBooking }: { onBooking: () => void }) {
   return (
     <section id="contact" style={{ padding: 'clamp(4rem, 8vw, 6rem) 0', background: C.bg }}>
       <div style={W}>
@@ -512,8 +530,8 @@ function BookingCTA() {
                 Book online in seconds. Choose your stylist, pick a time, and we&apos;ll take care of everything else.
               </p>
               <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 32 }}>
-                <button style={{ background: C.accent, color: '#fff', border: 'none', borderRadius: 100, padding: '16px 36px', fontSize: 15, fontWeight: 700, cursor: 'pointer', boxShadow: `0 8px 30px rgba(184,149,106,0.3)` }}>
-                  Book an Appointment →
+                <button onClick={onBooking} style={{ background: C.accent, color: '#fff', border: 'none', borderRadius: 100, padding: '16px 36px', fontSize: 15, fontWeight: 700, cursor: 'pointer', boxShadow: `0 8px 30px rgba(184,149,106,0.3)` }}>
+                  Book an Appointment &rarr;
                 </button>
                 <button style={{ background: 'transparent', color: C.muted, border: `1px solid ${C.border}`, borderRadius: 100, padding: '16px 32px', fontSize: 15, fontWeight: 500, cursor: 'pointer' }}>
                   Call us · (02) 9327 5880
@@ -599,10 +617,6 @@ function Reveal() {
                 See pricing
               </a>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 24, color: 'rgba(240,237,255,0.28)', fontSize: 13 }}>
-              <Stars color="#6b35f5" size={11} />
-              <span>Trusted by 200+ service businesses across Australia & NZ</span>
-            </div>
           </div>
         </FadeUp>
       </div>
@@ -613,18 +627,24 @@ function Reveal() {
 import { NicheEnquiryForm } from '../../components/NicheEnquiryForm'
 
 export default function SalonPage() {
+  const [bookingOpen, setBookingOpen] = useState(false)
+  const openBooking = () => setBookingOpen(true)
+
   return (
     <div style={{ background: C.bg }}>
       <Nav />
-      <Hero />
-      <Services />
+      <Hero onBooking={openBooking} />
+      <Services onBooking={openBooking} />
       <Team />
       <CinematicReel />
       <Gallery />
       <Reviews />
-      <BookingCTA />
-      <NicheEnquiryForm niche="salon" />
+      <BookingCTA onBooking={openBooking} />
+      <div id="enquiry">
+        <NicheEnquiryForm niche="salon" />
+      </div>
       <Reveal />
+      <DemoBookingModal open={bookingOpen} onClose={() => setBookingOpen(false)} />
     </div>
   )
 }

@@ -1,8 +1,12 @@
 'use client'
 
+import { Plus_Jakarta_Sans } from 'next/font/google'
 import { motion, useInView, animate, AnimatePresence } from 'framer-motion'
 import { NicheEnquiryForm } from '../../components/NicheEnquiryForm'
+import { DemoBookingModal } from '../../components/DemoBookingModal'
 import { useEffect, useRef, useState } from 'react'
+
+const plusJakarta = Plus_Jakarta_Sans({ subsets: ['latin'], weight: ['400','500','600','700','800'], display: 'swap' })
 
 // ─── Tokens ───────────────────────────────────────────────────────────────────
 const C = {
@@ -103,6 +107,7 @@ function Stars() {
 
 export default function ClinicPage() {
   const [navOpen, setNavOpen] = useState(false)
+  const [bookingOpen, setBookingOpen] = useState(false)
   const [liveItems, setLiveItems] = useState<Activity[]>(LIVE_ACTIVITY.slice(0, 3))
   const [reviewsVisible, setReviewsVisible] = useState(3)
   const liveRef = useRef(null)
@@ -148,6 +153,10 @@ export default function ClinicPage() {
               <div style={{ fontWeight: 800, color: C.text, fontSize: 14 }}>Pinnacle Health</div>
               <div style={{ color: C.muted, fontSize: 11 }}>Private Medical · North Sydney</div>
             </div>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'rgba(2,132,199,0.08)', border: '1px solid rgba(2,132,199,0.22)', borderRadius: 100, padding: '3px 10px' }}>
+              <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#0284c7', display: 'inline-block' }} />
+              <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#0284c7' }}>Demo</span>
+            </div>
           </div>
           <div className="sm-desktop-only" style={{ alignItems: 'center', gap: 32 }}>
             <div style={{ display: 'flex', gap: 28, fontSize: 13 }}>
@@ -155,7 +164,7 @@ export default function ClinicPage() {
                 <a key={l} href="#" style={{ color: C.muted, textDecoration: 'none' }}>{l}</a>
               ))}
             </div>
-            <button style={{ background: C.accent, color: '#fff', fontSize: 13, fontWeight: 700, padding: '10px 22px', borderRadius: 10, border: 'none', cursor: 'pointer' }}>
+            <button onClick={() => setBookingOpen(true)} style={{ background: C.accent, color: '#fff', fontSize: 13, fontWeight: 700, padding: '10px 22px', borderRadius: 10, border: 'none', cursor: 'pointer' }}>
               Book Appointment
             </button>
           </div>
@@ -186,24 +195,30 @@ export default function ClinicPage() {
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
               style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: C.accentLt, border: `1px solid ${C.border}`, borderRadius: 999, padding: '6px 16px', marginBottom: 24 }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.accent, display: 'inline-block' }} />
-              <span style={{ color: C.accent, fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Accepting new patients · North Sydney</span>
+              <span style={{ color: C.accent, fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Demo Clinic Website</span>
             </motion.div>
 
             <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1 }}
-              style={{ fontSize: 'clamp(2.8rem, 5.5vw, 4.2rem)', fontWeight: 900, color: C.text, lineHeight: 1.08, letterSpacing: '-0.02em', marginBottom: 20 }}>
+              style={{ fontFamily: plusJakarta.style.fontFamily, fontSize: 'clamp(54px, 7vw, 104px)', fontWeight: 800, color: C.text, lineHeight: 0.92, letterSpacing: '-0.03em', marginBottom: 16 }}>
               Pinnacle Health<br />
               <span style={{ color: C.accent }}>North Sydney</span>
             </motion.h1>
 
             <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.2 }}
-              style={{ color: C.muted, fontSize: 17, lineHeight: 1.7, marginBottom: 32, maxWidth: 440 }}>
-              Premium private medical care in the heart of North Sydney. GPs, specialists, and pathology — all under one roof, with follow-up that actually follows up.
+              style={{ color: C.muted, fontSize: 17, lineHeight: 1.7, marginBottom: 10, maxWidth: 440 }}>
+              Premium private medical care in the heart of North Sydney.
+            </motion.p>
+            <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.25 }}
+              style={{ fontSize: 13, lineHeight: 1.6, color: '#0284c7', margin: '0 0 32px', maxWidth: 440, fontWeight: 600, opacity: 0.9 }}>
+              This is a demo — we can build your clinic&apos;s version and have it live in 7 days.
             </motion.p>
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.3 }}
               style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 40 }}>
-              <button style={{ background: C.accent, color: '#fff', fontWeight: 800, padding: '14px 32px', borderRadius: 12, border: 'none', cursor: 'pointer', fontSize: 14 }}>
-                Book an Appointment
+              <button
+                onClick={() => { const el = document.getElementById('enquiry'); if (el) el.scrollIntoView({ behavior: 'smooth' }) }}
+                style={{ background: C.accent, color: '#fff', fontWeight: 800, padding: '14px 32px', borderRadius: 12, border: 'none', cursor: 'pointer', fontSize: 14 }}>
+                Build mine &rarr;
               </button>
               <button style={{ border: `1px solid ${C.border}`, color: C.text, fontWeight: 500, padding: '14px 32px', borderRadius: 12, background: 'none', cursor: 'pointer', fontSize: 14 }}>
                 Meet Our Doctors
@@ -534,7 +549,10 @@ export default function ClinicPage() {
           </Reveal>
         </div>
       </section>
-      <NicheEnquiryForm niche="clinic" />
+      <div id="enquiry">
+        <NicheEnquiryForm niche="clinic" />
+      </div>
+      <DemoBookingModal open={bookingOpen} onClose={() => setBookingOpen(false)} />
     </div>
   )
 }
