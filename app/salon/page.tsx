@@ -634,6 +634,18 @@ export default function SalonPage() {
     <div style={{ background: C.bg }}>
       <Nav />
       <Hero onBooking={openBooking} />
+      <section style={{ padding: 'clamp(2rem, 4vw, 3rem) 0', background: C.surface }}>
+        <div style={{ maxWidth: 1240, margin: '0 auto', padding: '0 clamp(1.5rem, 4vw, 3rem)' }}>
+          <div style={{ borderRadius: 24, overflow: 'hidden', boxShadow: `0 0 0 1px ${C.border}, 0 32px 80px rgba(28,21,16,0.12)`, aspectRatio: '16/9', position: 'relative', background: C.bg }}>
+            <video
+              src="/videos/salon-hero.mp4"
+              autoPlay loop muted playsInline
+              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 60%, rgba(28,21,16,0.3) 100%)' }} />
+          </div>
+        </div>
+      </section>
       <Services onBooking={openBooking} />
       <Team />
       <CinematicReel />
