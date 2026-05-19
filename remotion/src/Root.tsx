@@ -1,3 +1,4 @@
+import React from 'react'
 import { Composition, useCurrentFrame, interpolate } from 'remotion'
 import { FPS, TOTAL_FRAMES, SCENES } from './constants'
 import { Intro } from './scenes/Intro'
@@ -8,6 +9,10 @@ import { Automation } from './scenes/Automation'
 import { Result } from './scenes/Result'
 import { CTA } from './scenes/CTA'
 import { SalonReel } from './scenes/SalonReel'
+import { GymReel } from './scenes/GymReel'
+import { ClinicReel } from './scenes/ClinicReel'
+import { MortgageBrokerReel } from './scenes/MortgageBrokerReel'
+import { AlliedHealthReel } from './scenes/AlliedHealthReel'
 
 function ShoulderMonkeyDemo() {
   const frame = useCurrentFrame()
@@ -58,6 +63,38 @@ export function RemotionRoot() {
       <Composition
         id="SalonReel"
         component={SalonReel}
+        durationInFrames={360}
+        fps={30}
+        width={1280}
+        height={720}
+      />
+      <Composition
+        id="GymReel"
+        component={GymReel}
+        durationInFrames={360}
+        fps={30}
+        width={1280}
+        height={720}
+      />
+      <Composition
+        id="ClinicReel"
+        component={ClinicReel}
+        durationInFrames={360}
+        fps={30}
+        width={1280}
+        height={720}
+      />
+      <Composition
+        id="MortgageBrokerReel"
+        component={MortgageBrokerReel}
+        durationInFrames={360}
+        fps={30}
+        width={1280}
+        height={720}
+      />
+      <Composition
+        id="AlliedHealthReel"
+        component={AlliedHealthReel}
         durationInFrames={360}
         fps={30}
         width={1280}
