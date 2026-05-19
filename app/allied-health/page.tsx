@@ -291,6 +291,16 @@ export default function AlliedHealthPage() {
         </div>
       </section>
 
+      {/* ── Brand video ──────────────────────────────────────────────────── */}
+      <section style={{ padding: 'clamp(2rem, 4vw, 3rem) 0', background: C.surface }}>
+        <div style={{ maxWidth: 1240, margin: '0 auto', padding: '0 clamp(1.5rem, 4vw, 3rem)' }}>
+          <div style={{ borderRadius: 24, overflow: 'hidden', boxShadow: `0 0 0 1px ${C.border}, 0 32px 80px rgba(13,148,136,0.08)`, aspectRatio: '16/9', position: 'relative', background: C.bg }}>
+            <video src="/videos/allied-health-hero.mp4" autoPlay loop muted playsInline style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 60%, rgba(13,31,26,0.25) 100%)' }} />
+          </div>
+        </div>
+      </section>
+
       {/* ── Ticker ───────────────────────────────────────────────────────── */}
       <div style={{ overflow: 'hidden', background: C.accent, padding: '10px 0' }}>
         <motion.div animate={{ x: ['0%', '-50%'] }} transition={{ duration: 35, repeat: Infinity, ease: 'linear' }}
