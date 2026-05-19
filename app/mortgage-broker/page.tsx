@@ -296,7 +296,7 @@ export default function MortgageBrokerPage() {
       </section>
 
       {/* ── Signature stat ── */}
-      <section style={{ padding: 'clamp(4rem, 8vw, 7rem) 0', background: '#03060f', overflow: 'hidden', position: 'relative' }}>
+      <section style={{ padding: 'clamp(5rem, 9vw, 8rem) 0 clamp(4rem, 8vw, 7rem)', background: '#03060f', overflow: 'hidden', position: 'relative', zIndex: 2, marginTop: '-80px', borderRadius: '28px 28px 0 0' }}>
         <div style={{ position: 'absolute', right: '-2%', top: '50%', transform: 'translateY(-50%)', fontSize: 'clamp(120px, 22vw, 280px)', fontWeight: 800, color: 'rgba(212,160,74,0.04)', fontFamily: playfair.style.fontFamily, lineHeight: 1, pointerEvents: 'none', userSelect: 'none' }}>$2.8B</div>
         <div style={{ maxWidth: 1240, margin: '0 auto', padding: '0 clamp(1.5rem, 4vw, 3rem)', display: 'flex', alignItems: 'flex-end', gap: 'clamp(2rem, 5vw, 5rem)', flexWrap: 'wrap' }}>
           <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.9, ease: [0.22,1,0.36,1] }}>
