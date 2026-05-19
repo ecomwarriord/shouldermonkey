@@ -1,8 +1,12 @@
 'use client'
 
+import { Space_Grotesk } from 'next/font/google'
 import { motion, useInView, animate, AnimatePresence } from 'framer-motion'
 import { NicheEnquiryForm } from '../../components/NicheEnquiryForm'
+import { DemoBookingModal } from '../../components/DemoBookingModal'
 import { useEffect, useRef, useState } from 'react'
+
+const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], weight: ['400','500','600','700'], display: 'swap' })
 
 // ─── Tokens ───────────────────────────────────────────────────────────────────
 const C = {
@@ -101,6 +105,7 @@ function Stars() {
 
 export default function GymPage() {
   const [navOpen, setNavOpen] = useState(false)
+  const [bookingOpen, setBookingOpen] = useState(false)
   const [liveItems, setLiveItems] = useState<Activity[]>(LIVE_ACTIVITY.slice(0, 3))
   const [reviewsVisible, setReviewsVisible] = useState(3)
   const liveRef = useRef(null)
@@ -144,6 +149,10 @@ export default function GymPage() {
               <div style={{ fontWeight: 900, color: C.text, fontSize: 13, letterSpacing: '0.12em' }}>APEX</div>
               <div style={{ color: C.muted, fontSize: 11 }}>Performance Gym · Bondi</div>
             </div>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.22)', borderRadius: 100, padding: '3px 10px' }}>
+              <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }} />
+              <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#22c55e' }}>Demo</span>
+            </div>
           </div>
           <div className="sm-desktop-only" style={{ alignItems: 'center', gap: 32 }}>
             <div style={{ display: 'flex', gap: 28, color: C.muted, fontSize: 13 }}>
@@ -151,8 +160,8 @@ export default function GymPage() {
                 <a key={l} href="#" style={{ color: C.muted, textDecoration: 'none' }}>{l}</a>
               ))}
             </div>
-            <button style={{ background: C.accent, color: '#000', fontSize: 13, fontWeight: 800, padding: '10px 22px', borderRadius: 10, border: 'none', cursor: 'pointer' }}>
-              Free Trial →
+            <button onClick={() => setBookingOpen(true)} style={{ background: C.accent, color: '#000', fontSize: 13, fontWeight: 800, padding: '10px 22px', borderRadius: 10, border: 'none', cursor: 'pointer' }}>
+              Free Trial &rarr;
             </button>
           </div>
           <button className="sm-mobile-only" onClick={() => setNavOpen(v => !v)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 8, flexDirection: 'column', gap: 5 }}>
@@ -183,25 +192,31 @@ export default function GymPage() {
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
               style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(34,197,94,0.08)', border: `1px solid rgba(34,197,94,0.28)`, borderRadius: 999, padding: '6px 16px', marginBottom: 24 }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.accent, display: 'inline-block', animation: 'pulse 2s infinite' }} />
-              <span style={{ color: C.accent, fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Now accepting members · Bondi Beach, Sydney</span>
+              <span style={{ color: C.accent, fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Demo Gym Website</span>
             </motion.div>
 
             <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1 }}
-              style={{ fontSize: 'clamp(3.5rem, 7vw, 5.5rem)', fontWeight: 900, color: C.text, lineHeight: 1.0, letterSpacing: '-0.02em', marginBottom: 16 }}>
+              style={{ fontFamily: spaceGrotesk.style.fontFamily, fontSize: 'clamp(58px, 7.5vw, 108px)', fontWeight: 700, color: C.text, lineHeight: 0.92, letterSpacing: '-0.04em', marginBottom: 16 }}>
               APEX<br />
               <span style={{ color: C.accent }}>Performance</span><br />
               Gym
             </motion.h1>
 
             <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.2 }}
-              style={{ color: C.muted, fontSize: 17, lineHeight: 1.65, marginBottom: 32, maxWidth: 420 }}>
+              style={{ color: C.muted, fontSize: 17, lineHeight: 1.65, marginBottom: 10, maxWidth: 420 }}>
               Bondi&apos;s most results-driven gym. Personal training, group classes, and a system that actually keeps you accountable.
+            </motion.p>
+            <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.25 }}
+              style={{ fontSize: 13, lineHeight: 1.6, color: '#22c55e', margin: '0 0 32px', maxWidth: 420, fontWeight: 600, opacity: 0.85 }}>
+              This is a demo — we can build your gym&apos;s version and have it live in 7 days.
             </motion.p>
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.3 }}
               style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 36 }}>
-              <button style={{ background: C.accent, color: '#000', fontWeight: 900, padding: '14px 32px', borderRadius: 12, border: 'none', cursor: 'pointer', fontSize: 13 }}>
-                Start Free Trial
+              <button
+                onClick={() => { const el = document.getElementById('enquiry'); if (el) el.scrollIntoView({ behavior: 'smooth' }) }}
+                style={{ background: C.accent, color: '#000', fontWeight: 900, padding: '14px 32px', borderRadius: 12, border: 'none', cursor: 'pointer', fontSize: 13 }}>
+                Build mine &rarr;
               </button>
               <button style={{ border: `1px solid rgba(240,255,244,0.12)`, color: C.text, fontWeight: 500, padding: '14px 32px', borderRadius: 12, background: 'none', cursor: 'pointer', fontSize: 13 }}>
                 View Memberships
@@ -525,7 +540,10 @@ export default function GymPage() {
           </Reveal>
         </div>
       </section>
-      <NicheEnquiryForm niche="gym" />
+      <div id="enquiry">
+        <NicheEnquiryForm niche="gym" />
+      </div>
+      <DemoBookingModal open={bookingOpen} onClose={() => setBookingOpen(false)} />
     </div>
   )
 }
