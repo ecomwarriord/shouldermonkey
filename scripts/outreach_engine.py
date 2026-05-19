@@ -87,6 +87,75 @@ SMS = {
     },
 }
 
+# ─── Email copy per vertical ──────────────────────────────────────────────────
+
+BOOKING_LINK = "https://api.shouldermonkey.co/widget/booking/8U5JLwmKnUeDVkD4ATNm"
+_F = "---\nShoulderMonkey | Sydney, NSW\n{unsubscribe}"
+
+EMAIL = {
+    "vertical:salons": {
+        "subjects": {
+            1: "{company}",
+            2: "Re: {company}", 3: "Re: {company}", 4: "Re: {company}", 5: "Re: {company}",
+        },
+        "bodies": {
+            1: "Hey,\n\nNoticed {company}'s website could be working a lot harder for you.\n\nHad a look and reckon we could do something much better — get a lot more customers finding you online.\n\nHere's what we built for a salon like yours: shouldermonkey.co/salon\n\nFlick me a text or WhatsApp if you want me to put something together specifically for {company}. 0424 841 204\n\nDee\n" + _F,
+            2: "Hey,\n\nReached out a few days ago about your website — have you had a chance to look at that demo I sent through?\n\nReckon you'd get a lot more out of your online presence. And it's not gonna break the bank either.\n\nLet me know what you think.\n\nDee 0424 841 204\n" + _F,
+            3: "Hey,\n\nQuick one — most people searching for a salon in {city} are doing it on their phone. If your site doesn't load well on mobile, they're bouncing straight to the next result.\n\nWorth a look at what we'd fix: shouldermonkey.co/salon\n\nText me if you want to chat. 0424 841 204\n\nDee\n" + _F,
+            4: f"Hey,\n\nLast one before I leave you alone.\n\nHappy to put together a free mock-up of what we'd build for {{company}} before you commit to anything. No strings attached.\n\nBook a quick 15 min chat here: {BOOKING_LINK}\n\nOr just text. 0424 841 204\n\nDee\n" + _F,
+            5: "Alright, I'll leave you to it.\n\nIf you ever want to see what a proper website could do for {company}, the demo's still there: shouldermonkey.co/salon\n\nAnd if you decide to go for it down the track, feel free to text anytime. 0424 841 204\n\nAll the best, Dee\n" + _F,
+        },
+    },
+    "vertical:gyms": {
+        "subjects": {
+            1: "{company}", 2: "Re: {company}", 3: "Re: {company}", 4: "Re: {company}", 5: "Re: {company}",
+        },
+        "bodies": {
+            1: "Hey,\n\nNoticed {company}'s website could be working a lot harder for you.\n\nHad a look and reckon we could do something much better — get a lot more members finding you online.\n\nHere's what we built for a gym like yours: shouldermonkey.co/gym\n\nFlick me a text or WhatsApp if you want me to put something together specifically for {company}. 0424 841 204\n\nDee\n" + _F,
+            2: "Hey,\n\nReached out a few days ago about your website — have you had a chance to look at that demo I sent through?\n\nReckon you'd get a lot more out of your online presence. And it's not gonna break the bank either.\n\nLet me know what you think.\n\nDee 0424 841 204\n" + _F,
+            3: "Hey,\n\nQuick one — most people searching for a gym in {city} are doing it on their phone. If your site doesn't load well on mobile, they're bouncing straight to the next result.\n\nWorth a look at what we'd fix: shouldermonkey.co/gym\n\nText me if you want to chat. 0424 841 204\n\nDee\n" + _F,
+            4: f"Hey,\n\nLast one before I leave you alone.\n\nHappy to put together a free mock-up of what we'd build for {{company}} before you commit to anything. No strings attached.\n\nBook a quick 15 min chat here: {BOOKING_LINK}\n\nOr just text. 0424 841 204\n\nDee\n" + _F,
+            5: "Alright, I'll leave you to it.\n\nIf you ever want to see what a proper website could do for {company}, the demo's still there: shouldermonkey.co/gym\n\nAnd if you decide to go for it down the track, feel free to text anytime. 0424 841 204\n\nAll the best, Dee\n" + _F,
+        },
+    },
+    "vertical:clinics": {
+        "subjects": {
+            1: "{company} — your website", 2: "Re: {company}", 3: "Re: {company}", 4: "Re: {company}", 5: "Re: {company}",
+        },
+        "bodies": {
+            1: "Hi,\n\nNoticed {company}'s website could be working a lot harder for you.\n\nI help clinics and health practices in {city} build websites that bring in patients and build trust before the first appointment. Most practices I come across are leaving a lot on the table online.\n\nHere's an example of what we build for practices like yours: shouldermonkey.co/clinic\n\nHappy to answer any questions — feel free to text or reply. 0424 841 204\n\nDee\n" + _F,
+            2: "Hi,\n\nJust following up on the email I sent about your website — have you had a chance to take a look at the demo?\n\nA well-built site does a lot of the selling before a patient even calls. It's worth getting right, and it doesn't cost as much as most practices expect.\n\nLet me know if you'd like to talk it through.\n\nDee 0424 841 204\n" + _F,
+            3: "Hi,\n\nOne thing I see consistently with health practice websites — the majority of patients are now searching on mobile, but most sites are still built for desktop. If {company}'s site isn't optimised for mobile, a significant chunk of potential patients are going elsewhere.\n\nHere's how we address it: shouldermonkey.co/clinic\n\nHappy to walk you through it if that's helpful.\n\nDee 0424 841 204\n" + _F,
+            4: f"Hi,\n\nI'll keep this short — if you'd like to see what we'd actually build for {{company}} before making any decisions, I'm happy to put together a free mock-up. No obligation.\n\nBook a quick 15-minute call here: {BOOKING_LINK}\n\nOr text me directly. 0424 841 204\n\nDee\n" + _F,
+            5: "Hi,\n\nI'll leave it here — I've followed up a few times and don't want to take up more of your time.\n\nIf you'd like to revisit this at any point, the demo is still live: shouldermonkey.co/clinic\n\nAnd I'm easy to reach by text whenever it suits you. 0424 841 204\n\nBest, Dee\n" + _F,
+        },
+    },
+    "vertical:allied_health": {
+        "subjects": {
+            1: "{company} — your website", 2: "Re: {company}", 3: "Re: {company}", 4: "Re: {company}", 5: "Re: {company}",
+        },
+        "bodies": {
+            1: "Hi,\n\nNoticed {company}'s website could be working a lot harder for you.\n\nI help allied health professionals in {city} build websites that bring in patients and build trust before the first appointment. Most practices I come across are leaving a lot on the table online.\n\nHere's an example of what we build: shouldermonkey.co/allied-health\n\nHappy to answer any questions — feel free to text or reply. 0424 841 204\n\nDee\n" + _F,
+            2: "Hi,\n\nJust following up on the email I sent about your website — have you had a chance to take a look at the demo?\n\nA well-built site does a lot of the selling before a patient even calls. It's worth getting right, and it doesn't cost as much as most practices expect.\n\nLet me know if you'd like to talk it through.\n\nDee 0424 841 204\n" + _F,
+            3: "Hi,\n\nOne thing I see consistently with allied health websites — the majority of patients are now searching on mobile, but most sites are still built for desktop. If {company}'s site isn't optimised for mobile, a significant chunk of potential patients — whether you're a physio, chiro, or osteo — are going elsewhere.\n\nHere's how we address it: shouldermonkey.co/allied-health\n\nHappy to walk you through it.\n\nDee 0424 841 204\n" + _F,
+            4: f"Hi,\n\nI'll keep this short — if you'd like to see what we'd actually build for {{company}} before making any decisions, I'm happy to put together a free mock-up. No obligation.\n\nBook a quick 15-minute call here: {BOOKING_LINK}\n\nOr text me directly. 0424 841 204\n\nDee\n" + _F,
+            5: "Hi,\n\nI'll leave it here — I've followed up a few times and don't want to take up more of your time.\n\nIf you'd like to revisit this at any point, the demo is still live: shouldermonkey.co/allied-health\n\nAnd I'm easy to reach by text whenever it suits you. 0424 841 204\n\nBest, Dee\n" + _F,
+        },
+    },
+    "vertical:mortgage_brokers": {
+        "subjects": {
+            1: "{company} — online presence", 2: "Re: {company}", 3: "Re: {company}", 4: "Re: {company}", 5: "Re: {company}",
+        },
+        "bodies": {
+            1: "Hi,\n\nNoticed {company}'s website could be working a lot harder for you.\n\nI work with mortgage brokers and financial professionals across {city} to build websites that establish credibility and convert online enquiries. For most brokers, the website is the first impression a prospective client gets — and it matters more than most realise.\n\nHere's an example of what we build for brokers in a similar position: shouldermonkey.co/mortgage-broker\n\nI'd be glad to discuss how this might apply to {company}.\n\nDee 0424 841 204\n" + _F,
+            2: "Hi,\n\nFollowing up on the email I sent regarding your website — have you had a chance to review the demo?\n\nA professional, well-structured website builds trust before you've had the first conversation with a client. It's one of the higher-return investments a broker can make, and typically costs far less than expected.\n\nLet me know if you'd like to discuss further.\n\nDee 0424 841 204\n" + _F,
+            3: "Hi,\n\nOne thing worth noting: prospective financial services clients consistently research their broker online before making contact. A site that looks dated or doesn't load correctly on mobile creates doubt before the relationship has started.\n\nHere's how we approach this for brokers: shouldermonkey.co/mortgage-broker\n\nHappy to walk through it with you.\n\nDee 0424 841 204\n" + _F,
+            4: f"Hi,\n\nOne final note — if you'd like to see a mock-up of what we'd build for {{company}} before committing to anything, I'm happy to provide that at no cost.\n\nA 15-minute call is all it takes: {BOOKING_LINK}\n\nAlternatively, feel free to text directly. 0424 841 204\n\nDee\n" + _F,
+            5: "Hi,\n\nI'll leave it there — I've reached out several times and don't want to take up more of your time.\n\nThe demo remains available if you'd like to revisit: shouldermonkey.co/mortgage-broker\n\nAnd I'm easy to reach whenever it suits. 0424 841 204\n\nBest regards, Dee\n" + _F,
+        },
+    },
+}
+
 # ─── GHL API helpers ──────────────────────────────────────────────────────────
 
 def get_contacts(tag_filter=None, limit=100, after=None):
@@ -155,6 +224,26 @@ def send_sms(contact_id, message):
     return r.json()
 
 
+def send_email(contact_id: str, contact_email: str, subject: str, body: str) -> dict:
+    """Send email via GHL conversations API."""
+    html_body = body.replace("\n", "<br>")
+    r = requests.post(
+        f"{BASE_URL}/conversations/messages",
+        headers=HEADERS,
+        json={
+            "type": "Email",
+            "contactId": contact_id,
+            "subject": subject,
+            "html": html_body,
+            "emailFrom": f"{GHL_FROM_NAME} <{GHL_FROM_EMAIL}>",
+            "emailTo": contact_email,
+        },
+        timeout=15,
+    )
+    r.raise_for_status()
+    return r.json()
+
+
 def has_replied(contact_id):
     """Check if contact has any inbound messages (replied)."""
     r = requests.get(
@@ -195,8 +284,18 @@ def build_message(template, contact):
     return template.replace("{{company_name}}", company)
 
 
+def build_email_message(template: str, contact: dict) -> str:
+    company = contact.get("companyName") or contact.get("contactName") or "your business"
+    city    = contact.get("city") or "your area"
+    unsub   = contact.get("unsubscribeUrl") or "Reply to unsubscribe"
+    return (template
+            .replace("{company}", company)
+            .replace("{city}", city)
+            .replace("{unsubscribe}", unsub))
+
+
 def enrol_new_contacts(today_str, today_date, dry_run=False):
-    """Find un-enrolled contacts with phone numbers and enrol them."""
+    """Enrol new contacts. Email 1 sent for has:email; SMS 1 for SMS-only."""
     print(f"\n{'[DRY RUN] ' if dry_run else ''}=== ENROLMENT ({today_str}) ===")
     enrolled = 0
 
@@ -204,20 +303,17 @@ def enrol_new_contacts(today_str, today_date, dry_run=False):
         if enrolled >= DAILY_ENROL_LIMIT:
             break
 
-        # Get contacts with this vertical tag who aren't yet in outreach
         all_contacts = get_all_contacts_with_tag(vertical_tag)
-        eligible = []
-        for c in all_contacts:
-            tags = c.get("tags", [])
-            if ("outreach:active" not in tags
-                    and "outreach:complete" not in tags
-                    and "outreach:replied" not in tags
-                    and c.get("phone")):
-                eligible.append(c)
+        eligible = [
+            c for c in all_contacts
+            if "outreach:active" not in c.get("tags", [])
+            and "outreach:complete" not in c.get("tags", [])
+            and "outreach:replied" not in c.get("tags", [])
+            and (c.get("phone") or c.get("email"))
+        ]
 
         limit = min(DAILY_ENROL_LIMIT - enrolled, len(eligible))
         batch = eligible[:limit]
-
         print(f"  {vertical_tag}: {len(eligible)} eligible, enrolling {len(batch)}")
 
         for c in batch:
@@ -225,16 +321,27 @@ def enrol_new_contacts(today_str, today_date, dry_run=False):
                 print(f"    [DRY RUN] Would enrol: {c.get('companyName')} ({c['id']})")
                 continue
             try:
-                new_tags = ["outreach:active", f"batch:{today_str}"]
-                add_tags(c["id"], new_tags)
-                # Send SMS 1 immediately on enrolment
-                vertical = get_vertical(c.get("tags", []))
-                if vertical and vertical in SMS:
+                tags     = c.get("tags", [])
+                vertical = get_vertical(tags)
+                add_tags(c["id"], ["outreach:active", f"batch:{today_str}"])
+
+                has_email  = "has:email" in tags and c.get("email")
+                has_mobile = "has:mobile" in tags
+
+                if has_email and vertical in EMAIL:
+                    tmpl    = EMAIL[vertical]
+                    subject = tmpl["subjects"][1].format(company=c.get("companyName", ""))
+                    body    = build_email_message(tmpl["bodies"][1], c)
+                    send_email(c["id"], c["email"], subject, body)
+                    add_tags(c["id"], ["sent:email1"])
+                    print(f"    ✓ Enrolled + Email1: {c.get('companyName','?')} ({c.get('email','')})")
+                elif has_mobile and vertical in SMS:
                     msg = build_message(SMS[vertical][1], c)
                     send_sms(c["id"], msg)
                     add_tags(c["id"], ["sent:sms1"])
-                    print(f"    ✓ Enrolled + SMS1: {c.get('companyName','?')} ({c['phone']})")
-                time.sleep(0.3)  # rate limit
+                    print(f"    ✓ Enrolled + SMS1: {c.get('companyName','?')} ({c.get('phone','')})")
+
+                time.sleep(0.3)
                 enrolled += 1
             except Exception as e:
                 print(f"    ✗ Error enrolling {c.get('id')}: {e}")
@@ -243,78 +350,115 @@ def enrol_new_contacts(today_str, today_date, dry_run=False):
 
 
 def run_sequence(today_date, dry_run=False):
-    """Send follow-up messages to contacts already in the sequence."""
+    """Send follow-ups to active contacts based on days since enrolment."""
     print(f"\n{'[DRY RUN] ' if dry_run else ''}=== SEQUENCE RUN ({today_date}) ===")
 
     active = get_all_contacts_with_tag("outreach:active")
     print(f"  Active contacts: {len(active)}")
 
-    sms2_sent = sms3_sent = completed = replied_exits = 0
+    counters = {k: 0 for k in ("e2","e3","e4","e5","sms1","sms2","sms3","completed","replied")}
 
     for c in active:
-        contact_id = c["id"]
-        tags        = c.get("tags", [])
-        vertical    = get_vertical(tags)
-
-        if not vertical or vertical not in SMS:
+        cid      = c["id"]
+        tags     = c.get("tags", [])
+        vertical = get_vertical(tags)
+        if not vertical:
             continue
-
-        # Check if replied
         if "outreach:replied" in tags:
             continue
 
-        if has_replied(contact_id):
+        if has_replied(cid):
             if not dry_run:
-                add_tags(contact_id, ["outreach:replied"])
-                remove_tags(contact_id, ["outreach:active"])
-            print(f"    → Replied exit: {c.get('companyName','?')}")
-            replied_exits += 1
+                add_tags(cid, ["outreach:replied"])
+                remove_tags(cid, ["outreach:active"])
+            counters["replied"] += 1
             continue
 
         batch_date = get_batch_date(tags)
         if not batch_date:
             continue
+        d = (today_date - batch_date).days
 
-        days_elapsed = (today_date - batch_date).days
+        has_email  = "has:email" in tags and c.get("email")
+        has_mobile = "has:mobile" in tags
 
-        # Day 5 → SMS 2
-        if days_elapsed == 5 and "sent:sms2" not in tags:
-            if dry_run:
-                print(f"    [DRY RUN] SMS2 → {c.get('companyName','?')} (day {days_elapsed})")
-            else:
+        # ── Email path ──────────────────────────────────────────────────────
+        if has_email and vertical in EMAIL:
+            tmpl = EMAIL[vertical]
+
+            def _email(num, key):
+                if dry_run:
+                    print(f"    [DRY RUN] Email{num} → {c.get('companyName','?')} (d{d})")
+                    return
                 try:
-                    msg = build_message(SMS[vertical][2], c)
-                    send_sms(contact_id, msg)
-                    add_tags(contact_id, ["sent:sms2"])
-                    print(f"    ✓ SMS2: {c.get('companyName','?')} ({c.get('phone','')})")
-                    sms2_sent += 1
+                    subj = tmpl["subjects"][num].format(company=c.get("companyName", ""))
+                    body = build_email_message(tmpl["bodies"][num], c)
+                    send_email(cid, c["email"], subj, body)
+                    add_tags(cid, [f"sent:email{num}"])
+                    print(f"    ✓ Email{num}: {c.get('companyName','?')}")
+                    counters[key] += 1
                     time.sleep(0.3)
                 except Exception as e:
-                    print(f"    ✗ SMS2 error {contact_id}: {e}")
+                    print(f"    ✗ Email{num} error {cid}: {e}")
 
-        # Day 10 → SMS 3 (final)
-        elif days_elapsed == 10 and "sent:sms3" not in tags:
-            if dry_run:
-                print(f"    [DRY RUN] SMS3 → {c.get('companyName','?')} (day {days_elapsed})")
-            else:
+            def _sms(num, key):
+                if not has_mobile:
+                    return
+                if dry_run:
+                    print(f"    [DRY RUN] SMS{num} → {c.get('companyName','?')} (d{d})")
+                    return
                 try:
-                    msg = build_message(SMS[vertical][3], c)
-                    send_sms(contact_id, msg)
-                    add_tags(contact_id, ["sent:sms3"])
-                    print(f"    ✓ SMS3 (final): {c.get('companyName','?')} ({c.get('phone','')})")
-                    sms3_sent += 1
+                    send_sms(cid, build_message(SMS[vertical][num], c))
+                    add_tags(cid, [f"sent:sms{num}"])
+                    print(f"    ✓ SMS{num}: {c.get('companyName','?')}")
+                    counters[key] += 1
                     time.sleep(0.3)
                 except Exception as e:
-                    print(f"    ✗ SMS3 error {contact_id}: {e}")
+                    print(f"    ✗ SMS{num} error {cid}: {e}")
 
-        # Day 11+ → complete
-        elif days_elapsed >= 11 and "sent:sms3" in tags:
-            if not dry_run:
-                remove_tags(contact_id, ["outreach:active"])
-                add_tags(contact_id, ["outreach:complete"])
-            completed += 1
+            if   d == 1  and "sent:sms1"   not in tags: _sms(1, "sms1")
+            elif d == 3  and "sent:email2" not in tags: _email(2, "e2")
+            elif d == 6  and "sent:email3" not in tags: _email(3, "e3")
+            elif d == 8  and "sent:sms2"   not in tags: _sms(2, "sms2")
+            elif d == 10 and "sent:sms3"   not in tags: _sms(3, "sms3")
+            elif d == 11 and "sent:email4" not in tags: _email(4, "e4")
+            elif d == 13 and "sent:email5" not in tags: _email(5, "e5")
+            elif d >= 14 and "sent:email5" in tags:
+                if not dry_run:
+                    remove_tags(cid, ["outreach:active"])
+                    add_tags(cid, ["outreach:complete"])
+                counters["completed"] += 1
 
-    print(f"  SMS2 sent: {sms2_sent} | SMS3 sent: {sms3_sent} | Completed: {completed} | Replied exits: {replied_exits}")
+        # ── SMS-only path ───────────────────────────────────────────────────
+        elif has_mobile and vertical in SMS:
+            try:
+                if   d == 5  and "sent:sms2" not in tags:
+                    if dry_run: print(f"    [DRY RUN] SMS2 → {c.get('companyName','?')} (d{d})")
+                    else:
+                        send_sms(cid, build_message(SMS[vertical][2], c))
+                        add_tags(cid, ["sent:sms2"])
+                        print(f"    ✓ SMS2: {c.get('companyName','?')}")
+                        counters["sms2"] += 1
+                        time.sleep(0.3)
+                elif d == 10 and "sent:sms3" not in tags:
+                    if dry_run: print(f"    [DRY RUN] SMS3 → {c.get('companyName','?')} (d{d})")
+                    else:
+                        send_sms(cid, build_message(SMS[vertical][3], c))
+                        add_tags(cid, ["sent:sms3"])
+                        print(f"    ✓ SMS3: {c.get('companyName','?')}")
+                        counters["sms3"] += 1
+                        time.sleep(0.3)
+                elif d >= 11 and "sent:sms3" in tags:
+                    if not dry_run:
+                        remove_tags(cid, ["outreach:active"])
+                        add_tags(cid, ["outreach:complete"])
+                    counters["completed"] += 1
+            except Exception as e:
+                print(f"    ✗ Error {cid}: {e}")
+
+    print(f"  Email: e2={counters['e2']} e3={counters['e3']} e4={counters['e4']} e5={counters['e5']}")
+    print(f"  SMS:   1={counters['sms1']} 2={counters['sms2']} 3={counters['sms3']}")
+    print(f"  Completed: {counters['completed']} | Replied: {counters['replied']}")
 
 
 def status_report():
