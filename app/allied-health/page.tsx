@@ -147,7 +147,7 @@ export default function AlliedHealthPage() {
 
   return (
     <div style={{ background: C.bg, minHeight: '100vh', fontFamily: 'system-ui, sans-serif' }}>
-      <style>{`::selection { background: ${C.accent}; color: #fff; }`}</style>
+      <style>{`::selection { background: ${C.accent}; color: #fff; } * { cursor: auto !important; } button, a { cursor: pointer !important; }`}</style>
 
       {/* ── Nav ──────────────────────────────────────────────────────────── */}
       <nav style={{
@@ -157,8 +157,8 @@ export default function AlliedHealthPage() {
       }}>
         <div style={{ ...W, height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <div style={{ width: 36, height: 36, borderRadius: 10, background: C.accent, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <span style={{ fontSize: 18 }}>🌿</span>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: C.accent, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 900, color: '#fff', letterSpacing: '0.04em' }}>
+              RE
             </div>
             <div>
               <div style={{ fontWeight: 800, color: C.text, fontSize: 14 }}>Restore</div>
@@ -226,6 +226,7 @@ export default function AlliedHealthPage() {
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.3 }}
               style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 40 }}>
               <button
+                className="niche-btn"
                 onClick={() => { const el = document.getElementById('enquiry'); if (el) el.scrollIntoView({ behavior: 'smooth' }) }}
                 style={{ background: C.accent, color: '#fff', fontWeight: 800, padding: '14px 32px', borderRadius: 12, border: 'none', cursor: 'pointer', fontSize: 14 }}>
                 Build mine &rarr;

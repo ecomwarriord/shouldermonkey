@@ -155,7 +155,7 @@ function Nav() {
   )
 }
 
-function Hero({ onBooking }: { onBooking: () => void }) {
+function Hero({ onBooking: _onBooking }: { onBooking: () => void }) {
   const msgs = [
     { from: 'salon' as const, delay: 0.6,  text: '✅ Confirmed! The Loft Salon & Spa\n\n📅 Wed 23 Apr · 2:00pm\n✂️ Balayage with Emma\n📍 Knox St, Double Bay' },
     { from: 'salon' as const, delay: 1.8,  text: '⏰ Hey Sarah! Just a reminder — see you tomorrow at 2pm with Emma. Need to move it? Reply CHANGE 💛' },
@@ -196,6 +196,7 @@ function Hero({ onBooking }: { onBooking: () => void }) {
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.26, ease: [0.22,1,0.36,1] }}
               style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 40 }}>
               <button
+                className="niche-btn"
                 onClick={() => { const el = document.getElementById('enquiry'); if (el) el.scrollIntoView({ behavior: 'smooth' }) }}
                 style={{ background: C.accent, color: '#fff', border: 'none', borderRadius: 100, padding: '14px 28px', fontSize: 14, fontWeight: 700, cursor: 'pointer', boxShadow: `0 8px 30px rgba(184,149,106,0.3)` }}>
                 Build mine &rarr;
@@ -644,7 +645,7 @@ export default function SalonPage() {
 
   return (
     <div style={{ background: C.bg }}>
-      <style>{`::selection { background: ${C.accent}; color: #fff; }`}</style>
+      <style>{`::selection { background: ${C.accent}; color: #fff; } * { cursor: auto !important; } button, a { cursor: pointer !important; }`}</style>
       <Nav />
       <Hero onBooking={openBooking} />
       <section style={{ overflow: 'hidden', background: C.surface, position: 'relative', maxHeight: '65vh', minHeight: 320 }}>

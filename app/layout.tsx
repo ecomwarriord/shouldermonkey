@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Plus_Jakarta_Sans, Inter } from 'next/font/google'
 import Script from 'next/script'
+import { SmoothScroll } from '../components/SmoothScroll'
 import './globals.css'
 
 const syne = Plus_Jakarta_Sans({
@@ -167,6 +168,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
       <body suppressHydrationWarning>
+        <SmoothScroll />
         {children}
         {/* Google Analytics */}
         <Script
