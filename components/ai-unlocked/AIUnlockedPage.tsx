@@ -434,19 +434,20 @@ export function AIUnlockedPage() {
         </div>
 
         {/* ── AFTER CINEMATIC: Detail sections (normal scroll) ─────────── */}
-        <div style={{ position: 'relative', zIndex: 10, background: '#030108' }}>
+        {/* Semi-transparent so the fixed 3D canvas shows through */}
+        <div style={{ position: 'relative', zIndex: 10, background: 'rgba(0,0,0,0.82)' }}>
           <AffiliateSection />
           <FAQSection />
 
           {/* Footer CTA */}
-          <section style={{ background: '#000', padding: '80px 24px', textAlign: 'center' }}>
+          <section style={{ background: 'transparent', padding: '60px 24px 80px', textAlign: 'center' }}>
             <h2 style={{
               fontFamily: 'var(--font-display, var(--font-syne), sans-serif)',
-              fontSize: 'clamp(2.2rem, 5vw, 3.5rem)',
-              fontWeight: 900,
-              letterSpacing: '-0.03em',
+              fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)',
+              fontWeight: 700,
+              letterSpacing: '-0.02em',
               color: '#ffffff',
-              margin: '0 0 32px',
+              margin: '0 0 28px',
             }}>
               Still here?{' '}
               <span style={{ color: '#FF3366' }}>Join the waitlist.</span>
@@ -462,7 +463,7 @@ export function AIUnlockedPage() {
           </section>
 
           {/* Footer */}
-          <footer className="px-8 py-10 border-t" style={{ background: '#000', borderColor: 'rgba(255,255,255,0.06)' }}>
+          <footer style={{ padding: '24px 32px', borderTop: '1px solid rgba(255,255,255,0.08)', background: 'rgba(0,0,0,0.5)' }}>
             <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="text-center md:text-left">
                 <p className="font-display font-black text-white text-lg tracking-tight">

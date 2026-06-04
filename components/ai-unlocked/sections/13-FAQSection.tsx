@@ -147,7 +147,7 @@ function FAQGroup({ label, faqs, accentColor }: FAQGroupProps) {
 
 export function FAQSection() {
   return (
-    <section style={{ background: '#030108', padding: '80px 24px' }}>
+    <section style={{ background: 'transparent', padding: '60px 24px 60px' }}>
       <div style={{ maxWidth: 720, margin: '0 auto' }}>
         {/* Heading */}
         <div style={{ marginBottom: 48 }}>
@@ -163,10 +163,10 @@ export function FAQSection() {
           </p>
           <h2 style={{
             fontFamily: 'var(--font-display, var(--font-syne), sans-serif)',
-            fontSize: 'clamp(2.2rem, 5vw, 3.5rem)',
-            fontWeight: 900,
-            letterSpacing: '-0.03em',
-            lineHeight: 1.05,
+            fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)',
+            fontWeight: 700,
+            letterSpacing: '-0.02em',
+            lineHeight: 1.15,
             color: '#ffffff',
             margin: 0,
           }}>

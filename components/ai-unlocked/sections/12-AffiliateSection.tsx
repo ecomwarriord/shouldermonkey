@@ -77,7 +77,7 @@ const TOOLS = [
 
 export function AffiliateSection() {
   return (
-    <section style={{ background: '#000', padding: '100px 24px 80px' }}>
+    <section style={{ background: 'transparent', padding: '80px 24px 60px' }}>
       <div style={{ maxWidth: 960, margin: '0 auto' }}>
 
         {/* Section header */}
@@ -94,14 +94,14 @@ export function AffiliateSection() {
           </p>
           <h2 style={{
             fontFamily: 'var(--font-display, var(--font-syne), sans-serif)',
-            fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-            fontWeight: 900,
-            letterSpacing: '-0.03em',
-            lineHeight: 1.05,
+            fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)',
+            fontWeight: 700,
+            letterSpacing: '-0.02em',
+            lineHeight: 1.15,
             color: '#ffffff',
             margin: '0 0 16px',
           }}>
-            Nine tools.<br />
+            Nine tools.{' '}
             <span style={{ color: '#FF3366' }}>All taught in the course.</span>
           </h2>
           <p style={{
