@@ -20,7 +20,7 @@ const FAQS = [
   {
     id: 'p3',
     q: 'Is there a refund if my child can\'t attend?',
-    a: 'Yes. If your child can\'t make it, email us and we\'ll refund the ticket. All ticket holders also receive the full replay, so missing the live session doesn\'t mean missing the content.',
+    a: 'Webinar tickets are non-refundable once purchased. All ticket holders receive the full replay, so missing the live session doesn\'t mean missing the content. If the event is cancelled by us, a full refund will be issued — this is required under Australian Consumer Law regardless of our policy.',
     audience: 'parent',
   },
   {

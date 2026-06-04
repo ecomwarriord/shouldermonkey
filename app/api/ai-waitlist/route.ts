@@ -34,33 +34,34 @@ export async function POST(req: NextRequest) {
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0] ?? 'unknown'
   const rateKey = `ai-waitlist-rate:${ip}`
 
-  // Rate limit: 3 submissions per IP per hour
   const count = await redis.incr(rateKey)
   if (count === 1) await redis.expire(rateKey, 3600)
-  if (count > 3) {
-    return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
-  }
+  if (count > 3) return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
 
   let body: {
+    firstName?: string
+    lastName?: string
     email?: string
     phone?: string
     role?: string
+    age?: string
+    ageRange?: string
+    parentFirstName?: string
+    parentLastName?: string
+    parentEmail?: string
+    parentPhone?: string
+    parentConsentProvided?: boolean
     archetype?: string
     utm_source?: string
     ref?: string
     website?: string // honeypot
   }
 
-  try {
-    body = await req.json()
-  } catch {
-    return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
-  }
+  try { body = await req.json() }
+  catch { return NextResponse.json({ error: 'Invalid request' }, { status: 400 }) }
 
-  // Honeypot — silent discard
-  if (body.website) {
-    return NextResponse.json({ success: true })
-  }
+  // Honeypot
+  if (body.website) return NextResponse.json({ success: true })
 
   const email = (body.email ?? '').trim().toLowerCase()
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -68,49 +69,73 @@ export async function POST(req: NextRequest) {
   }
 
   const role = body.role ?? 'unknown'
-  const archetype = body.archetype ?? 'archetype-unknown'
-  const utm = body.utm_source
-  const ref = body.ref
+  const ageRange = body.ageRange ?? 'age-unknown'
+  const isUnder18 = ageRange === 'age-under-15' || ageRange === 'age-15-17'
 
   const tags = [
     'ai-unlocked-waitlist',
     `role-${role}`,
-    archetype.startsWith('archetype-') ? archetype : `archetype-${archetype.toLowerCase()}`,
+    ageRange,
+    isUnder18 && body.parentConsentProvided ? 'parental-consent-provided' : null,
+    body.archetype ? `archetype-${body.archetype.toLowerCase()}` : null,
+    body.utm_source ? `utm-${body.utm_source}` : null,
+    body.ref ? `referred-by-${body.ref}` : null,
     'source-landing-page',
-    utm ? `utm-${utm}` : null,
-    ref ? `referred-by-${ref}` : null,
   ].filter(Boolean) as string[]
 
-  const payload = {
+  // Primary contact payload (student or parent if under-18)
+  const primaryPayload = {
+    firstName: body.firstName ?? '',
+    lastName: body.lastName ?? '',
     email,
     phone: body.phone ?? '',
     source: 'ai-unlocked-landing',
-    firstName: '',
     tags,
+    customFields: {
+      age: body.age,
+      role,
+      ...(isUnder18 ? {
+        parentGuardianName: `${body.parentFirstName ?? ''} ${body.parentLastName ?? ''}`.trim(),
+        parentGuardianEmail: body.parentEmail ?? '',
+        parentGuardianPhone: body.parentPhone ?? '',
+        parentalConsentDate: new Date().toISOString(),
+      } : {}),
+    },
   }
 
-  const success = await postToGHL(payload)
+  const success = await postToGHL(primaryPayload)
 
   if (!success) {
-    // Fallback: persist to Redis so no lead is lost
-    await redis.lpush('ai-waitlist-fallback', JSON.stringify({ ...payload, timestamp: Date.now() }))
-
-    // Alert via Telegram bot
-    const telegramToken = process.env.TELEGRAM_BOT_TOKEN
+    await redis.lpush('ai-waitlist-fallback', JSON.stringify({ ...primaryPayload, timestamp: Date.now() }))
+    const token = process.env.TELEGRAM_BOT_TOKEN
     const chatId = process.env.TELEGRAM_ALLOWED_CHAT_ID
-    if (telegramToken && chatId) {
-      fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
+    if (token && chatId) {
+      fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: chatId,
-          text: `⚠️ AI Unlocked: GHL webhook failed for ${email}. Saved to fallback queue.`,
-        }),
+        body: JSON.stringify({ chat_id: chatId, text: `⚠️ AI Unlocked: GHL webhook failed for ${email}. Saved to fallback.` }),
       }).catch(() => {})
     }
   }
 
-  // Increment city counter for cohort map (use a placeholder city for now)
+  // If under-18 and parent email provided — also register parent as a separate contact
+  if (isUnder18 && body.parentEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.parentEmail)) {
+    const parentPayload = {
+      firstName: body.parentFirstName ?? '',
+      lastName: body.parentLastName ?? '',
+      email: body.parentEmail.toLowerCase(),
+      phone: body.parentPhone ?? '',
+      source: 'ai-unlocked-landing',
+      tags: ['ai-unlocked-waitlist', 'role-parent', 'parental-consent-provided', `child-age-${ageRange}`, 'source-landing-page'],
+      customFields: {
+        childName: `${body.firstName ?? ''} ${body.lastName ?? ''}`.trim(),
+        childAge: body.age,
+        consentDate: new Date().toISOString(),
+      },
+    }
+    await postToGHL(parentPayload) // best-effort, don't block on failure
+  }
+
   await redis.incr('ai-waitlist-total').catch(() => {})
 
   return NextResponse.json({ success: true })
