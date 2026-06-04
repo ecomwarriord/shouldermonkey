@@ -439,14 +439,22 @@ export function AIUnlockedPage() {
           <FAQSection />
 
           {/* Footer CTA */}
-          <section className="py-24 px-6 text-center" style={{ background: '#000' }}>
-            <h2 className="font-display font-black mb-6 text-white" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', letterSpacing: '-0.02em' }}>
-              Still here? Join the waitlist.
+          <section style={{ background: '#000', padding: '80px 24px', textAlign: 'center' }}>
+            <h2 style={{
+              fontFamily: 'var(--font-display, var(--font-syne), sans-serif)',
+              fontSize: 'clamp(2.2rem, 5vw, 3.5rem)',
+              fontWeight: 900,
+              letterSpacing: '-0.03em',
+              color: '#ffffff',
+              margin: '0 0 32px',
+            }}>
+              Still here?{' '}
+              <span style={{ color: '#FF3366' }}>Join the waitlist.</span>
             </h2>
             <a
               href="#waitlist"
               className="btn-primary"
-              style={{ background: 'linear-gradient(135deg, #7B3FE4 0%, #FF3366 100%)', fontSize: '1.1rem', padding: '1rem 2.5rem' }}
+              style={{ background: 'linear-gradient(135deg, #7B3FE4 0%, #FF3366 100%)', fontSize: '1.1rem', padding: '1.1rem 2.8rem', display: 'inline-flex' }}
               onClick={e => { e.preventDefault(); document.getElementById('waitlist')?.scrollIntoView({ behavior: 'smooth' }) }}
             >
               Claim Your Spot →
