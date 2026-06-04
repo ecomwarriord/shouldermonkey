@@ -42,10 +42,21 @@ body {
   overflow-x: hidden;
 }
 
-/* ── Custom cursor ── */
-* { cursor: none !important; }
+/* ── Hide GHL chat widget on AI Unlocked page ── */
+[data-page="ai-unlocked"] [data-widget-id],
+[data-page="ai-unlocked"] #chat-widget,
+[data-page="ai-unlocked"] iframe[src*="leadconnector"],
+[data-page="ai-unlocked"] iframe[src*="widgets.leadconnector"] {
+  display: none !important;
+}
+
+/* ── Custom cursor (ShoulderMonkey main site only — not on AI Unlocked) ── */
+body:not([data-page="ai-unlocked"]) * { cursor: none !important; }
+body[data-page="ai-unlocked"] * { cursor: auto !important; }
+body[data-page="ai-unlocked"] a,
+body[data-page="ai-unlocked"] button { cursor: pointer !important; }
 @media (hover: none) and (pointer: coarse) {
-  * { cursor: auto !important; }
+  body:not([data-page="ai-unlocked"]) * { cursor: auto !important; }
   .btn-primary, .btn-ghost { cursor: pointer !important; }
 }
 
@@ -227,6 +238,83 @@ body {
 @media print {
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   .no-print { display: none !important; }
+}
+
+/* ════════════════════════════════════════════
+   AI UNLOCKED — Page-scoped design tokens
+   Scoped to [data-page="ai-unlocked"] so they
+   never bleed into the rest of ShoulderMonkey.
+   ════════════════════════════════════════════ */
+
+[data-page="ai-unlocked"] {
+  --ai-bg:       #030108;
+  --ai-surface:  #0a0612;
+  --ai-accent:   #844bfe;
+  --ai-pop:      #00ebc1;
+  --ai-text:     #f0edff;
+  --ai-muted:    rgba(240,237,255,0.55);
+}
+
+[data-page="ai-unlocked"] [data-theme="light"] {
+  --ai-bg:      #f8f6ff;
+  --ai-surface: #ffffff;
+  --ai-accent:  #4623d3;
+  --ai-pop:     #0d9488;
+  --ai-text:    #0a0612;
+  --ai-muted:   rgba(10,6,18,0.55);
+}
+
+[data-page="ai-unlocked"] [data-theme="promise"] {
+  --ai-bg:   #000000;
+  --ai-text: #ffffff;
+}
+
+/* Tailwind variants for theme switching */
+@variant ai-light ([data-theme="light"]);
+@variant ai-promise ([data-theme="promise"]);
+
+/* Focus ring for AI Unlocked interactive elements */
+[data-page="ai-unlocked"] :focus-visible {
+  outline: 2px solid var(--ai-accent);
+  outline-offset: 4px;
+}
+
+/* Mobile hero fallback gradient */
+.ai-hero-mobile-bg {
+  background: radial-gradient(ellipse at 50% 0%, rgba(132,75,254,0.3) 0%, transparent 60%),
+              #030108;
+}
+
+/* Glow card edge animation */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(132,75,254,0.2), inset 0 0 0 1px rgba(132,75,254,0.15); }
+  50%       { box-shadow: 0 0 40px rgba(132,75,254,0.45), inset 0 0 0 1px rgba(132,75,254,0.35); }
+}
+
+/* Word-mask reveal (used in Promise section) */
+.word-mask {
+  overflow: hidden;
+  display: inline-block;
+}
+.word-mask span {
+  display: inline-block;
+  transform: translateY(110%);
+}
+
+/* Sticky mobile CTA bar */
+.ai-mobile-cta-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 50;
+  padding: 12px 16px;
+  background: rgba(3,1,8,0.92);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(132,75,254,0.2);
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .ai-mobile-cta-bar { display: block; }
 }
 
 /* ── Mobile responsive utilities ── */

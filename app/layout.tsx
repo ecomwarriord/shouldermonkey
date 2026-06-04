@@ -168,8 +168,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
       <body suppressHydrationWarning>
-        <SmoothScroll />
-        {children}
+        <SmoothScroll>
+          {children}
+        </SmoothScroll>
         {/* Google Analytics */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-BDPBWCXN50"
