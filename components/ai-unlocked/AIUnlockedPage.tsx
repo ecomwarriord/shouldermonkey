@@ -32,6 +32,7 @@ export function AIUnlockedPage() {
   const storyRef = useRef<HTMLDivElement>(null)
   const [canvasReady, setCanvasReady] = useState(false)
   const [chapter, setChapter] = useState(0)
+  const [chapterOpacities, setChapterOpacities] = useState<number[]>([1, 0, 0, 0, 0])
   const [waitlistStep, setWaitlistStep] = useState<WaitlistStep>('form')
   const [submittedEmail] = useState('')
   const [waitlistRole, setWaitlistRole] = useState('unknown')
@@ -58,12 +59,27 @@ export function AIUnlockedPage() {
         onUpdate(self: any) {
           scrollRef.current = self.progress
           const p = self.progress
-          // Each chapter gets ~20% with a 2% buffer on entry — more dwell time
-          if (p < 0.20) setChapter(0)
-          else if (p < 0.40) setChapter(1)
-          else if (p < 0.60) setChapter(2)
-          else if (p < 0.80) setChapter(3)
-          else setChapter(4)
+
+          // Smooth per-chapter opacity — each chapter has a fade-in zone,
+          // a full-on zone, and a fade-out zone. No hard threshold snapping.
+          // Layout: [0-0.22] Ch0, [0.12-0.44] Ch1, [0.34-0.66] Ch2, [0.56-0.88] Ch3, [0.78-1.0] Ch4
+          const FADE = 0.10 // 10% of scroll = fade duration
+          const peaks = [0, 0.22, 0.44, 0.66, 0.88]
+          const opacities = peaks.map((peak, i) => {
+            const fadeIn = peak - FADE
+            const peakEnd = i === 4 ? 1.0 : peaks[i + 1] - FADE
+            const fadeOut = i === 4 ? 1.0 : peaks[i + 1]
+            if (i === 0 && p < peakEnd) return 1
+            if (p < fadeIn) return 0
+            if (p < peak) return (p - fadeIn) / FADE
+            if (p < peakEnd) return 1
+            if (p < fadeOut) return 1 - (p - peakEnd) / FADE
+            return 0
+          })
+          setChapterOpacities(opacities)
+          // Active chapter = highest opacity
+          const max = Math.max(...opacities)
+          setChapter(opacities.indexOf(max))
         },
       })
     }
@@ -123,7 +139,7 @@ export function AIUnlockedPage() {
           <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
 
             {/* ── CHAPTER 0: THE EVENT ── */}
-            <Chapter show={chapter === 0 && canvasReady}>
+            <Chapter opacity={canvasReady ? chapterOpacities[0] : 0}>
               <div className="flex flex-col items-center justify-center h-screen text-center px-6">
                 <p
                   className={`mb-5 ${chapter === 0 ? 'animate__animated animate__fadeInDown' : ''}`}
@@ -191,7 +207,7 @@ export function AIUnlockedPage() {
             </Chapter>
 
             {/* ── CHAPTER 1: THE PROBLEM + THE WINDOW ── */}
-            <Chapter show={chapter === 1}>
+            <Chapter opacity={chapterOpacities[1]}>
               <div className="flex flex-col items-center justify-center h-screen text-center px-6">
                 <p
                   className={`font-semibold mb-6 max-w-2xl ${chapter === 1 ? 'animate__animated animate__fadeInDown' : ''}`}
@@ -228,7 +244,7 @@ export function AIUnlockedPage() {
             </Chapter>
 
             {/* ── CHAPTER 2: WHAT HAPPENS IN 90 MINUTES (the value stack) ── */}
-            <Chapter show={chapter === 2}>
+            <Chapter opacity={chapterOpacities[2]}>
               <div className="flex flex-col items-center justify-center h-screen text-center px-6">
                 <p
                   className={`mb-3 ${chapter === 2 ? 'animate__animated animate__fadeInDown' : ''}`}
@@ -239,14 +255,14 @@ export function AIUnlockedPage() {
 
                 <h2
                   className={`font-display font-black ${chapter === 2 ? 'animate__animated animate__fadeInUp' : ''}`}
-                  style={{ fontSize: 'clamp(2rem, 4.5vw, 3.8rem)', letterSpacing: '-0.03em', color: '#ffffff', maxWidth: 680, lineHeight: 1.1, animationDuration: '0.6s', animationDelay: '0.05s' }}
+                  style={{ fontSize: 'clamp(1.8rem, 3.8vw, 3.2rem)', letterSpacing: '-0.03em', color: '#ffffff', maxWidth: 680, lineHeight: 1.1, animationDuration: '0.6s', animationDelay: '0.05s' }}
                 >
                   You walk in not knowing.<br />
                   <span style={{ color: '#FF3366' }}>You walk out building.</span>
                 </h2>
 
                 <div
-                  className={`mt-10 grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl w-full text-left ${chapter === 2 ? 'animate__animated animate__fadeInUp' : ''}`}
+                  className={`mt-14 grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl w-full text-left ${chapter === 2 ? 'animate__animated animate__fadeInUp' : ''}`}
                   style={{ animationDuration: '0.5s', animationDelay: '0.2s' }}
                 >
                   {[
@@ -276,7 +292,7 @@ export function AIUnlockedPage() {
             </Chapter>
 
             {/* ── CHAPTER 3: THE GUIDE ── */}
-            <Chapter show={chapter === 3}>
+            <Chapter opacity={chapterOpacities[3]}>
               <div className="flex flex-col items-center justify-center h-screen text-center px-6">
                 <p
                   className={`mb-6 max-w-xl ${chapter === 3 ? 'animate__animated animate__fadeIn' : ''}`}
@@ -336,7 +352,7 @@ export function AIUnlockedPage() {
             </Chapter>
 
             {/* ── CHAPTER 4: THE INVITE ── (form is below the cinematic zone) */}
-            <Chapter show={chapter === 4}>
+            <Chapter opacity={chapterOpacities[4]}>
               <div className="flex flex-col items-center justify-center h-screen text-center px-6">
                 <p
                   className={`mb-3 ${chapter === 4 ? 'animate__animated animate__fadeIn' : ''}`}
@@ -468,8 +484,9 @@ export function AIUnlockedPage() {
   )
 }
 
-// ── Chapter overlay helper ────────────────────────────────────────────────────
-function Chapter({ show, children }: { show: boolean; children: React.ReactNode }) {
+// ── Chapter overlay helper — smooth opacity, no CSS transition needed ─────────
+function Chapter({ opacity, children }: { opacity: number; children: React.ReactNode }) {
+  const o = Math.max(0, Math.min(1, opacity))
   return (
     <div
       style={{
@@ -478,13 +495,13 @@ function Chapter({ show, children }: { show: boolean; children: React.ReactNode 
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        opacity: show ? 1 : 0,
-        transform: show ? 'translateY(0)' : 'translateY(20px)',
-        transition: 'opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1)',
-        pointerEvents: show ? 'auto' : 'none',
-        zIndex: 10,
+        opacity: o,
+        transform: `translateY(${(1 - o) * 16}px)`,
+        transition: 'none',
+        pointerEvents: o > 0.3 ? 'auto' : 'none',
+        zIndex: o > 0.5 ? 11 : 10,
       }}
-      aria-hidden={!show}
+      aria-hidden={o < 0.1}
     >
       {children}
     </div>
