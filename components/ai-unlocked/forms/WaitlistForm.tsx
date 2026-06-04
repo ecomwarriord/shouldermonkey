@@ -119,7 +119,7 @@ export function WaitlistForm({ onSuccess, utm_source, ref_id }: WaitlistFormProp
         }),
       })
 
-      if (res.status === 429) { setError("You're already on the list — check your inbox."); return }
+      if (res.status === 429) { setError("You're already on the list. Check your inbox."); return }
       if (!res.ok) { setError('Something went wrong. Please try again.'); return }
 
       if ((window as any).gtag) (window as any).gtag('event', 'ai_unlocked_form_success', { role: form.role })

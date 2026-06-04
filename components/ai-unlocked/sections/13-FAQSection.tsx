@@ -2,44 +2,42 @@
 
 import * as Accordion from '@radix-ui/react-accordion'
 
-// FAQ is for the WEBINAR only — the 12-week course is not on this page
+// FAQ is for the WEBINAR only. The 12-week course is not on this page.
 const FAQS = [
-  // Parent questions first
   {
     id: 'p1',
     q: 'What exactly happens at this webinar?',
-    a: '90 minutes live, online. You\'ll see AI tools used in real time — not slides, not theory. Your child will watch a product get built from scratch, learn the tool stack, see an automation created live, and leave with resources they can use the same night.',
+    a: '90 minutes live, online. You\'ll see AI tools used in real time. Not slides. Not theory. Your child will watch a product get built from scratch, learn the tool stack, see an automation created live, and leave with resources they can use the same night.',
     audience: 'parent',
   },
   {
     id: 'p2',
     q: 'How much are tickets, and when do they go on sale?',
-    a: 'Tickets start from $149 AUD early bird, $199 standard. Waitlist members get first access and the early bird price — that\'s why joining free now matters. We\'ll email you the moment tickets drop.',
+    a: 'Tickets start from $149 AUD early bird, $199 standard. Waitlist members get first access and the early bird price. That\'s why joining free now matters. We\'ll email you the moment tickets drop.',
     audience: 'parent',
   },
   {
     id: 'p3',
     q: 'Is there a refund if my child can\'t attend?',
-    a: 'Webinar tickets are non-refundable once purchased. All ticket holders receive the full replay, so missing the live session doesn\'t mean missing the content. If the event is cancelled by us, a full refund will be issued — this is required under Australian Consumer Law regardless of our policy.',
+    a: 'Webinar tickets are non-refundable once purchased. All ticket holders receive the full replay, so missing the live session doesn\'t mean missing the content. If the event is cancelled by us, a full refund will be issued. This is required under Australian Consumer Law regardless of our policy.',
     audience: 'parent',
   },
   {
     id: 'p4',
     q: 'Who is running this, and are they qualified?',
-    a: 'Dee is a Sydney-based founder who has shipped 6 live AI-powered products in the last 12 months — including ShoulderMonkey (a SaaS platform with 200+ active business users) and Qaneri (an enterprise all-in-one platform, live at qaneri.com). These are not experiments. They are real products, built with AI, used by real people and real businesses. He built this event using the same tools he teaches. Abhinav Verma is the founder of RackTheBrain — an online learning platform with 1,000+ students — and a Sydney-based educator and podcaster with a track record of helping young people perform at a higher level.',
+    a: 'Dee is a Sydney-based founder who has shipped 6 live AI-powered products in the last 12 months, including ShoulderMonkey (a SaaS platform with 200+ active business users) and Qaneri (an enterprise all-in-one platform, live at qaneri.com). These are not experiments. They are real products, built with AI, used by real businesses. He built this event using the same tools he teaches. Abhinav Verma is the founder of RackTheBrain, an online learning platform with 1,000+ students, and a Sydney-based educator and podcaster with a track record of helping young people perform at a higher level.',
     audience: 'parent',
   },
   {
     id: 'p5',
     q: 'Is the content age-appropriate for a 13-year-old?',
-    a: 'Yes — the webinar is specifically designed for 13 and up. No coding required, no technical background needed. If your child can use a smartphone, they have everything they need.',
+    a: 'Yes. The webinar is designed for 13 and up. No coding required, no technical background needed. If your child can use a smartphone, they have everything they need.',
     audience: 'parent',
   },
-  // Student questions
   {
     id: 't1',
     q: 'Do I need to know how to code?',
-    a: 'No. We teach you to build with AI tools — not write code. If you can use YouTube, Instagram, or a phone, you\'re ready.',
+    a: 'No. We teach you to build with AI tools, not write code. If you can use YouTube, Instagram, or a phone, you\'re ready.',
     audience: 'teen',
   },
   {
@@ -51,7 +49,7 @@ const FAQS = [
   {
     id: 't3',
     q: 'Is it actually live or pre-recorded?',
-    a: 'Fully live. You can ask questions, watch things get built in real time, and see what happens when something doesn\'t work first time. The replay is available to all ticket holders after.',
+    a: 'Fully live. You can ask questions, watch things get built in real time, and see what happens when something goes wrong the first time. The replay is available to all ticket holders after.',
     audience: 'teen',
   },
   {

@@ -4,7 +4,7 @@ const TOOLS = [
   {
     name: 'ChatGPT',
     tag: 'The one everyone knows',
-    desc: 'Brainstorm, write, research, plan. This is where most people start — we go way beyond the basics.',
+    desc: 'Brainstorm, write, research, plan. This is where most people start. We go way beyond the basics.',
     badge: 'Free tier',
     color: '#10B981',
     url: 'https://chat.openai.com',
@@ -20,7 +20,7 @@ const TOOLS = [
   {
     name: 'Claude Code',
     tag: 'Build with AI in your terminal',
-    desc: 'The tool your instructor uses to build everything. Type what you want — it writes the code.',
+    desc: 'The tool your instructor uses to build everything. Type what you want. It writes the code.',
     badge: 'Free tier',
     color: '#FF3366',
     url: 'https://claude.ai/code',
@@ -52,7 +52,7 @@ const TOOLS = [
   {
     name: 'Higgsfield',
     tag: 'AI video generation',
-    desc: 'Cinematic AI video from a single prompt. Product ads, social content, brand stories — in minutes.',
+    desc: 'Cinematic AI video from a single prompt. Product ads, social content, brand stories. In minutes.',
     badge: 'Free tier',
     color: '#EC4899',
     url: 'https://higgsfield.ai',
@@ -60,7 +60,7 @@ const TOOLS = [
   {
     name: 'ShoulderMonkey',
     tag: 'Built by your instructor',
-    desc: 'An entire business platform built with AI. CRM, automation, bookings — this is what 12 weeks can build.',
+    desc: 'An entire business platform built with AI: CRM, automation, bookings. This is what building with AI looks like.',
     badge: 'Live product',
     color: '#7B3FE4',
     url: 'https://shouldermonkey.co',
@@ -116,7 +116,7 @@ export function AffiliateSection() {
           </p>
         </div>
 
-        {/* Tool grid — 3 columns on desktop */}
+        {/* Tool grid , 3 columns on desktop */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',

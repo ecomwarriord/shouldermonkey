@@ -179,7 +179,7 @@ export function AIUnlockedPage() {
                   style={{ fontSize: 'clamp(1.1rem, 2.2vw, 1.4rem)', color: 'rgba(255,255,255,0.65)', lineHeight: 1.5, animationDuration: '0.8s', animationDelay: '0.35s' }}
                 >
                   A 90-minute live event where you learn to use AI<br />
-                  to <span style={{ color: '#ffffff' }}>build real things</span> — and why that matters right now.
+                  to <span style={{ color: '#ffffff' }}>build real things.</span> Why that matters right now.
                 </p>
 
                 <div
@@ -192,7 +192,7 @@ export function AIUnlockedPage() {
                     style={{ fontSize: '1.15rem', padding: '1.1rem 2.8rem', background: 'linear-gradient(135deg, #7B3FE4 0%, #FF3366 100%)', letterSpacing: '0.01em' }}
                     onClick={e => { e.preventDefault(); document.getElementById('waitlist')?.scrollIntoView({ behavior: 'smooth' }) }}
                   >
-                    Join the Waitlist — Free
+                    Join the Waitlist. It's Free.
                   </a>
                   <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.8rem', textShadow: '0 1px 10px rgba(0,0,0,0.9)', letterSpacing: '0.04em' }}>
                     Waitlist is free · Tickets from $149 AUD when they drop · 13 and up
@@ -266,8 +266,8 @@ export function AIUnlockedPage() {
                   style={{ animationDuration: '0.5s', animationDelay: '0.2s' }}
                 >
                   {[
-                    { label: 'Live AI build', detail: 'Watch a real product get built in front of you — then do it yourself' },
-                    { label: 'The tool stack', detail: 'ChatGPT, Claude, Canva AI, ElevenLabs — used live, not explained in slides' },
+                    { label: 'Live AI build', detail: 'Watch a real product get built in front of you. Then do it yourself.' },
+                    { label: 'The tool stack', detail: 'ChatGPT, Claude, Canva AI, ElevenLabs. Used live, not explained in slides.' },
                     { label: 'One automation', detail: 'A workflow you leave with that saves 10+ hours a week, built live' },
                     { label: 'Content in 60 minutes', detail: 'A full week of social content created in under an hour' },
                   ].map((item, i) => (
@@ -286,7 +286,7 @@ export function AIUnlockedPage() {
                   className={`mt-8 ${chapter === 2 ? 'animate__animated animate__fadeIn' : ''}`}
                   style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.9rem', fontStyle: 'italic', animationDuration: '0.5s', animationDelay: '0.35s' }}
                 >
-                  And at the end — a special offer for those who want to go further.
+                  And at the end: a special offer for those who want to go further.
                 </p>
               </div>
             </Chapter>
@@ -377,7 +377,7 @@ export function AIUnlockedPage() {
                   style={{ background: 'linear-gradient(135deg, #7B3FE4 0%, #FF3366 100%)', fontSize: '1.1rem', padding: '1.1rem 2.8rem', animationDuration: '0.5s', animationDelay: '0.2s' }}
                   onClick={e => { e.preventDefault(); document.getElementById('waitlist-form')?.scrollIntoView({ behavior: 'smooth' }) }}
                 >
-                  Join the Waitlist — Free →
+                  Join the Waitlist. It's Free. →
                 </a>
                 <p className="mt-4 text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
                   Waitlist is free · Tickets from $149 AUD when they drop
