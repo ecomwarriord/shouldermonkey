@@ -121,67 +121,50 @@ export function AIUnlockedPage() {
           {/* Chapters are fixed overlays within this zone */}
           <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
 
-            {/* ── CHAPTER 0: HERO'S DESIRE ── */}
+            {/* ── CHAPTER 0: THE EVENT ── */}
             <Chapter show={chapter === 0 && canvasReady}>
               <div className="flex flex-col items-center justify-center h-screen text-center px-6">
-                {/* Co-brand pill */}
-                <div
-                  className={`label-pill mb-8 ${chapter === 0 ? 'animate__animated animate__fadeInDown' : ''}`}
-                  style={{ color: '#FF3366', borderColor: 'rgba(255,51,102,0.3)', background: 'rgba(255,51,102,0.08)', animationDuration: '0.6s' }}
+                <p
+                  className={`mb-5 ${chapter === 0 ? 'animate__animated animate__fadeInDown' : ''}`}
+                  style={{
+                    fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.18em',
+                    textTransform: 'uppercase', color: '#FF3366', animationDuration: '0.5s',
+                  }}
                 >
-                  RackTheBrain × ShoulderMonkey · Sydney, Australia
-                </div>
+                  One night · Live · Online · Sydney, Australia
+                </p>
 
-                {/* Two-tier typography: tiny "AI" label + dominant "UNLOCKED" statement */}
                 <div
                   className={chapter === 0 ? 'animate__animated animate__fadeInUp' : ''}
                   style={{ animationDuration: '0.7s', animationDelay: '0.1s', textAlign: 'center' }}
                 >
-                  {/* "AI" — small label, sets the category */}
                   <span
                     className="font-display font-black"
                     style={{
-                      display: 'block',
-                      fontSize: 'clamp(1.2rem, 2.5vw, 2.5rem)',
-                      letterSpacing: '0.5em',
-                      color: '#FF3366',
-                      marginBottom: '0.15em',
-                      paddingLeft: '0.5em', // optical compensation for letter-spacing
+                      display: 'block', fontSize: 'clamp(1.2rem, 2.5vw, 2.5rem)',
+                      letterSpacing: '0.5em', color: '#FF3366', marginBottom: '0.15em',
+                      paddingLeft: '0.5em',
                     }}
                   >
                     AI
                   </span>
-                  {/* "UNLOCKED" — the commanding statement */}
                   <h1
                     className="font-display font-black"
-                    style={{
-                      fontSize: 'clamp(3.8rem, 12.5vw, 13rem)',
-                      lineHeight: 0.85,
-                      letterSpacing: '-0.04em',
-                      margin: 0,
-                    }}
+                    style={{ fontSize: 'clamp(3.8rem, 12.5vw, 13rem)', lineHeight: 0.85, letterSpacing: '-0.04em', margin: 0 }}
                   >
                     <span style={{ WebkitTextStroke: '3px #7B3FE4', color: 'transparent' }}>UN</span>
                     <span style={{ color: '#ffffff' }}>LOCKED</span>
                   </h1>
                 </div>
 
-                {/* Sub — speaks to the desire, not the product */}
                 <p
                   className={`mt-8 font-semibold max-w-lg ${chapter === 0 ? 'animate__animated animate__fadeIn' : ''}`}
-                  style={{
-                    fontSize: 'clamp(1.1rem, 2.2vw, 1.5rem)',
-                    color: 'rgba(255,255,255,0.65)',
-                    lineHeight: 1.4,
-                    animationDuration: '0.8s',
-                    animationDelay: '0.35s',
-                  }}
+                  style={{ fontSize: 'clamp(1.1rem, 2.2vw, 1.4rem)', color: 'rgba(255,255,255,0.65)', lineHeight: 1.5, animationDuration: '0.8s', animationDelay: '0.35s' }}
                 >
-                  Stop watching other people build with AI.<br />
-                  <span style={{ color: '#ffffff' }}>Start being the one who does.</span>
+                  A 90-minute live event where you learn to use AI<br />
+                  to <span style={{ color: '#ffffff' }}>build real things</span> — and why that matters right now.
                 </p>
 
-                {/* Direct CTA — one action, clear outcome */}
                 <div
                   className={`mt-10 flex flex-col items-center gap-3 ${chapter === 0 ? 'animate__animated animate__fadeInUp' : ''}`}
                   style={{ animationDuration: '0.6s', animationDelay: '0.5s' }}
@@ -189,22 +172,16 @@ export function AIUnlockedPage() {
                   <a
                     href="#waitlist"
                     className="btn-primary"
-                    style={{
-                      fontSize: '1.15rem',
-                      padding: '1.1rem 2.8rem',
-                      background: 'linear-gradient(135deg, #7B3FE4 0%, #FF3366 100%)',
-                      letterSpacing: '0.01em',
-                    }}
+                    style={{ fontSize: '1.15rem', padding: '1.1rem 2.8rem', background: 'linear-gradient(135deg, #7B3FE4 0%, #FF3366 100%)', letterSpacing: '0.01em' }}
                     onClick={e => { e.preventDefault(); document.getElementById('waitlist')?.scrollIntoView({ behavior: 'smooth' }) }}
                   >
-                    Join the Waitlist — It's Free
+                    Join the Waitlist — Free
                   </a>
-                  <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.8rem', textShadow: '0 1px 10px rgba(0,0,0,0.9)', letterSpacing: '0.04em' }}>
-                    13 and up · Founding Cohort · 50 seats only
+                  <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.8rem', textShadow: '0 1px 10px rgba(0,0,0,0.9)', letterSpacing: '0.04em' }}>
+                    Waitlist is free · Tickets from $149 AUD when they drop · 13 and up
                   </p>
                 </div>
 
-                {/* Scroll prompt */}
                 <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2" aria-hidden="true">
                   <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '0.7rem', letterSpacing: '0.15em', textTransform: 'uppercase' }}>scroll</span>
                   <div style={{ width: 1, height: 44, background: 'linear-gradient(to bottom, rgba(123,63,228,0.7), transparent)' }} />
@@ -212,19 +189,17 @@ export function AIUnlockedPage() {
               </div>
             </Chapter>
 
-            {/* ── CHAPTER 1: THE VILLAIN (internal emotion first, then proof) ── */}
+            {/* ── CHAPTER 1: THE PROBLEM + THE WINDOW ── */}
             <Chapter show={chapter === 1}>
               <div className="flex flex-col items-center justify-center h-screen text-center px-6">
-                {/* Internal problem — the FOMO they already feel */}
                 <p
-                  className={`font-display font-semibold mb-6 max-w-2xl ${chapter === 1 ? 'animate__animated animate__fadeInDown' : ''}`}
-                  style={{ fontSize: 'clamp(1rem, 2vw, 1.25rem)', color: 'rgba(255,255,255,0.45)', letterSpacing: '0.01em', animationDuration: '0.6s' }}
+                  className={`font-semibold mb-6 max-w-2xl ${chapter === 1 ? 'animate__animated animate__fadeInDown' : ''}`}
+                  style={{ fontSize: 'clamp(1rem, 2vw, 1.2rem)', color: 'rgba(255,255,255,0.4)', animationDuration: '0.6s' }}
                 >
                   Right now, someone your age is building an AI product<br />
                   that thousands of people will use.
                 </p>
 
-                {/* The external proof — big number creates contrast */}
                 <div
                   className={`font-display font-black ${chapter === 1 ? 'animate__animated animate__zoomIn' : ''}`}
                   style={{ fontSize: 'clamp(5rem, 18vw, 18rem)', lineHeight: 0.82, letterSpacing: '-0.05em', color: '#FF3366', animationDuration: '0.5s', animationDelay: '0.1s' }}
@@ -241,63 +216,91 @@ export function AIUnlockedPage() {
                 </p>
                 <p style={{ marginTop: 8, color: 'rgba(255,255,255,0.25)', fontSize: '0.8rem' }}>Deloitte AI Education in Australia Report, 2025</p>
 
-                {/* Philosophical injustice */}
                 <p
                   className={`mt-10 ${chapter === 1 ? 'animate__animated animate__fadeIn' : ''}`}
-                  style={{ color: 'rgba(255,255,255,0.5)', maxWidth: 520, fontSize: '1.05rem', lineHeight: 1.5, animationDuration: '0.6s', animationDelay: '0.3s' }}
+                  style={{ color: 'rgba(255,255,255,0.55)', maxWidth: 540, fontSize: '1.1rem', lineHeight: 1.6, animationDuration: '0.6s', animationDelay: '0.3s' }}
                 >
-                  It&apos;s not right that the most important skill of your generation<br />
-                  isn&apos;t being taught anywhere.
+                  The window to get ahead is open right now.<br />
+                  <span style={{ color: '#ffffff' }}>In 90 minutes, you could be on the right side of that gap.</span>
                 </p>
-
-                {/* Contrast: what they lose vs what they gain */}
-                <div
-                  className={`mt-10 grid grid-cols-1 md:grid-cols-2 gap-5 max-w-2xl w-full ${chapter === 1 ? 'animate__animated animate__fadeInUp' : ''}`}
-                  style={{ animationDuration: '0.5s', animationDelay: '0.4s' }}
-                >
-                  <div className="rounded-2xl p-7 text-left" style={{ background: 'rgba(255,51,102,0.05)', border: '1.5px solid rgba(255,51,102,0.25)' }}>
-                    <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#FF3366' }}>Without this</p>
-                    <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1rem', lineHeight: 1.6 }}>Watching others build things you could&apos;ve built — while you figure out where to start.</p>
-                  </div>
-                  <div className="rounded-2xl p-7 text-left" style={{ background: 'rgba(123,63,228,0.08)', border: '1.5px solid rgba(123,63,228,0.35)' }}>
-                    <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#7B3FE4' }}>After 12 weeks</p>
-                    <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '1rem', lineHeight: 1.6 }}>Building with AI before most people your age know how to prompt it.</p>
-                  </div>
-                </div>
               </div>
             </Chapter>
 
-            {/* ── CHAPTER 2: THE GUIDE (empathy first, then authority) ── */}
+            {/* ── CHAPTER 2: WHAT HAPPENS IN 90 MINUTES (the value stack) ── */}
             <Chapter show={chapter === 2}>
               <div className="flex flex-col items-center justify-center h-screen text-center px-6">
-                {/* Empathy — guide understands the problem */}
                 <p
-                  className={`max-w-xl mb-8 ${chapter === 2 ? 'animate__animated animate__fadeIn' : ''}`}
-                  style={{ color: 'rgba(255,255,255,0.45)', fontSize: '1.05rem', lineHeight: 1.6, animationDuration: '0.6s' }}
+                  className={`mb-3 ${chapter === 2 ? 'animate__animated animate__fadeInDown' : ''}`}
+                  style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#7B3FE4', animationDuration: '0.5s' }}
                 >
-                  We know what it&apos;s like to watch AI change everything around you<br />
-                  with no clear path in.
+                  What you get from 90 minutes live
                 </p>
 
-                {/* Authority — specific and concrete, not boastful */}
                 <h2
                   className={`font-display font-black ${chapter === 2 ? 'animate__animated animate__fadeInUp' : ''}`}
+                  style={{ fontSize: 'clamp(2rem, 4.5vw, 3.8rem)', letterSpacing: '-0.03em', color: '#ffffff', maxWidth: 680, lineHeight: 1.1, animationDuration: '0.6s', animationDelay: '0.05s' }}
+                >
+                  You walk in not knowing.<br />
+                  <span style={{ color: '#FF3366' }}>You walk out building.</span>
+                </h2>
+
+                <div
+                  className={`mt-10 grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl w-full text-left ${chapter === 2 ? 'animate__animated animate__fadeInUp' : ''}`}
+                  style={{ animationDuration: '0.5s', animationDelay: '0.2s' }}
+                >
+                  {[
+                    { label: 'Live AI build', detail: 'Watch a real product get built in front of you — then do it yourself' },
+                    { label: 'The tool stack', detail: 'ChatGPT, Claude, Canva AI, ElevenLabs — used live, not explained in slides' },
+                    { label: 'One automation', detail: 'A workflow you leave with that saves 10+ hours a week, built live' },
+                    { label: 'Content in 60 minutes', detail: 'A full week of social content created in under an hour' },
+                  ].map((item, i) => (
+                    <div
+                      key={item.label}
+                      className="rounded-xl p-5"
+                      style={{ background: i % 2 === 0 ? 'rgba(123,63,228,0.07)' : 'rgba(255,51,102,0.05)', border: `1.5px solid ${i % 2 === 0 ? 'rgba(123,63,228,0.28)' : 'rgba(255,51,102,0.22)'}` }}
+                    >
+                      <p className="font-bold text-sm mb-1" style={{ color: i % 2 === 0 ? '#a673ff' : '#FF3366' }}>{item.label}</p>
+                      <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '0.9rem', lineHeight: 1.5 }}>{item.detail}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <p
+                  className={`mt-8 ${chapter === 2 ? 'animate__animated animate__fadeIn' : ''}`}
+                  style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.9rem', fontStyle: 'italic', animationDuration: '0.5s', animationDelay: '0.35s' }}
+                >
+                  And at the end — a special offer for those who want to go further.
+                </p>
+              </div>
+            </Chapter>
+
+            {/* ── CHAPTER 3: THE GUIDE ── */}
+            <Chapter show={chapter === 3}>
+              <div className="flex flex-col items-center justify-center h-screen text-center px-6">
+                <p
+                  className={`mb-6 max-w-xl ${chapter === 3 ? 'animate__animated animate__fadeIn' : ''}`}
+                  style={{ color: 'rgba(255,255,255,0.4)', fontSize: '1rem', lineHeight: 1.6, animationDuration: '0.6s' }}
+                >
+                  Led by someone who doesn&apos;t just teach AI. He builds with it.
+                </p>
+
+                <h2
+                  className={`font-display font-black ${chapter === 3 ? 'animate__animated animate__fadeInUp' : ''}`}
                   style={{ fontSize: 'clamp(2.2rem, 5.5vw, 4.5rem)', letterSpacing: '-0.03em', color: '#ffffff', maxWidth: 700, lineHeight: 1.05, animationDuration: '0.6s', animationDelay: '0.1s' }}
                 >
-                  6 products built with AI.<br />
-                  <span style={{ color: '#FF3366' }}>Every one still live.</span>
+                  6 live AI products.<br />
+                  <span style={{ color: '#FF3366' }}>Every one still running.</span>
                 </h2>
 
                 <p
-                  className={`mt-4 ${chapter === 2 ? 'animate__animated animate__fadeIn' : ''}`}
+                  className={`mt-3 ${chapter === 3 ? 'animate__animated animate__fadeIn' : ''}`}
                   style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.9rem', animationDuration: '0.6s', animationDelay: '0.2s' }}
                 >
-                  By Dee, 29, Sydney — your instructor. Not a theory. A track record.
+                  Dee · 29 · Sydney · Your instructor for the night
                 </p>
 
-                {/* Projects as proof points */}
                 <div
-                  className={`mt-8 grid grid-cols-3 gap-2 max-w-lg w-full mx-auto ${chapter === 2 ? 'animate__animated animate__fadeInUp' : ''}`}
+                  className={`mt-8 grid grid-cols-3 gap-2 max-w-lg w-full mx-auto ${chapter === 3 ? 'animate__animated animate__fadeInUp' : ''}`}
                   style={{ animationDuration: '0.5s', animationDelay: '0.25s' }}
                 >
                   {[
@@ -322,81 +325,32 @@ export function AIUnlockedPage() {
                   ))}
                 </div>
 
-                {/* Second guide — Abhinav's empathy + authority */}
-                <p
-                  className={`mt-8 ${chapter === 2 ? 'animate__animated animate__fadeIn' : ''}`}
-                  style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.9rem', animationDuration: '0.6s', animationDelay: '0.35s' }}
-                >
-                  + Abhinav Verma (RackTheBrain) · 1,000+ students taught · Podcaster · Sydney educator
-                </p>
-              </div>
-            </Chapter>
-
-            {/* ── CHAPTER 3: SUCCESS PICTURE (vivid, specific, aspirational) ── */}
-            <Chapter show={chapter === 3}>
-              <div className="flex flex-col items-center justify-center h-screen text-center px-6">
-                {/* Week 6 — the first milestone they can feel */}
-                <p
-                  className={`label-pill mb-6 ${chapter === 3 ? 'animate__animated animate__fadeInDown' : ''}`}
-                  style={{ color: '#FF3366', background: 'rgba(255,51,102,0.08)', borderColor: 'rgba(255,51,102,0.25)', animationDuration: '0.5s' }}
-                >
-                  By Week 6
-                </p>
-
-                <h2
-                  className={`font-display font-black ${chapter === 3 ? 'animate__animated animate__fadeInUp' : ''}`}
-                  style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', letterSpacing: '-0.03em', color: '#ffffff', maxWidth: 700, lineHeight: 1.1, animationDuration: '0.6s' }}
-                >
-                  You show your mates something<br />
-                  they can&apos;t{' '}
-                  <span style={{ color: '#FF3366' }}>build.</span>
-                </h2>
-
                 <p
                   className={`mt-6 ${chapter === 3 ? 'animate__animated animate__fadeIn' : ''}`}
-                  style={{ color: 'rgba(255,255,255,0.75)', fontSize: '1.2rem', maxWidth: 520, lineHeight: 1.6, animationDuration: '0.6s', animationDelay: '0.15s' }}
+                  style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.9rem', animationDuration: '0.6s', animationDelay: '0.35s' }}
                 >
-                  A working AI product. Not a school project.<br />
-                  Something that <span style={{ color: '#ffffff', fontWeight: 700 }}>actually runs.</span>
+                  + Abhinav Verma (RackTheBrain) · 1,000+ students · Sydney educator
                 </p>
-
-                {/* Week 12 — the bigger promise */}
-                <div
-                  className={`mt-12 rounded-2xl p-8 max-w-xl w-full text-left ${chapter === 3 ? 'animate__animated animate__fadeInUp' : ''}`}
-                  style={{ background: 'rgba(123,63,228,0.07)', border: '1px solid rgba(123,63,228,0.2)', animationDuration: '0.5s', animationDelay: '0.25s' }}
-                >
-                  <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#7B3FE4' }}>By Week 12</p>
-                  <p className="font-display font-black" style={{ fontSize: 'clamp(1.2rem, 2.5vw, 1.8rem)', color: '#ffffff', lineHeight: 1.2, letterSpacing: '-0.02em' }}>
-                    A live AI business. A launch strategy.<br />
-                    A path to your first <span style={{ color: '#FF3366' }}>$1,000 online.</span>
-                  </p>
-                  <p className="mt-4 text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                    A real product people pay for. Not dropshipping. Not MLM.<br />
-                    <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.75rem' }}>Results depend on effort. This is a target, not a guarantee.</span>
-                  </p>
-                </div>
               </div>
             </Chapter>
 
-            {/* ── CHAPTER 4: THE CALL TO ACTION ── */}
+            {/* ── CHAPTER 4: JOIN THE WAITLIST ── */}
             <Chapter show={chapter === 4}>
               <div id="waitlist" className="flex flex-col items-center justify-center h-screen text-center px-6">
-                {/* Stakes + scarcity — the cost of not acting */}
                 <p
                   className={`mb-3 ${chapter === 4 ? 'animate__animated animate__fadeIn' : ''}`}
-                  style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.9rem', letterSpacing: '0.05em', animationDuration: '0.5s' }}
+                  style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.85rem', letterSpacing: '0.05em', animationDuration: '0.5s' }}
                 >
-                  Founding Cohort · 50 seats · Most will be gone before tickets launch
+                  Waitlist is free · Tickets from $149 AUD · Limited seats · Sydney, online
                 </p>
 
-                {/* Headline — join the movement */}
                 <h2
                   className={`font-display font-black mb-8 ${chapter === 4 ? 'animate__animated animate__fadeInUp' : ''}`}
-                  style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)', letterSpacing: '-0.03em', color: '#ffffff', lineHeight: 1.0, animationDuration: '0.6s', animationDelay: '0.1s' }}
+                  style={{ fontSize: 'clamp(2.2rem, 5.5vw, 4.5rem)', letterSpacing: '-0.03em', color: '#ffffff', lineHeight: 1.05, animationDuration: '0.6s', animationDelay: '0.1s' }}
                 >
-                  50 young Australians<br />
-                  are about to build the future.<br />
-                  <span style={{ color: '#FF3366' }}>Are you in?</span>
+                  Join the waitlist.<br />
+                  Be first when<br />
+                  <span style={{ color: '#FF3366' }}>tickets drop.</span>
                 </h2>
 
                 {/* Form */}
