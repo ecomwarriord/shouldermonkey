@@ -163,11 +163,11 @@ export function AffiliateSection() {
               {/* Name */}
               <p style={{
                 fontFamily: 'var(--font-display, var(--font-syne), sans-serif)',
-                fontSize: '1.3rem',
-                fontWeight: 900,
-                letterSpacing: '-0.02em',
+                fontSize: '1.25rem',
+                fontWeight: 700,
+                letterSpacing: '-0.01em',
                 color: '#ffffff',
-                lineHeight: 1.1,
+                lineHeight: 1.15,
                 margin: 0,
               }}>
                 {tool.name}
@@ -175,9 +175,10 @@ export function AffiliateSection() {
 
               {/* Description */}
               <p style={{
+                fontFamily: 'var(--font-body, var(--font-inter), system-ui, sans-serif)',
                 fontSize: '0.875rem',
-                lineHeight: 1.6,
-                color: 'rgba(255,255,255,0.52)',
+                lineHeight: 1.65,
+                color: 'rgba(255,255,255,0.55)',
                 flexGrow: 1,
                 margin: 0,
               }}>

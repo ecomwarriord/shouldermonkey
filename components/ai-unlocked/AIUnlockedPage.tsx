@@ -297,7 +297,7 @@ export function AIUnlockedPage() {
 
                 {/* Projects as proof points */}
                 <div
-                  className={`mt-8 grid grid-cols-3 gap-2 max-w-lg w-full ${chapter === 2 ? 'animate__animated animate__fadeInUp' : ''}`}
+                  className={`mt-8 grid grid-cols-3 gap-2 max-w-lg w-full mx-auto ${chapter === 2 ? 'animate__animated animate__fadeInUp' : ''}`}
                   style={{ animationDuration: '0.5s', animationDelay: '0.25s' }}
                 >
                   {[
