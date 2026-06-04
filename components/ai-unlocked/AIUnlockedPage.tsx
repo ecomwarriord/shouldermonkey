@@ -58,10 +58,11 @@ export function AIUnlockedPage() {
         onUpdate(self: any) {
           scrollRef.current = self.progress
           const p = self.progress
-          if (p < 0.18) setChapter(0)
-          else if (p < 0.38) setChapter(1)
-          else if (p < 0.58) setChapter(2)
-          else if (p < 0.78) setChapter(3)
+          // Each chapter gets ~20% with a 2% buffer on entry — more dwell time
+          if (p < 0.20) setChapter(0)
+          else if (p < 0.40) setChapter(1)
+          else if (p < 0.60) setChapter(2)
+          else if (p < 0.80) setChapter(3)
           else setChapter(4)
         },
       })
@@ -115,8 +116,8 @@ export function AIUnlockedPage() {
 
       <main id="main-content">
 
-        {/* ── CINEMATIC ZONE: 600vh ────────────────────────────────────── */}
-        <div ref={storyRef} style={{ height: '600vh', position: 'relative' }}>
+        {/* ── CINEMATIC ZONE: 800vh — more dwell time per chapter ───────── */}
+        <div ref={storyRef} style={{ height: '800vh', position: 'relative' }}>
 
           {/* Chapters are fixed overlays within this zone */}
           <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
@@ -459,7 +460,7 @@ function Chapter({ show, children }: { show: boolean; children: React.ReactNode 
         justifyContent: 'center',
         opacity: show ? 1 : 0,
         transform: show ? 'translateY(0)' : 'translateY(20px)',
-        transition: 'opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1)',
+        transition: 'opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1)',
         pointerEvents: show ? 'auto' : 'none',
         zIndex: 10,
       }}

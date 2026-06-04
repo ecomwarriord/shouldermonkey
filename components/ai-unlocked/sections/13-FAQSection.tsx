@@ -2,65 +2,62 @@
 
 import * as Accordion from '@radix-ui/react-accordion'
 
+// FAQ is for the WEBINAR only — the 12-week course is not on this page
 const FAQS = [
+  // Parent questions first
   {
     id: 'p1',
-    q: 'Is this legitimate? What qualifications do the presenters have?',
-    a: 'Dee has built 6 live AI-powered products in the last 12 months — all still running, all publicly accessible. Abhinav has taught 1,000+ students through RackTheBrain, his online learning platform. This is a structured 12-week programme, not a one-off webinar.',
+    q: 'What exactly happens at this webinar?',
+    a: '90 minutes live, online. You\'ll see AI tools used in real time — not slides, not theory. Your child will watch a product get built from scratch, learn the tool stack, see an automation created live, and leave with resources they can use the same night.',
     audience: 'parent',
   },
   {
     id: 'p2',
-    q: 'What is the refund policy?',
-    a: '14-day satisfaction guarantee. If your child attends the first two sessions and it\'s not working for them, we\'ll refund in full — no questions, no chasing. We only want committed students.',
+    q: 'How much are tickets, and when do they go on sale?',
+    a: 'Tickets start from $149 AUD early bird, $199 standard. Waitlist members get first access and the early bird price — that\'s why joining free now matters. We\'ll email you the moment tickets drop.',
     audience: 'parent',
   },
   {
     id: 'p3',
-    q: 'My child says they\'ll make $1,000 in 12 weeks. Is that realistic?',
-    a: 'Some will. Some won\'t — it depends on effort and what they build. What we guarantee is that by Week 12 they\'ll have a working AI product and a concrete launch strategy. The $1,000 is a target, not a promise.',
+    q: 'Is there a refund if my child can\'t attend?',
+    a: 'Yes. If your child can\'t make it, email us and we\'ll refund the ticket. All ticket holders also receive the full replay, so missing the live session doesn\'t mean missing the content.',
     audience: 'parent',
   },
   {
     id: 'p4',
-    q: 'How does $2,999 compare to other options?',
-    a: 'University AI units cost $3,500+ per subject. Coding bootcamps average $15,000+. Private AI tutors in Sydney charge $80–$150/hr. This is 12 weeks of live, structured instruction with real project delivery — at a fraction of the cost.',
+    q: 'Who is running this, and are they qualified?',
+    a: 'Dee has built 6 live AI-powered products in the last 12 months — all publicly accessible and still running. Abhinav Verma runs RackTheBrain, an online learning platform with 1,000+ students. This is a live event run by people who actually build with AI, not just talk about it.',
     audience: 'parent',
   },
   {
     id: 'p5',
-    q: 'What if my child loses interest partway through?',
-    a: '14-day refund covers the first two weeks. After that, the curriculum is built to keep momentum high — each week builds directly on real work from the previous one. Students who complete Week 6 almost always finish.',
+    q: 'Is the content age-appropriate for a 13-year-old?',
+    a: 'Yes — the webinar is specifically designed for 13 and up. No coding required, no technical background needed. If your child can use a smartphone, they have everything they need.',
     audience: 'parent',
   },
-  {
-    id: 'p6',
-    q: 'Is the webinar ticket fee refundable?',
-    a: 'The webinar ticket ($149) is non-refundable, but it\'s fully credited toward the course if you enrol within 48 hours of attending. Effectively, attending the webinar costs you nothing if you join the course.',
-    audience: 'parent',
-  },
+  // Student questions
   {
     id: 't1',
-    q: 'Do I need any coding experience?',
-    a: 'None. If you can use YouTube, Instagram, or a smartphone, you have everything you need. We teach you to build with AI tools — not to write code.',
+    q: 'Do I need to know how to code?',
+    a: 'No. We teach you to build with AI tools — not write code. If you can use YouTube, Instagram, or a phone, you\'re ready.',
     audience: 'teen',
   },
   {
     id: 't2',
-    q: 'Can I do this while I\'m still in school?',
-    a: 'Yes — it\'s designed for school students. Sessions are recorded so you can catch up. Most students put in 4–6 hours per week including the live session.',
+    q: 'What will I actually walk away with?',
+    a: 'A live AI build you watched happen step by step, an automation template you can use immediately, a week of content you could post tonight, and the full tool stack we use. Plus the replay.',
     audience: 'teen',
   },
   {
     id: 't3',
-    q: 'What kind of products will I build?',
-    a: 'Depends what interests you — an AI content tool, a small SaaS product, an automation business, or a digital product. By Week 6 you\'ll have chosen your direction and by Week 12 it\'ll be live.',
+    q: 'Is it actually live or pre-recorded?',
+    a: 'Fully live. You can ask questions, watch things get built in real time, and see what happens when something doesn\'t work first time. The replay is available to all ticket holders after.',
     audience: 'teen',
   },
   {
     id: 't4',
-    q: 'Will I meet other students my age?',
-    a: 'Yes. The course has a private community (Skool or Discord) with all students in the same cohort. Weekly live sessions mean you\'ll see the same people building alongside you for 12 weeks.',
+    q: 'What happens at the end of the webinar?',
+    a: 'Something you won\'t see coming. We\'ll leave it at that.',
     audience: 'teen',
   },
 ]
@@ -82,14 +79,7 @@ interface FAQGroupProps {
 function FAQGroup({ label, faqs, accentColor }: FAQGroupProps) {
   return (
     <div style={{ marginBottom: 40 }}>
-      <p style={{
-        fontSize: '0.72rem',
-        fontWeight: 800,
-        letterSpacing: '0.12em',
-        textTransform: 'uppercase',
-        color: accentColor,
-        marginBottom: 16,
-      }}>
+      <p style={{ fontSize: '0.72rem', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', color: accentColor, marginBottom: 16 }}>
         {label}
       </p>
       <Accordion.Root type="multiple" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -97,45 +87,22 @@ function FAQGroup({ label, faqs, accentColor }: FAQGroupProps) {
           <Accordion.Item
             key={faq.id}
             value={faq.id}
-            style={{
-              background: 'rgba(255,255,255,0.03)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              borderRadius: 12,
-              overflow: 'hidden',
-            }}
+            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, overflow: 'hidden' }}
           >
             <Accordion.Header style={{ margin: 0 }}>
               <Accordion.Trigger
                 style={{
-                  width: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '18px 20px',
-                  textAlign: 'left',
-                  fontFamily: 'inherit',
-                  fontWeight: 600,
-                  fontSize: '0.95rem',
-                  lineHeight: 1.4,
-                  color: '#ffffff',
-                  background: 'transparent',
-                  border: 'none',
-                  cursor: 'pointer',
-                  gap: 16,
+                  width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: '18px 20px', textAlign: 'left', fontFamily: 'inherit', fontWeight: 600,
+                  fontSize: '0.95rem', lineHeight: 1.4, color: '#ffffff', background: 'transparent',
+                  border: 'none', cursor: 'pointer', gap: 16,
                 }}
               >
                 <span>{faq.q}</span>
                 <span style={{ color: accentColor }}><ChevronIcon /></span>
               </Accordion.Trigger>
             </Accordion.Header>
-            <Accordion.Content
-              style={{
-                padding: '0 20px 18px',
-                fontSize: '0.9rem',
-                lineHeight: 1.7,
-                color: 'rgba(255,255,255,0.55)',
-              }}
-            >
+            <Accordion.Content style={{ padding: '0 20px 18px', fontSize: '0.9rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.55)' }}>
               {faq.a}
             </Accordion.Content>
           </Accordion.Item>
@@ -149,41 +116,20 @@ export function FAQSection() {
   return (
     <section style={{ background: 'transparent', padding: '60px 24px 60px' }}>
       <div style={{ maxWidth: 720, margin: '0 auto' }}>
-        {/* Heading */}
         <div style={{ marginBottom: 48 }}>
-          <p style={{
-            fontSize: '0.7rem',
-            fontWeight: 700,
-            letterSpacing: '0.15em',
-            textTransform: 'uppercase',
-            color: '#7B3FE4',
-            marginBottom: 12,
-          }}>
+          <p style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#7B3FE4', marginBottom: 12 }}>
             FAQ
           </p>
           <h2 style={{
             fontFamily: 'var(--font-display, var(--font-syne), sans-serif)',
             fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)',
-            fontWeight: 700,
-            letterSpacing: '-0.02em',
-            lineHeight: 1.15,
-            color: '#ffffff',
-            margin: 0,
+            fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1.15, color: '#ffffff', margin: 0,
           }}>
-            Questions answered.
+            Questions about the webinar.
           </h2>
         </div>
-
-        <FAQGroup
-          label="For Parents"
-          faqs={FAQS.filter((f) => f.audience === 'parent')}
-          accentColor="#FF3366"
-        />
-        <FAQGroup
-          label="For Students"
-          faqs={FAQS.filter((f) => f.audience === 'teen')}
-          accentColor="#7B3FE4"
-        />
+        <FAQGroup label="For Parents" faqs={FAQS.filter((f) => f.audience === 'parent')} accentColor="#FF3366" />
+        <FAQGroup label="For Students" faqs={FAQS.filter((f) => f.audience === 'teen')} accentColor="#7B3FE4" />
       </div>
     </section>
   )
