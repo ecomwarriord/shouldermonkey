@@ -1,60 +1,88 @@
 'use client'
 
-// Tools selected for 13+ Australian entrepreneurs:
-// Free/accessible tiers, demonstrable in the course, high wow-factor
 const TOOLS = [
   {
     name: 'ChatGPT',
     tag: 'The one everyone knows',
-    desc: 'Brainstorm, write, research, code — the Swiss Army knife of AI. We go way deeper than the basics.',
+    desc: 'Brainstorm, write, research, plan. This is where most people start — we go way beyond the basics.',
     badge: 'Free tier',
     color: '#10B981',
+    url: 'https://chat.openai.com',
   },
   {
-    name: 'Claude',
-    tag: 'Best for building',
-    desc: 'Longer documents, better reasoning, and it can actually write code that works. Our go-to for serious work.',
+    name: 'Claude AI',
+    tag: 'Best for thinking and writing',
+    desc: 'Longer documents, sharper reasoning, better code explanations. Our go-to for serious work.',
     badge: 'Free tier',
     color: '#FF3366',
+    url: 'https://claude.ai',
   },
   {
-    name: 'Canva AI',
-    tag: 'Design in minutes',
-    desc: 'Logos, social posts, pitch decks, thumbnails — AI does the design, you do the direction.',
+    name: 'Claude Code',
+    tag: 'Build with AI in your terminal',
+    desc: 'The tool your instructor uses to build everything. Type what you want — it writes the code.',
     badge: 'Free tier',
-    color: '#7B3FE4',
+    color: '#FF3366',
+    url: 'https://claude.ai/code',
   },
   {
-    name: 'CapCut AI',
-    tag: 'Video content machine',
-    desc: 'Auto-captions, AI B-roll, voice enhancement. A week of content in under an hour.',
+    name: 'Gemini',
+    tag: 'Google\'s AI',
+    desc: 'Research, summarise, analyse documents and images. Deep integration with Google Workspace.',
     badge: 'Free',
-    color: '#FF3366',
+    color: '#4285F4',
+    url: 'https://gemini.google.com',
   },
   {
-    name: 'Make',
-    tag: 'Automate anything',
-    desc: 'Connect apps without writing code. Build automations that run while you sleep.',
+    name: 'Perplexity',
+    tag: 'AI search with sources',
+    desc: 'Ask anything, get a cited answer. Replaces hours of Googling. Great for market research.',
     badge: 'Free tier',
     color: '#7B3FE4',
+    url: 'https://perplexity.ai',
   },
   {
     name: 'ElevenLabs',
-    tag: 'AI voice',
-    desc: 'Clone your voice, create characters, narrate content. The demo alone will blow your mind.',
+    tag: 'AI voice and audio',
+    desc: 'Clone your voice. Create characters. Narrate content. The live demo alone will blow your mind.',
     badge: 'Free tier',
-    color: '#10B981',
+    color: '#F59E0B',
+    url: 'https://elevenlabs.io',
+  },
+  {
+    name: 'Higgsfield',
+    tag: 'AI video generation',
+    desc: 'Cinematic AI video from a single prompt. Product ads, social content, brand stories — in minutes.',
+    badge: 'Free tier',
+    color: '#EC4899',
+    url: 'https://higgsfield.ai',
+  },
+  {
+    name: 'ShoulderMonkey',
+    tag: 'Built by your instructor',
+    desc: 'An entire business platform built with AI. CRM, automation, bookings — this is what 12 weeks can build.',
+    badge: 'Live product',
+    color: '#7B3FE4',
+    url: 'https://shouldermonkey.co',
+  },
+  {
+    name: 'Lovable',
+    tag: 'Build apps by chatting',
+    desc: 'Describe what you want and it builds a working web app. No code required. Ship in hours, not weeks.',
+    badge: 'Free tier',
+    color: '#FF3366',
+    url: 'https://lovable.dev',
   },
 ]
 
 export function AffiliateSection() {
   return (
     <section style={{ background: '#000', padding: '100px 24px 80px' }}>
-      <div style={{ maxWidth: 900, margin: '0 auto' }}>
+      <div style={{ maxWidth: 960, margin: '0 auto' }}>
+
         {/* Section header */}
         <div style={{ textAlign: 'center', marginBottom: 56 }}>
           <p style={{
-            display: 'inline-block',
             fontSize: '0.7rem',
             fontWeight: 700,
             letterSpacing: '0.15em',
@@ -73,40 +101,61 @@ export function AffiliateSection() {
             color: '#ffffff',
             margin: '0 0 16px',
           }}>
-            Six tools.<br />
-            <span style={{ color: '#FF3366' }}>You&apos;ll use all of them.</span>
+            Nine tools.<br />
+            <span style={{ color: '#FF3366' }}>All taught in the course.</span>
           </h2>
-          <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '1rem', maxWidth: 500, margin: '0 auto' }}>
-            All free tiers to start. All demonstrable on day one. All taught in the course.
+          <p style={{
+            color: 'rgba(255,255,255,0.45)',
+            fontSize: '1rem',
+            maxWidth: 520,
+            margin: '0 auto',
+            lineHeight: 1.6,
+          }}>
+            Every one has a free tier to get started. Every one is demonstrable on day one.
+            ShoulderMonkey? That&apos;s what 12 weeks of AI building looks like.
           </p>
         </div>
 
-        {/* Tool grid */}
+        {/* Tool grid — 3 columns on desktop */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
-          gap: 16,
+          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+          gap: 14,
         }}>
           {TOOLS.map((tool) => (
-            <div
+            <a
               key={tool.name}
+              href={tool.url}
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
                 background: 'rgba(255,255,255,0.03)',
-                border: `1.5px solid ${tool.color}33`,
-                borderRadius: 16,
-                padding: '24px 24px 20px',
+                border: `1.5px solid ${tool.color}44`,
+                borderRadius: 14,
+                padding: '22px 22px 18px',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 10,
+                textDecoration: 'none',
+                transition: 'transform 0.15s ease, border-color 0.15s ease',
+              }}
+              onMouseEnter={e => {
+                ;(e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'
+                ;(e.currentTarget as HTMLElement).style.borderColor = `${tool.color}88`
+              }}
+              onMouseLeave={e => {
+                ;(e.currentTarget as HTMLElement).style.transform = 'translateY(0)'
+                ;(e.currentTarget as HTMLElement).style.borderColor = `${tool.color}44`
               }}
             >
               {/* Tag */}
               <p style={{
-                fontSize: '0.68rem',
+                fontSize: '0.67rem',
                 fontWeight: 700,
                 letterSpacing: '0.1em',
                 textTransform: 'uppercase',
                 color: tool.color,
+                margin: 0,
               }}>
                 {tool.tag}
               </p>
@@ -114,11 +163,12 @@ export function AffiliateSection() {
               {/* Name */}
               <p style={{
                 fontFamily: 'var(--font-display, var(--font-syne), sans-serif)',
-                fontSize: '1.35rem',
+                fontSize: '1.3rem',
                 fontWeight: 900,
                 letterSpacing: '-0.02em',
                 color: '#ffffff',
                 lineHeight: 1.1,
+                margin: 0,
               }}>
                 {tool.name}
               </p>
@@ -127,8 +177,9 @@ export function AffiliateSection() {
               <p style={{
                 fontSize: '0.875rem',
                 lineHeight: 1.6,
-                color: 'rgba(255,255,255,0.55)',
+                color: 'rgba(255,255,255,0.52)',
                 flexGrow: 1,
+                margin: 0,
               }}>
                 {tool.desc}
               </p>
@@ -138,11 +189,11 @@ export function AffiliateSection() {
                 fontSize: '0.72rem',
                 fontWeight: 700,
                 color: tool.color,
-                marginTop: 4,
+                margin: 0,
               }}>
                 ✓ {tool.badge}
               </p>
-            </div>
+            </a>
           ))}
         </div>
       </div>
