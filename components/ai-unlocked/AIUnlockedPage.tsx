@@ -335,9 +335,9 @@ export function AIUnlockedPage() {
               </div>
             </Chapter>
 
-            {/* ── CHAPTER 4: JOIN THE WAITLIST ── */}
+            {/* ── CHAPTER 4: THE INVITE ── (form is below the cinematic zone) */}
             <Chapter show={chapter === 4}>
-              <div id="waitlist" className="flex flex-col items-center justify-center h-screen text-center px-6">
+              <div className="flex flex-col items-center justify-center h-screen text-center px-6">
                 <p
                   className={`mb-3 ${chapter === 4 ? 'animate__animated animate__fadeIn' : ''}`}
                   style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.85rem', letterSpacing: '0.05em', animationDuration: '0.5s' }}
@@ -354,33 +354,17 @@ export function AIUnlockedPage() {
                   <span style={{ color: '#FF3366' }}>tickets drop.</span>
                 </h2>
 
-                {/* Form */}
-                <div
-                  className={`w-full max-w-md rounded-2xl p-8 ${chapter === 4 ? 'animate__animated animate__fadeInUp' : ''}`}
-                  style={{ background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(24px)', border: '1px solid rgba(123,63,228,0.25)', animationDuration: '0.5s', animationDelay: '0.2s' }}
+                {/* Scroll down to the form — it lives below the cinematic zone */}
+                <a
+                  className={`btn-primary mt-2 ${chapter === 4 ? 'animate__animated animate__fadeInUp' : ''}`}
+                  href="#waitlist-form"
+                  style={{ background: 'linear-gradient(135deg, #7B3FE4 0%, #FF3366 100%)', fontSize: '1.1rem', padding: '1.1rem 2.8rem', animationDuration: '0.5s', animationDelay: '0.2s' }}
+                  onClick={e => { e.preventDefault(); document.getElementById('waitlist-form')?.scrollIntoView({ behavior: 'smooth' }) }}
                 >
-                  {waitlistStep === 'form' && (
-                    <WaitlistForm
-                      onSuccess={(role) => {
-                        setWaitlistRole(role)
-                        setWaitlistStep('segment')
-                      }}
-                    />
-                  )}
-                  {waitlistStep === 'segment' && (
-                    <SegmentationQuestion
-                      email={submittedEmail}
-                      onComplete={(r) => { setWaitlistRole(r); setWaitlistStep('done') }}
-                    />
-                  )}
-                  {waitlistStep === 'done' && (
-                    <ParentHandoff role={waitlistRole} />
-                  )}
-                </div>
-
-                {/* Transitional CTA for the not-yet-ready */}
-                <p className="mt-5 text-xs" style={{ color: 'rgba(255,255,255,0.25)' }}>
-                  Free to join · Webinar tickets from $149 AUD · 14-day course guarantee
+                  Join the Waitlist — Free →
+                </a>
+                <p className="mt-4 text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                  Waitlist is free · Tickets from $149 AUD when they drop
                 </p>
               </div>
             </Chapter>
@@ -391,6 +375,42 @@ export function AIUnlockedPage() {
         {/* ── AFTER CINEMATIC: Detail sections (normal scroll) ─────────── */}
         {/* Semi-transparent so the fixed 3D canvas shows through */}
         <div style={{ position: 'relative', zIndex: 10, background: 'rgba(0,0,0,0.82)' }}>
+
+          {/* ── WAITLIST FORM — real anchor, not inside sticky overlay ── */}
+          <section
+            id="waitlist-form"
+            style={{ padding: '80px 24px', textAlign: 'center', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+          >
+            <div style={{ maxWidth: 480, margin: '0 auto' }}>
+              <p style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#7B3FE4', marginBottom: 16 }}>
+                Waitlist
+              </p>
+              <h2 style={{
+                fontFamily: 'var(--font-display, var(--font-syne), sans-serif)',
+                fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)',
+                fontWeight: 700, letterSpacing: '-0.02em', color: '#ffffff', margin: '0 0 8px',
+              }}>
+                Be first when tickets drop.
+              </h2>
+              <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.9rem', marginBottom: 32 }}>
+                Free to join. Founding pricing locked for waitlist members.
+              </p>
+              <div
+                style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(24px)', border: '1px solid rgba(123,63,228,0.25)', borderRadius: 20, padding: '32px 28px' }}
+              >
+                {waitlistStep === 'form' && (
+                  <WaitlistForm onSuccess={(role) => { setWaitlistRole(role); setWaitlistStep('segment') }} />
+                )}
+                {waitlistStep === 'segment' && (
+                  <SegmentationQuestion email={submittedEmail} onComplete={(r) => { setWaitlistRole(r); setWaitlistStep('done') }} />
+                )}
+                {waitlistStep === 'done' && (
+                  <ParentHandoff role={waitlistRole} />
+                )}
+              </div>
+            </div>
+          </section>
+
           <AffiliateSection />
           <FAQSection />
 
