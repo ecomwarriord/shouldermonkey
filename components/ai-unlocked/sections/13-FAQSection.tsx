@@ -26,7 +26,7 @@ const FAQS = [
   {
     id: 'p4',
     q: 'Who is running this, and are they qualified?',
-    a: 'Dee has built 6 live AI-powered products in the last 12 months — all publicly accessible and still running. Abhinav Verma runs RackTheBrain, an online learning platform with 1,000+ students. This is a live event run by people who actually build with AI, not just talk about it.',
+    a: 'Dee is a Sydney-based founder who has shipped 6 live AI-powered products in the last 12 months — including ShoulderMonkey (a SaaS platform with 200+ active business users) and Qaneri (an enterprise all-in-one platform, live at qaneri.com). These are not experiments. They are real products, built with AI, used by real people and real businesses. He built this event using the same tools he teaches. Abhinav Verma is the founder of RackTheBrain — an online learning platform with 1,000+ students — and a Sydney-based educator and podcaster with a track record of helping young people perform at a higher level.',
     audience: 'parent',
   },
   {
