@@ -43,31 +43,20 @@ export function AINav() {
         aria-label="Site navigation"
       >
         {/* Co-brand */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{
-            fontFamily: 'var(--font-display, var(--font-syne), sans-serif)',
-            fontWeight: 700,
-            fontSize: '0.9rem',
-            letterSpacing: '0.01em',
-            color: '#ffffff',
-          }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0 }}>
+          <span style={{ fontWeight: 700, fontSize: '0.82rem', color: '#ffffff', whiteSpace: 'nowrap' }}>
             RackTheBrain
           </span>
-          <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.9rem' }}>×</span>
-          <span style={{
-            fontFamily: 'var(--font-display, var(--font-syne), sans-serif)',
-            fontWeight: 700,
-            fontSize: '0.9rem',
-            letterSpacing: '0.01em',
-            color: '#7B3FE4',
-          }}>
+          <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.82rem', flexShrink: 0 }}>×</span>
+          <span style={{ fontWeight: 700, fontSize: '0.82rem', color: '#7B3FE4', whiteSpace: 'nowrap' }}>
             ShoulderMonkey
           </span>
         </div>
 
-        {/* CTA */}
+        {/* CTA — wrapper div hides on mobile (btn-primary overrides Tailwind otherwise) */}
+        <div className="hidden md:block">
         <a
-          href="#waitlist"
+          href="#waitlist-form"
           className="btn-primary"
           style={{
             padding: '0.65rem 1.6rem',
@@ -81,6 +70,7 @@ export function AINav() {
         >
           Join the Waitlist
         </a>
+        </div>
       </nav>
     </>
   )

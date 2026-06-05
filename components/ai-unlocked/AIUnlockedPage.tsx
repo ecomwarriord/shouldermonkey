@@ -96,15 +96,20 @@ export function AIUnlockedPage() {
     // Put data-page on body so CSS cursor rule can match it
     document.body.setAttribute('data-page', 'ai-unlocked')
 
-    // Hide GHL chat widget — poll because it injects dynamically
+    // Hide GHL chat widget — keep polling for 60s as it re-injects on mobile
     const hide = () => {
       document.querySelectorAll<HTMLElement>(
-        '[data-widget-id], iframe[src*="leadconnector"], #chat-widget-container, .lc-chat-widget'
-      ).forEach(el => { el.style.setProperty('display', 'none', 'important') })
+        '[data-widget-id], iframe[src*="leadconnector"], #chat-widget-container, .lc-chat-widget, #lc-widget-container, div[class*="chat-widget"]'
+      ).forEach(el => {
+        el.style.setProperty('display', 'none', 'important')
+        el.style.setProperty('visibility', 'hidden', 'important')
+        el.style.setProperty('opacity', '0', 'important')
+        el.style.setProperty('pointer-events', 'none', 'important')
+      })
     }
     hide()
-    const iv = setInterval(hide, 800)
-    setTimeout(() => clearInterval(iv), 12000)
+    const iv = setInterval(hide, 500)
+    setTimeout(() => clearInterval(iv), 60000)
 
     return () => {
       document.body.removeAttribute('data-page')
@@ -181,8 +186,8 @@ export function AIUnlockedPage() {
                     Join today and get the AI Starter Guide in your inbox immediately.
                   </p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%', textAlign: 'left' }}>
-                    {['First access when ticket dates drop', 'Founding cohort pricing — the lowest this event will ever be', 'Early access to what we\'re including for the founding cohort'].map((item) => (
-                      <p key={item} style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.6)', display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                    {['First access when ticket dates drop', 'Founding cohort pricing locked', 'Early access to what we\'re including for founders'].map((item) => (
+                      <p key={item} style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.6)', display: 'flex', gap: 8, alignItems: 'flex-start', wordBreak: 'break-word', overflowWrap: 'break-word' }}>
                         <span style={{ color: '#7B3FE4', flexShrink: 0 }}>✓</span>{item}
                       </p>
                     ))}
