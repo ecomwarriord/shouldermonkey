@@ -251,46 +251,51 @@ export function AIUnlockedPage() {
 
             {/* ── CHAPTER 2: THE GUIDE ── */}
             <Chapter opacity={chapterOpacities[2]}>
-              <div className="flex flex-col items-center justify-center h-screen text-center px-6">
-                <p className={`mb-8 ${chapter === 2 ? 'animate__animated animate__fadeIn' : ''}`}
-                  style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.95rem', lineHeight: 1.6, animationDuration: '0.6s' }}>
-                  We were exactly where you are. Watching AI change everything with no clear path in.
+              <div className="flex flex-col items-center justify-center h-screen px-8 md:px-16" style={{ maxWidth: 1100, margin: '0 auto', width: '100%' }}>
+
+                <p className={`mb-10 text-center ${chapter === 2 ? 'animate__animated animate__fadeIn' : ''}`}
+                  style={{ color: 'rgba(255,255,255,0.35)', fontSize: '1rem', letterSpacing: '0.01em', animationDuration: '0.5s' }}>
+                  Led by two people who have already done what this event teaches.
                 </p>
 
-                {/* Two instructors — side by side */}
-                <div className={`grid grid-cols-1 md:grid-cols-2 gap-5 max-w-3xl w-full mb-6 ${chapter === 2 ? 'animate__animated animate__fadeInUp' : ''}`}
+                <div className={`grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-8 ${chapter === 2 ? 'animate__animated animate__fadeInUp' : ''}`}
                   style={{ animationDuration: '0.6s', animationDelay: '0.1s' }}>
 
                   {/* Dee */}
-                  <div className="rounded-2xl p-6 text-left" style={{ background: 'rgba(255,51,102,0.05)', border: '1.5px solid rgba(255,51,102,0.2)' }}>
-                    <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#FF3366' }}>Dee · Sydney · Your instructor</p>
-                    <p style={{ fontSize: '1rem', fontWeight: 700, color: '#ffffff', lineHeight: 1.4, marginBottom: 8 }}>
-                      6 live AI products in 12 months.
+                  <div className="rounded-2xl p-8 text-left" style={{ background: 'rgba(255,51,102,0.05)', border: '1.5px solid rgba(255,51,102,0.22)' }}>
+                    <p style={{ fontSize: '0.72rem', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#FF3366', marginBottom: 14 }}>
+                      Dee · Sydney · Your instructor
                     </p>
-                    <p style={{ fontSize: '0.88rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.6 }}>
-                      Didn&apos;t study AI. Shipped with it. Including ShoulderMonkey (200+ businesses) and Qaneri (enterprise platform, live at qaneri.com). Built this event using the same tools he teaches.
+                    <h3 style={{ fontFamily: 'var(--font-display, sans-serif)', fontSize: 'clamp(1.3rem, 2.5vw, 2rem)', fontWeight: 800, color: '#ffffff', lineHeight: 1.2, letterSpacing: '-0.02em', margin: '0 0 14px' }}>
+                      ShoulderMonkey is used by 200+ businesses today. In the last 12 months, AI let him ship 5 more products.
+                    </h3>
+                    <p style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1.7 }}>
+                      He has been building with technology for years. Then AI arrived — and everything accelerated. Qaneri, Holmes, Donna, Veridian, FORGE: all built in the last year, all still live. The tools you will use in this event are the same ones he built with.
                     </p>
                   </div>
 
                   {/* Abhinav */}
-                  <div className="rounded-2xl p-6 text-left" style={{ background: 'rgba(123,63,228,0.07)', border: '1.5px solid rgba(123,63,228,0.25)' }}>
-                    <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#7B3FE4' }}>Abhinav Verma · RackTheBrain</p>
-                    <p style={{ fontSize: '1rem', fontWeight: 700, color: '#ffffff', lineHeight: 1.4, marginBottom: 8 }}>
-                      1,000+ students taught.
+                  <div className="rounded-2xl p-8 text-left" style={{ background: 'rgba(123,63,228,0.07)', border: '1.5px solid rgba(123,63,228,0.25)' }}>
+                    <p style={{ fontSize: '0.72rem', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#7B3FE4', marginBottom: 14 }}>
+                      Abhinav Verma · RackTheBrain
                     </p>
-                    <p style={{ fontSize: '0.88rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.6 }}>
-                      Founded RackTheBrain, an online learning platform built around how young people actually learn. Knows how to make things click.
+                    <h3 style={{ fontFamily: 'var(--font-display, sans-serif)', fontSize: 'clamp(1.3rem, 2.5vw, 2rem)', fontWeight: 800, color: '#ffffff', lineHeight: 1.2, letterSpacing: '-0.02em', margin: '0 0 14px' }}>
+                      He built RackTheBrain because he watched the same problem repeat: young people not reaching what they were capable of.
+                    </h3>
+                    <p style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1.7 }}>
+                      Over 1,000 students have gone through his programs. He knows how young people actually learn — and he knows how to make it stick long after the session ends.
                     </p>
                   </div>
                 </div>
 
-                {/* Parent moment */}
-                <div className={`max-w-2xl w-full rounded-2xl p-5 ${chapter === 2 ? 'animate__animated animate__fadeIn' : ''}`}
-                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', animationDuration: '0.5s', animationDelay: '0.25s' }}>
-                  <p style={{ fontSize: '0.88rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, textAlign: 'left' }}>
-                    <span style={{ color: '#7B3FE4', fontWeight: 700 }}>Parents:</span> This runs on Zoom, it&apos;s supervised, and sessions are recorded for all ticket holders. No technical background needed. Your child leaves with a working template they built themselves.
+                {/* Parent note */}
+                <div className={`w-full rounded-xl px-6 py-4 ${chapter === 2 ? 'animate__animated animate__fadeIn' : ''}`}
+                  style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)', animationDuration: '0.5s', animationDelay: '0.3s' }}>
+                  <p style={{ fontSize: '0.88rem', color: 'rgba(255,255,255,0.45)', lineHeight: 1.6, margin: 0, textAlign: 'center' }}>
+                    <span style={{ color: '#7B3FE4', fontWeight: 700 }}>Parents:</span> Runs on Zoom. Supervised. Recorded for all ticket holders. No technical background needed. Your child leaves with something they built.
                   </p>
                 </div>
+
               </div>
             </Chapter>
 
