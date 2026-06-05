@@ -205,24 +205,26 @@ export function AIUnlockedPage() {
             {/* ── CHAPTER 1: THE PROBLEM ── */}
             <Chapter opacity={chapterOpacities[1]}>
               <div className="flex flex-col items-center justify-center h-screen text-center px-6">
-                <p className={`font-semibold mb-6 max-w-2xl ${chapter === 1 ? 'animate__animated animate__fadeInDown' : ''}`}
+                <p className={`font-semibold mb-10 max-w-2xl ${chapter === 1 ? 'animate__animated animate__fadeInDown' : ''}`}
                   style={{ fontSize: 'clamp(1rem, 2vw, 1.2rem)', color: 'rgba(255,255,255,0.5)', lineHeight: 1.6, animationDuration: '0.6s' }}>
                   You&apos;re watching everyone else figure out AI.<br />
                   You&apos;re not sure where to start. You&apos;re not wrong to feel that way.
                 </p>
 
-                <div className={`font-display font-black ${chapter === 1 ? 'animate__animated animate__zoomIn' : ''}`}
-                  style={{ fontSize: 'clamp(5rem, 18vw, 18rem)', lineHeight: 0.82, letterSpacing: '-0.05em', color: '#FF3366', animationDuration: '0.5s', animationDelay: '0.1s' }}
-                  aria-label="95 percent">
-                  95<span style={{ fontSize: '0.3em', verticalAlign: 'super', color: 'rgba(255,51,102,0.6)' }}>%</span>
-                </div>
+                {/* Verified ACARA fact — no fabricated stat */}
+                <h2 className={`font-display font-black ${chapter === 1 ? 'animate__animated animate__fadeInUp' : ''}`}
+                  style={{ fontSize: 'clamp(1.8rem, 4vw, 3.5rem)', lineHeight: 1.1, letterSpacing: '-0.03em', color: '#FF3366', maxWidth: 720, animationDuration: '0.6s', animationDelay: '0.1s' }}
+                  aria-label="Australia's national curriculum has no AI subject">
+                  Australia&apos;s national curriculum has<br />
+                  no AI subject.
+                </h2>
 
-                <p className={`mt-4 font-semibold ${chapter === 1 ? 'animate__animated animate__fadeIn' : ''}`}
-                  style={{ fontSize: 'clamp(1.1rem, 2.5vw, 1.6rem)', color: '#ffffff', maxWidth: 600, animationDuration: '0.6s', animationDelay: '0.2s' }}>
-                  of Australian schools have no AI curriculum
+                <p className={`mt-4 ${chapter === 1 ? 'animate__animated animate__fadeIn' : ''}`}
+                  style={{ color: '#ffffff', fontSize: 'clamp(1rem, 2vw, 1.2rem)', maxWidth: 600, lineHeight: 1.5, animationDuration: '0.6s', animationDelay: '0.2s' }}>
+                  Not in Year 7. Not in Year 12. Not anywhere.
                 </p>
                 <p style={{ marginTop: 8, color: 'rgba(255,255,255,0.25)', fontSize: '0.78rem' }}>
-                  Source: AITSL National AI Curriculum Review, 2025
+                  Source: Australian Curriculum V9, ACARA — verify at australiancurriculum.edu.au
                 </p>
 
                 <p className={`mt-6 font-semibold ${chapter === 1 ? 'animate__animated animate__fadeIn' : ''}`}
