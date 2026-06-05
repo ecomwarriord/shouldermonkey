@@ -1,11 +1,6 @@
 import * as THREE from 'three'
-import { cinematicVert } from './three/shaders/cinematic.vert'
-import { cinematicFrag } from './three/shaders/cinematic.frag'
 
-// three/addons path for three@0.183+
-// Using dynamic import to avoid SSR issues with these ESM modules
-type EffectComposerType = any
-type UnrealBloomPassType = any
+// No GLSL shaders needed — additive blending creates the natural glow
 
 interface EngineOptions {
   container: HTMLDivElement
@@ -19,17 +14,19 @@ export class CinematicEngine {
   private renderer!: THREE.WebGLRenderer
   private scene!: THREE.Scene
   private camera!: THREE.PerspectiveCamera
-  private composer!: EffectComposerType
-  private network!: THREE.InstancedMesh
+  private nodesMesh!: THREE.InstancedMesh
+  private nodeHalos!: THREE.InstancedMesh
+  private accentMesh!: THREE.InstancedMesh
+  private accentHalo!: THREE.InstancedMesh
   private lines!: THREE.LineSegments
-  private pointLight!: THREE.PointLight
-  private material!: THREE.ShaderMaterial
-  private timeline: any = null
+  private particles!: THREE.Points
   private scrollTrigger: any = null
   private rafId = 0
   private startTime = performance.now()
   private destroyed = false
   private readonly NODE_COUNT = 80
+  private readonly ACCENT_COUNT = 14
+  private readonly PARTICLE_COUNT = 500
   private _resizeCleanup = () => {}
   private _lenisScrollHandler = () => {}
 
@@ -41,139 +38,201 @@ export class CinematicEngine {
     const { container } = this.opts
     const W = window.innerWidth
     const H = window.innerHeight
+    const isMobile = W < 768
 
-    // Renderer
+    // Renderer — no postprocessing, additive blending is the glow
     this.renderer = new THREE.WebGLRenderer({
-      antialias: true,
+      antialias: !isMobile,
       alpha: false,
       powerPreference: 'high-performance',
     })
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2))
     this.renderer.setSize(W, H)
     this.renderer.setClearColor(0x000000, 1)
-    this.renderer.toneMapping = THREE.ACESFilmicToneMapping
-    this.renderer.toneMappingExposure = 1.0
     container.appendChild(this.renderer.domElement)
 
-    // Scene + Camera
     this.scene = new THREE.Scene()
     this.camera = new THREE.PerspectiveCamera(65, W / H, 0.1, 100)
     this.camera.position.set(0, 0, 8)
 
-    // Build neural network geometry
-    this.buildNetwork()
-
-    // Postprocessing via 'postprocessing' package (v6, already in node_modules)
-    try {
-      const { EffectComposer, RenderPass, BloomEffect, EffectPass } = await import('postprocessing' as any)
-      this.composer = new EffectComposer(this.renderer)
-      this.composer.addPass(new RenderPass(this.scene, this.camera))
-      const bloom = new BloomEffect({
-        intensity: 1.4,            // stronger so glow is clearly visible
-        luminanceThreshold: 0.15, // lower threshold = more nodes bloom
-        luminanceSmoothing: 0.9,
-        mipmapBlur: true,
-      })
-      this.composer.addPass(new EffectPass(this.camera, bloom))
-    } catch {
-      // Graceful degradation — render without bloom
-      this.composer = {
-        render: () => this.renderer.render(this.scene, this.camera),
-        setSize: (_w: number, _h: number) => {},
-      }
-    }
-
+    this.buildScene()
     this.setupResize()
     this.animate()
     await this.setupGSAP()
     if (!this.destroyed) this.opts.onReady()
   }
 
-  private buildNetwork() {
-    // Generate positions — wide spread, sense of vastness and possibility
-    const positions: THREE.Vector3[] = []
-    for (let i = 0; i < this.NODE_COUNT; i++) {
-      // Keep nodes within the visible camera frustum — no rogue outer nodes
-      const isOuter = i > this.NODE_COUNT * 0.4
-      const minR = isOuter ? 3.5 : 1.2
-      const maxR = isOuter ? 6.0 : 3.2
+  private buildScene() {
+    const isMobile = window.innerWidth < 768
+    const nodeCount = isMobile ? 45 : this.NODE_COUNT
+    const accentCount = isMobile ? 6 : this.ACCENT_COUNT
+    const particleCount = isMobile ? 0 : this.PARTICLE_COUNT
+
+    // Materials — additive blending = natural glow where nodes cluster
+    const purpleMat = new THREE.MeshBasicMaterial({
+      color: 0x7B3FE4, transparent: true, opacity: 0.92,
+      blending: THREE.AdditiveBlending, depthWrite: false,
+    })
+    const purpleHaloMat = new THREE.MeshBasicMaterial({
+      color: 0x7B3FE4, transparent: true, opacity: 0.1,
+      blending: THREE.AdditiveBlending, depthWrite: false,
+    })
+    const pinkMat = new THREE.MeshBasicMaterial({
+      color: 0xFF3366, transparent: true, opacity: 0.95,
+      blending: THREE.AdditiveBlending, depthWrite: false,
+    })
+    const pinkHaloMat = new THREE.MeshBasicMaterial({
+      color: 0xFF3366, transparent: true, opacity: 0.14,
+      blending: THREE.AdditiveBlending, depthWrite: false,
+    })
+
+    const sGeo = new THREE.SphereGeometry(1, 16, 12)
+    this.nodesMesh = new THREE.InstancedMesh(sGeo, purpleMat, nodeCount)
+    this.nodeHalos = new THREE.InstancedMesh(sGeo, purpleHaloMat, nodeCount)
+    this.accentMesh = new THREE.InstancedMesh(sGeo, pinkMat, accentCount)
+    this.accentHalo = new THREE.InstancedMesh(sGeo, pinkHaloMat, accentCount)
+    this.nodesMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
+    this.nodeHalos.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
+    this.accentMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
+    this.accentHalo.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
+    this.scene.add(this.nodesMesh, this.nodeHalos, this.accentMesh, this.accentHalo)
+
+    // Node positions — same distribution as original NeuralWorldCanvas
+    const nPos: THREE.Vector3[] = []
+    const nScale: number[] = []
+    const nDelay: number[] = []
+    for (let i = 0; i < nodeCount; i++) {
+      const isOuter = i < nodeCount * 0.35
+      const minR = isOuter ? 4.5 : 1.5
+      const maxR = isOuter ? 8.0 : 3.5
       const r = minR + Math.random() * (maxR - minR)
       const theta = Math.random() * Math.PI * 2
       const phi = Math.acos(2 * Math.random() - 1)
-      positions.push(new THREE.Vector3(
+      nPos.push(new THREE.Vector3(
         r * Math.sin(phi) * Math.cos(theta),
         r * Math.sin(phi) * Math.sin(theta),
-        r * Math.cos(phi) * 0.5,
+        r * Math.cos(phi) * 0.45,
       ))
+      nScale.push(0.05 + Math.random() * 0.09)
+      nDelay.push(i / nodeCount * 2.0 + Math.random() * 0.3)
     }
 
-    // GLSL ShaderMaterial
-    this.material = new THREE.ShaderMaterial({
-      vertexShader: cinematicVert,
-      fragmentShader: cinematicFrag,
-      uniforms: {
-        uTime: { value: 0 },
-        uPointLightPos: { value: new THREE.Vector3(0, 0, 12) },
-        uPointLightIntensity: { value: 0.5 },
-        uBaseColor: { value: new THREE.Color(0x7B3FE4) },
-        uAccentColor: { value: new THREE.Color(0xFF3366) },
-      },
-      transparent: true,
-      depthWrite: false,
-    })
+    // Accent node positions
+    const aPos: THREE.Vector3[] = []
+    const aScale: number[] = []
+    for (let i = 0; i < accentCount; i++) {
+      const r = 2 + Math.random() * 5
+      const theta = Math.random() * Math.PI * 2
+      const phi = Math.acos(2 * Math.random() - 1)
+      aPos.push(new THREE.Vector3(
+        r * Math.sin(phi) * Math.cos(theta),
+        r * Math.sin(phi) * Math.sin(theta),
+        r * Math.cos(phi) * 0.45,
+      ))
+      aScale.push(0.065 + Math.random() * 0.10)
+    }
 
-    // InstancedMesh — 1 draw call for all nodes
-    const geo = new THREE.SphereGeometry(1, 18, 12)
-    this.network = new THREE.InstancedMesh(geo, this.material, this.NODE_COUNT)
-    this.network.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
-    this.scene.add(this.network)
-
-    // Set all instance matrices — nodes sized to be clearly visible
-    const dummy = new THREE.Object3D()
-    positions.forEach((pos, i) => {
-      dummy.position.copy(pos)
-      dummy.scale.setScalar(0.12 + Math.random() * 0.16) // 3x larger than before
-      dummy.updateMatrix()
-      this.network.setMatrixAt(i, dummy.matrix)
-    })
-    this.network.instanceMatrix.needsUpdate = true // REQUIRED — council finding
-
-    // Connection lines — 1 draw call
+    // Connection lines
     const lineVerts: number[] = []
-    for (let i = 0; i < this.NODE_COUNT; i++) {
-      for (let j = i + 1; j < this.NODE_COUNT; j++) {
-        if (positions[i].distanceTo(positions[j]) < 3.2) {
-          lineVerts.push(
-            positions[i].x, positions[i].y, positions[i].z,
-            positions[j].x, positions[j].y, positions[j].z,
-          )
+    for (let i = 0; i < nodeCount; i++) {
+      for (let j = i + 1; j < nodeCount; j++) {
+        if (nPos[i].distanceTo(nPos[j]) < 2.9) {
+          lineVerts.push(nPos[i].x, nPos[i].y, nPos[i].z, nPos[j].x, nPos[j].y, nPos[j].z)
         }
       }
     }
     const lineGeo = new THREE.BufferGeometry()
     lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(lineVerts, 3))
     this.lines = new THREE.LineSegments(lineGeo, new THREE.LineBasicMaterial({
-      color: 0x7B3FE4,
-      transparent: true,
-      opacity: 0.22,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
+      color: 0x7B3FE4, transparent: true, opacity: 0,
+      blending: THREE.AdditiveBlending, depthWrite: false,
     }))
     this.scene.add(this.lines)
 
-    // PointLight — arrives from above on load, creating cinematic entry
-    this.pointLight = new THREE.PointLight(0x7B3FE4, 0, 22, 2)
-    this.pointLight.position.set(0, 0, 20) // starts far back
-    this.scene.add(this.pointLight)
+    // Ambient particles
+    if (particleCount > 0) {
+      const pPos = new Float32Array(particleCount * 3)
+      for (let i = 0; i < particleCount; i++) {
+        pPos[i * 3 + 0] = (Math.random() - 0.5) * 18
+        pPos[i * 3 + 1] = (Math.random() - 0.5) * 18
+        pPos[i * 3 + 2] = (Math.random() - 0.5) * 18
+      }
+      const pGeo = new THREE.BufferGeometry()
+      pGeo.setAttribute('position', new THREE.Float32BufferAttribute(pPos, 3))
+      this.particles = new THREE.Points(pGeo, new THREE.PointsMaterial({
+        color: 0x6B2FD4, size: 0.02, transparent: true, opacity: 0.35,
+        blending: THREE.AdditiveBlending, depthWrite: false, sizeAttenuation: true,
+      }))
+      this.scene.add(this.particles)
+    }
 
-    // Animate light arrival after 800ms (after preloader)
-    setTimeout(async () => {
-      if (this.destroyed) return
-      const { gsap } = await import('gsap')
-      gsap.to(this.pointLight.position, { z: 8, duration: 2.0, ease: 'power2.out' })
-      gsap.to(this.pointLight, { intensity: 3.5, duration: 2.0, ease: 'power2.out' })
-    }, 800)
+    // Build-in: animate nodes appearing from nothing
+    const dummy = new THREE.Object3D()
+    const t = (performance.now() - this.startTime) * 0.001
+
+    const updateMatrices = (elapsed: number) => {
+      const buildProgress = Math.min(elapsed / 2.5, 1)
+      for (let i = 0; i < nodeCount; i++) {
+        const nodeProgress = Math.max(0, Math.min(1, (buildProgress - nDelay[i] / 2.5) * 5))
+        const springScale = nodeProgress < 0.5
+          ? 2 * nodeProgress * nodeProgress
+          : 1 - Math.pow(-2 * nodeProgress + 2, 3) / 2
+        const overshoot = nodeProgress > 0.7 ? 1 + Math.sin((nodeProgress - 0.7) * Math.PI * 3) * 0.06 : 1
+        const s = nScale[i] * springScale * overshoot
+        const pulse = 0.9 + 0.1 * Math.sin(i * 0.41 + elapsed * 0.85)
+        dummy.position.copy(nPos[i])
+        dummy.scale.setScalar(s * pulse)
+        dummy.updateMatrix()
+        this.nodesMesh.setMatrixAt(i, dummy.matrix)
+        dummy.scale.setScalar(s * pulse * 3.5)
+        dummy.updateMatrix()
+        this.nodeHalos.setMatrixAt(i, dummy.matrix)
+      }
+      this.nodesMesh.instanceMatrix.needsUpdate = true
+      this.nodeHalos.instanceMatrix.needsUpdate = true
+
+      const accentBoost = 0.85 + 0.15 * Math.sin(elapsed * 1.5)
+      for (let i = 0; i < accentCount; i++) {
+        const progress = Math.min(elapsed / 2.0, 1)
+        const pulse = 0.9 + 0.1 * Math.sin(i * 0.7 + elapsed * 1.2)
+        const s = aScale[i] * 0.65 * progress * pulse * accentBoost
+        dummy.position.copy(aPos[i])
+        dummy.scale.setScalar(s)
+        dummy.updateMatrix()
+        this.accentMesh.setMatrixAt(i, dummy.matrix)
+        dummy.scale.setScalar(s * 2.5)
+        dummy.updateMatrix()
+        this.accentHalo.setMatrixAt(i, dummy.matrix)
+      }
+      this.accentMesh.instanceMatrix.needsUpdate = true
+      this.accentHalo.instanceMatrix.needsUpdate = true
+
+      // Lines and particles fade in
+      ;(this.lines.material as THREE.LineBasicMaterial).opacity = Math.min(buildProgress * 1.5, 1) * 0.22
+      if (this.particles) {
+        ;(this.particles.material as THREE.PointsMaterial).opacity = Math.min(elapsed / 3, 1) * 0.32
+      }
+    }
+
+    // Store for use in animate loop
+    this._updateMatrices = updateMatrices
+    this._nPos = nPos
+    this._aPos = aPos
+    this._nScale = nScale
+    this._aScale = aScale
+    this._nDelay = nDelay
+    this._nodeCount = nodeCount
+    this._accentCount = accentCount
   }
+
+  private _updateMatrices: (elapsed: number) => void = () => {}
+  private _nPos: THREE.Vector3[] = []
+  private _aPos: THREE.Vector3[] = []
+  private _nScale: number[] = []
+  private _aScale: number[] = []
+  private _nDelay: number[] = []
+  private _nodeCount = 80
+  private _accentCount = 14
 
   private async setupGSAP() {
     const { gsap } = await import('gsap')
@@ -181,7 +240,7 @@ export class CinematicEngine {
     gsap.registerPlugin(ScrollTrigger)
     this.scrollTrigger = ScrollTrigger
 
-    // CRITICAL: wire ScrollTrigger to Lenis scroll position (council finding #1)
+    // Wire Lenis proxy (council fix)
     if (this.opts.lenis) {
       ScrollTrigger.scrollerProxy(document.body, {
         scrollTop: (value?: number) => {
@@ -191,45 +250,13 @@ export class CinematicEngine {
           return this.opts.lenis?.scroll ?? window.scrollY
         },
         getBoundingClientRect: () => ({
-          top: 0, left: 0,
-          width: window.innerWidth,
-          height: window.innerHeight,
+          top: 0, left: 0, width: window.innerWidth, height: window.innerHeight,
         }),
       })
       this.opts.lenis.on('scroll', ScrollTrigger.update)
       this._lenisScrollHandler = ScrollTrigger.update
     }
 
-    // Master timeline — progress() is driven by scroll scrub
-    const tl = gsap.timeline({ paused: true })
-    this.timeline = tl
-
-    // PointLight descends: z=12 → z=-8, intensity 0.5 → 4
-    const lightTarget = { z: 12, intensity: 0.5 }
-    tl.to(lightTarget, {
-      z: -8,
-      intensity: 4,
-      duration: 1,
-      ease: 'none',
-      onUpdate: () => {
-        this.pointLight.position.z = lightTarget.z
-        this.pointLight.intensity = lightTarget.intensity
-        // Manual uniform sync — required for custom ShaderMaterial (council finding #3)
-        this.material.uniforms.uPointLightPos.value.copy(this.pointLight.position)
-        this.material.uniforms.uPointLightIntensity.value = lightTarget.intensity
-      },
-    }, 0)
-
-    // Colour shift: purple → pink as light descends deeper
-    tl.to({}, {
-      duration: 0.4,
-      ease: 'none',
-      onUpdate: function() {
-        // tl is captured in closure
-      },
-    }, 0.6)
-
-    // Find story container
     const storyEl = document.querySelector('[data-cinematic-story]')
     if (!storyEl) return
 
@@ -241,20 +268,11 @@ export class CinematicEngine {
       onUpdate: (self) => {
         if (this.destroyed) return
         this.opts.scrollProgress.current = self.progress
-        tl.progress(self.progress)
-
-        // Colour shift: purple at 0, pink at 0.8+
-        const pinkAmount = Math.max(0, (self.progress - 0.5) * 2)
-        this.material.uniforms.uBaseColor.value.setRGB(
-          0.482 + (1.0 - 0.482) * pinkAmount,
-          0.247 + (0.2 - 0.247) * pinkAmount,
-          0.894 + (0.4 - 0.894) * pinkAmount,
-        )
-
-        // Chapter detection
         const p = self.progress
         const chapter = p < 0.2 ? 0 : p < 0.4 ? 1 : p < 0.6 ? 2 : p < 0.8 ? 3 : 4
         this.opts.onChapterChange(chapter)
+        // Slow drift of the whole network based on scroll
+        this.scene.rotation.y = p * 0.3
       },
     })
   }
@@ -262,14 +280,13 @@ export class CinematicEngine {
   private animate = () => {
     if (this.destroyed) return
     this.rafId = requestAnimationFrame(this.animate)
-    const time = (performance.now() - this.startTime) * 0.001
-
-    this.material.uniforms.uTime.value = time
-    // Very slow rotation — atmospheric drift, not erratic spinning
-    this.network.rotation.y += 0.00004
-    this.lines.rotation.y += 0.00004
-
-    this.composer.render()
+    const elapsed = (performance.now() - this.startTime) * 0.001
+    this._updateMatrices(elapsed)
+    if (this.particles) {
+      this.particles.rotation.y += 0.0002
+      this.particles.rotation.x += 0.0001
+    }
+    this.renderer.render(this.scene, this.camera)
   }
 
   private setupResize() {
@@ -279,7 +296,6 @@ export class CinematicEngine {
       this.camera.aspect = W / H
       this.camera.updateProjectionMatrix()
       this.renderer.setSize(W, H)
-      this.composer.setSize?.(W, H)
       this.scrollTrigger?.refresh()
     }
     window.addEventListener('resize', onResize)
