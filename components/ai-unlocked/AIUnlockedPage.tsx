@@ -284,13 +284,13 @@ export function AIUnlockedPage() {
                   {/* Abhinav */}
                   <div className="rounded-2xl p-8 text-left" style={{ background: 'rgba(123,63,228,0.07)', border: '1.5px solid rgba(123,63,228,0.25)' }}>
                     <p style={{ fontSize: '0.72rem', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#7B3FE4', marginBottom: 12 }}>
-                      Abhinav Verma · RackTheBrain
+                      Abhinav Verma · Chief Learning Architect · RackTheBrain
                     </p>
                     <p style={{ fontSize: 'clamp(1.4rem, 2vw, 1.7rem)', fontWeight: 700, color: '#ffffff', lineHeight: 1.25, margin: '0 0 14px', letterSpacing: '-0.01em' }}>
-                      1,000+ students taught.<br />Built RackTheBrain to fix how young people learn.
+                      Author of 2 books.<br />1,000+ students. Cert IV in Training &amp; Assessment.
                     </p>
                     <p style={{ fontSize: '0.92rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1.7 }}>
-                      He watched the same problem repeat — young people capable of more, not reaching it. He spent years working out how they actually learn, not how adults think they learn. He knows how to make it stick.
+                      Tony Buzan-trained in Mind Mapping. Trains young people in Speed Reading, Memory Techniques, and Brain Games. Convener of national competitions — Rubik&apos;s Cube marathons, Memory Masters, Debate Derby. He doesn&apos;t just know the theory. He competes in it.
                     </p>
                   </div>
                 </div>
