@@ -249,38 +249,46 @@ export function AIUnlockedPage() {
               </div>
             </Chapter>
 
-            {/* ── CHAPTER 2: THE GUIDE (trust before value) ── */}
+            {/* ── CHAPTER 2: THE GUIDE ── */}
             <Chapter opacity={chapterOpacities[2]}>
               <div className="flex flex-col items-center justify-center h-screen text-center px-6">
-                <p className={`mb-8 max-w-xl ${chapter === 2 ? 'animate__animated animate__fadeIn' : ''}`}
-                  style={{ color: 'rgba(255,255,255,0.4)', fontSize: '1rem', lineHeight: 1.6, animationDuration: '0.6s' }}>
+                <p className={`mb-8 ${chapter === 2 ? 'animate__animated animate__fadeIn' : ''}`}
+                  style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.95rem', lineHeight: 1.6, animationDuration: '0.6s' }}>
                   We were exactly where you are. Watching AI change everything with no clear path in.
                 </p>
 
-                {/* Abhinav leads */}
-                <div className={`mb-6 max-w-2xl ${chapter === 2 ? 'animate__animated animate__fadeInUp' : ''}`}
+                {/* Two instructors — side by side */}
+                <div className={`grid grid-cols-1 md:grid-cols-2 gap-5 max-w-3xl w-full mb-6 ${chapter === 2 ? 'animate__animated animate__fadeInUp' : ''}`}
                   style={{ animationDuration: '0.6s', animationDelay: '0.1s' }}>
-                  <p style={{ fontSize: 'clamp(1.4rem, 3vw, 2.2rem)', fontWeight: 700, letterSpacing: '-0.02em', color: '#ffffff', lineHeight: 1.15, marginBottom: 8 }}>
-                    Abhinav Verma founded RackTheBrain, an online learning platform where 1,000+ students have learned to perform at a higher level.
-                    <span style={{ color: 'rgba(255,255,255,0.5)', fontWeight: 400 }}> He&apos;s spent years figuring out how young people learn — and how to make it stick.</span>
-                  </p>
-                </div>
 
-                {/* Dee second */}
-                <div className={`mb-6 max-w-2xl ${chapter === 2 ? 'animate__animated animate__fadeIn' : ''}`}
-                  style={{ animationDuration: '0.6s', animationDelay: '0.2s' }}>
-                  <p style={{ fontSize: 'clamp(1rem, 2vw, 1.2rem)', color: 'rgba(255,255,255,0.65)', lineHeight: 1.6 }}>
-                    Dee didn&apos;t study AI. He shipped with it. In 12 months: 6 live products — including ShoulderMonkey (200+ businesses) and Qaneri (enterprise platform, live at qaneri.com).
-                    He built this event using the same tools he teaches.
-                  </p>
+                  {/* Dee */}
+                  <div className="rounded-2xl p-6 text-left" style={{ background: 'rgba(255,51,102,0.05)', border: '1.5px solid rgba(255,51,102,0.2)' }}>
+                    <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#FF3366' }}>Dee · Sydney · Your instructor</p>
+                    <p style={{ fontSize: '1rem', fontWeight: 700, color: '#ffffff', lineHeight: 1.4, marginBottom: 8 }}>
+                      6 live AI products in 12 months.
+                    </p>
+                    <p style={{ fontSize: '0.88rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.6 }}>
+                      Didn&apos;t study AI. Shipped with it. Including ShoulderMonkey (200+ businesses) and Qaneri (enterprise platform, live at qaneri.com). Built this event using the same tools he teaches.
+                    </p>
+                  </div>
+
+                  {/* Abhinav */}
+                  <div className="rounded-2xl p-6 text-left" style={{ background: 'rgba(123,63,228,0.07)', border: '1.5px solid rgba(123,63,228,0.25)' }}>
+                    <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#7B3FE4' }}>Abhinav Verma · RackTheBrain</p>
+                    <p style={{ fontSize: '1rem', fontWeight: 700, color: '#ffffff', lineHeight: 1.4, marginBottom: 8 }}>
+                      1,000+ students taught.
+                    </p>
+                    <p style={{ fontSize: '0.88rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.6 }}>
+                      Founded RackTheBrain, an online learning platform built around how young people actually learn. Knows how to make things click.
+                    </p>
+                  </div>
                 </div>
 
                 {/* Parent moment */}
-                <div className={`max-w-xl rounded-2xl p-5 ${chapter === 2 ? 'animate__animated animate__fadeIn' : ''}`}
-                  style={{ background: 'rgba(123,63,228,0.07)', border: '1px solid rgba(123,63,228,0.2)', animationDuration: '0.5s', animationDelay: '0.3s' }}>
-                  <p style={{ fontSize: '0.88rem', color: 'rgba(255,255,255,0.65)', lineHeight: 1.6 }}>
-                    <span style={{ color: '#7B3FE4', fontWeight: 700 }}>Parents:</span> This runs on Zoom, it&apos;s supervised, and sessions are recorded for all ticket holders.
-                    Your child doesn&apos;t need a technical background. They leave with a working template they built themselves.
+                <div className={`max-w-2xl w-full rounded-2xl p-5 ${chapter === 2 ? 'animate__animated animate__fadeIn' : ''}`}
+                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', animationDuration: '0.5s', animationDelay: '0.25s' }}>
+                  <p style={{ fontSize: '0.88rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, textAlign: 'left' }}>
+                    <span style={{ color: '#7B3FE4', fontWeight: 700 }}>Parents:</span> This runs on Zoom, it&apos;s supervised, and sessions are recorded for all ticket holders. No technical background needed. Your child leaves with a working template they built themselves.
                   </p>
                 </div>
               </div>
