@@ -10,96 +10,102 @@ export const metadata: Metadata = {
 const DAYS = [
   {
     day: 1,
-    title: 'Validate your business idea',
+    title: 'Find and test your first idea',
     tool: 'ChatGPT',
     toolUrl: 'https://chat.openai.com',
     timeEstimate: '30 minutes',
     color: '#10B981',
-    what: 'Before you build anything, you need to know if it is worth building. Today you use AI to stress-test your idea in 30 minutes — faster than any mentor, more brutal than any friend.',
-    prompt: `"I have a business idea: [describe your idea in one sentence]. I am targeting [describe who you think your customer is]. Give me: (1) the three biggest reasons this will fail, (2) the one thing that would make it work, and (3) the most important question I should answer before spending a single dollar on it."`,
-    deliverable: 'A reality-checked idea and the one question you need to answer before you go further.',
-    tip: 'Be honest in your description. The more specific you are, the more useful the feedback.',
+    what: "Don't have an idea yet? Good. AI finds them faster than you do. Already have one? Even better — today you find out if it is actually worth building before you spend a second more on it.",
+    prompt: `If you need an idea:
+"I am [your age] and I am interested in [hobbies, things you know about, problems you notice around you]. What are five specific business ideas I could start with AI tools, no money, and no experience? For each one, tell me who would pay for it and why."
+
+If you already have an idea:
+"My idea is: [describe it in one sentence]. The people I want to sell to are [describe them]. Tell me: (1) the three most likely reasons this fails, (2) the one thing that would make it work, (3) the one question I need to answer before going further."`,
+    deliverable: "An idea that has been stress-tested by AI. If it survived, you have something worth building. If it didn't, you just saved months.",
+    tip: "If AI says your idea has problems, don't quit — ask it: \"How would I fix those problems?\" The fix is often better than the original idea.",
   },
   {
     day: 2,
-    title: 'Research your market in 5 minutes',
+    title: 'Find out who actually has the problem',
     tool: 'Perplexity',
     toolUrl: 'https://perplexity.ai',
     timeEstimate: '30 minutes',
     color: '#7B3FE4',
-    what: 'Perplexity searches the internet for you and cites every source. Use it to understand who already has the problem you are solving and how big that market actually is.',
-    prompt: `"I want to understand the market for [your idea]. Tell me: (1) who specifically has this problem and how many of them there are, (2) what solutions already exist and why people are unhappy with them, (3) what they are currently paying to solve this. Include sources."`,
-    deliverable: 'A one-paragraph market summary you can use to explain your idea to anyone.',
-    tip: 'Ask follow-up questions. If the first answer feels vague, push: "Give me more specific numbers for Australia."',
+    what: 'Perplexity is AI search that shows you where it got every answer. Today you use it to find out who already has the problem you are solving, how many of them there are, and what they are doing about it right now.',
+    prompt: `"I want to understand who has this problem: [describe the problem your idea solves]. Tell me: (1) what kinds of people specifically deal with this problem and how often, (2) what they are currently doing to solve it and why they are unhappy with those solutions, (3) roughly how much they spend on solutions right now. Cite your sources."`,
+    deliverable: "A clear picture of your customer — who they are, what frustrates them, and what they already spend money on. This is more market research than most adults do before starting a business.",
+    tip: 'If the answer feels too general, ask: "Specifically for Australia" or "Specifically for people aged 15-25." Narrow it down until it feels real.',
   },
   {
     day: 3,
-    title: 'Write your value proposition',
+    title: 'Write the one sentence that sells your idea',
     tool: 'Claude AI',
     toolUrl: 'https://claude.ai',
     timeEstimate: '45 minutes',
     color: '#FF3366',
-    what: 'Your value proposition is the one sentence that tells someone why they should care. It is the most important sentence in your business. Today you write it with AI.',
-    prompt: `"I am building [your idea]. My target customer is [who they are]. Their biggest frustration with current solutions is [what they hate]. Write me 5 different one-sentence value propositions that focus on the outcome they get, not the features I offer. Make each one distinct — different angles, different emotions."`,
-    deliverable: 'Five value propositions to choose from. Pick the one that makes you think "yes, that is exactly it."',
-    tip: 'Read each one out loud. The one that sounds most natural when you say it to a friend is usually the winner.',
+    what: "Every successful business can explain itself in one sentence. Not a paragraph. Not a pitch. One sentence that makes someone think \"I need that.\" Today you write yours.",
+    prompt: `"I am building [your idea]. The people I help are [who they are]. The biggest thing they hate about current options is [what frustrates them]. Write me 5 different one-sentence descriptions of my business that focus entirely on what the customer gets — not what I do. Make each one different: one for teenagers, one for parents, one that sounds urgent, one that sounds exciting, one that sounds simple."`,
+    deliverable: "Five ways to describe your business. Pick the one that makes someone immediately say \"tell me more.\" That is the sentence you use everywhere.",
+    tip: 'Read each one to someone else and watch their face. The one that makes them lean in slightly is the winner.',
   },
   {
     day: 4,
-    title: 'Define your brand voice',
+    title: 'Decide how your business sounds',
     tool: 'Claude AI',
     toolUrl: 'https://claude.ai',
     timeEstimate: '30 minutes',
     color: '#FF3366',
-    what: 'Your brand voice is how your business sounds — in every post, every email, every message. Getting this right early means everything you create sounds consistent, not random.',
-    prompt: `"I am building a business called [name or working title]. My target customer is [who they are]. Three brands whose tone I admire are [list three — can be anything from any industry]. Write me a brand voice guide with: (1) three words that define my tone, (2) five words I should always use, (3) five words I should never use, (4) two example sentences written in my voice."`,
-    deliverable: 'A one-page brand voice guide. Save this. You will paste it into every AI tool from now on.',
-    tip: 'Paste your brand voice guide into future prompts with: "Write this in my brand voice: [paste the guide]."',
+    what: "Your business has a personality — the way it sounds in every post, every message, every piece of content. Getting this clear now means everything you create from Day 5 onwards will sound like it belongs together.",
+    prompt: `"I am building a business called [name or working title]. My customers are [who they are]. Three businesses or brands I think sound great and would want to be similar to are [list three — can be brands, YouTubers, apps, anything]. Write me: (1) three words that describe how my business should sound, (2) five words my business would use a lot, (3) five words my business would never use, (4) two example sentences written the way my business would write."`,
+    deliverable: "A personality guide for your business. Save this — you will paste it into every AI prompt from here on to make sure everything sounds like you.",
+    tip: 'Add this to the start of future prompts: "Write this in my business tone: [paste your guide]." Everything you create will instantly sound more consistent.',
   },
   {
     day: 5,
-    title: 'Create your first social post',
-    tool: 'Canva AI',
-    toolUrl: 'https://canva.com',
+    title: 'Write and design your first social post',
+    tool: 'Claude AI + Canva',
+    toolUrl: 'https://claude.ai',
     timeEstimate: '45 minutes',
     color: '#7B3FE4',
-    what: 'Today you make something you can actually post. Use Canva AI to design a graphic and write the caption in your brand voice. Your first piece of real content.',
-    prompt: `First, use Claude to write the caption:
-"Write a social media post for [Instagram/TikTok/LinkedIn] announcing [your idea] for the first time. Use my brand voice: [paste your Day 4 guide]. The post should: (1) hook them in the first line, (2) describe the problem you solve in two sentences, (3) end with a question that invites comments."
+    what: "Today you put something real into the world. First Claude writes the words. Then Canva designs the visual. One post, ready to publish. This is how creators who look like they have a team actually work alone.",
+    prompt: `Step 1 — Write the post with Claude:
+"Write a social media post for [Instagram/TikTok] announcing my business for the first time. Use my business tone: [paste your Day 4 guide]. The post should: start with a line that makes someone stop scrolling, explain the problem I solve in two sentences, end with a question that makes people want to comment."
 
-Then open Canva, use Magic Design, and create a visual that matches.`,
-    deliverable: 'A designed social post ready to publish. Do not overthink it. Post it.',
-    tip: 'The goal is not perfection. The goal is to have something real in the world. Ship it.',
+Step 2 — Design the visual: open Canva (canva.com), click Create, search "Instagram post," use Magic Design with a description of your idea, and match it to the post tone.`,
+    deliverable: "A written post and a designed graphic — ready to post tonight. The goal is not perfection. The goal is having something real exist.",
+    tip: 'Post it. Even if only five people see it. The habit of publishing is more valuable than the reach of any single post.',
   },
   {
     day: 6,
-    title: 'Record your pitch in your own voice',
+    title: 'Create a 60-second pitch in your voice',
     tool: 'ElevenLabs',
     toolUrl: 'https://elevenlabs.io',
     timeEstimate: '45 minutes',
     color: '#F59E0B',
-    what: 'A 60-second voice pitch is one of the most powerful tools you can have. Today you clone your voice and create a pitch you can attach to emails, DMs, or social posts — without recording yourself every time.',
-    prompt: `First, write your script with Claude:
-"Write a 60-second voice pitch script for [your business idea]. Use my brand voice: [paste your Day 4 guide]. Structure: (1) hook — one sentence that names the problem, (2) who you help and how, (3) why this matters now, (4) what to do next. Keep it conversational, not scripted-sounding."
+    what: "A voice pitch in your own voice — that you can send in a DM, attach to an email, or post as audio content. Today you clone your voice once and then generate it as many times as you want without ever recording yourself again.",
+    prompt: `Step 1 — Write the script with Claude:
+"Write a 60-second spoken pitch for [your business]. Use my business tone: [paste your Day 4 guide]. Structure: one sentence naming the problem, two sentences on who I help and how, one sentence on why now, one sentence on what to do next. Make it sound like I am talking to a friend — not reading a script."
 
-Then go to ElevenLabs, clone your voice with a 30-second recording, paste the script, and generate the audio.`,
-    deliverable: 'A 60-second MP3 pitch in your cloned voice. You never have to record this again — just regenerate anytime you update the script.',
-    tip: 'Record your voice sample in a quiet room, speaking naturally. The more natural the sample, the better the clone.',
+Step 2 — Go to ElevenLabs, create a free account, go to Voice Lab, record 30 seconds of yourself speaking naturally, clone your voice, paste the script, and generate.`,
+    deliverable: "A 60-second MP3 in your own cloned voice. Send it to someone today and watch their reaction.",
+    tip: 'Record your voice sample in the quietest room you can find. Speak at your natural pace. The better the sample, the more natural the clone.',
   },
   {
     day: 7,
-    title: 'Make a 10-second brand video',
+    title: 'Make a 10-second video for your business',
     tool: 'Higgsfield',
     toolUrl: 'https://higgsfield.ai',
     timeEstimate: '45 minutes',
     color: '#EC4899',
-    what: 'Cinematic video used to cost thousands of dollars and take weeks. Today you make one in 45 minutes with a text prompt. This is the kind of thing that stops people mid-scroll.',
-    prompt: `Write your video prompt for Higgsfield:
-"[Describe your target customer in one sentence], holding [your product or representing your service], in [a setting that reflects your brand], looking confident and capable, cinematic lighting, 4K, authentic."
+    what: "Cinematic video used to cost thousands and take weeks. Today you make one in under an hour with a text prompt. This is the kind of content that makes people stop and think \"that looks like a real brand.\"",
+    prompt: `Write your prompt for Higgsfield:
+"[Describe your target customer in one sentence], [describe what they are doing — working, creating, building something], in [a setting that matches your brand — bedroom, cafe, outdoors], looking focused and capable, cinematic lighting, authentic."
 
-Example: "A 17-year-old in a Sydney bedroom, laptop open, building something online, determined expression, warm lighting, cinematic."`,
-    deliverable: 'A 5-10 second video you can use as a social media ad, a website background, or a story.',
-    tip: 'Generate 3-4 variations with slightly different prompts. Pick the one that makes you think "yes, that is my brand."',
+Example: "A 16-year-old in a Sydney bedroom, laptop open, building a business online, focused expression, warm afternoon light, cinematic."
+
+Generate 3-4 versions with slight variations. Pick your favourite.`,
+    deliverable: "A 5-10 second cinematic video. Post it. Use it as a website background. Attach it to your pitch. This is what your brand looks like.",
+    tip: 'The more specific your prompt, the better the result. Add details: the colour of the walls, the time of day, the mood. Specificity is the skill.',
   },
 ]
 
@@ -118,13 +124,13 @@ export default function StarterGuidePage() {
           <span style={{ color: '#FF3366' }}>Zero experience needed.</span>
         </h1>
         <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '1rem', lineHeight: 1.7, maxWidth: 580, margin: 0 }}>
-          This is not a list of tools. This is a plan. By Day 7 you will have a validated business idea,
-          market research, a value proposition, a brand voice, a social post, a voice pitch, and a video.
-          One tool per day. 30-45 minutes. All free to start.
+          This is not a list of tools. It is a plan. By Day 7 you will have a tested idea, real market research,
+          a selling sentence, a business personality, a social post live in the world, a voice pitch you can send in a DM,
+          and a cinematic video. One tool per day. 30-45 minutes each. All free to start.
         </p>
 
         <div style={{ marginTop: 24, display: 'flex', flexWrap: 'wrap', gap: 12 }}>
-          {['Validated idea', 'Market research', 'Value proposition', 'Brand voice', 'Social post', 'Voice pitch', 'Brand video'].map((item) => (
+          {['A tested idea', 'Market research', 'Your selling sentence', 'Your business personality', 'A social post', 'A voice pitch', 'A brand video'].map((item) => (
             <span key={item} style={{ fontSize: '0.78rem', fontWeight: 600, color: 'rgba(255,255,255,0.6)', background: 'rgba(123,63,228,0.08)', border: '1px solid rgba(123,63,228,0.2)', padding: '4px 12px', borderRadius: 100 }}>
               {item}
             </span>
