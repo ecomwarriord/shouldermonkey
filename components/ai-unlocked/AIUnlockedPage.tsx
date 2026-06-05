@@ -143,7 +143,7 @@ export function AIUnlockedPage() {
               <div className="flex flex-col items-center justify-center h-screen text-center px-6">
                 <p className={`mb-5 ${chapter === 0 ? 'animate__animated animate__fadeInDown' : ''}`}
                   style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#FF3366', animationDuration: '0.5s' }}>
-                  100% ONLINE · ZOOM · ONE NIGHT · AUSTRALIA
+                  100% ONLINE · ZOOM · AUGUST 2026 · AEST
                 </p>
 
                 <div className={chapter === 0 ? 'animate__animated animate__fadeInUp' : ''}
@@ -338,7 +338,7 @@ export function AIUnlockedPage() {
                     <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.7)' }}>Join the waitlist free. You hear first. You pay nothing today.</p>
                   </div>
                   <div className="rounded-xl p-4" style={{ background: 'rgba(255,51,102,0.06)', border: '1px solid rgba(255,51,102,0.2)', textAlign: 'left' }}>
-                    <p style={{ fontSize: '0.78rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#FF3366', marginBottom: 4 }}>When the date is set</p>
+                    <p style={{ fontSize: '0.78rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#FF3366', marginBottom: 4 }}>August 2026 · AEST</p>
                     <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.7)' }}>Founding cohort members get the ticket first. $149 AUD. One night live.</p>
                   </div>
                 </div>
@@ -351,7 +351,7 @@ export function AIUnlockedPage() {
                 </a>
 
                 <p className="mt-5" style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.82rem' }}>
-                  Waitlist closes when the founding cohort is full.
+                  August 2026, AEST · Waitlist closes when the founding cohort is full.
                 </p>
 
                 <p className="mt-4 font-semibold" style={{ color: '#ffffff', fontSize: '1rem' }}>
@@ -381,10 +381,10 @@ export function AIUnlockedPage() {
                 fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)',
                 fontWeight: 700, letterSpacing: '-0.02em', color: '#ffffff', margin: '0 0 8px',
               }}>
-                Be first when tickets drop.
+                August 2026. Be first when tickets drop.
               </h2>
               <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.9rem', marginBottom: 32 }}>
-                Free to join. Founding pricing locked for waitlist members.
+                Free to join. Founding cohort pricing locked for waitlist members.
               </p>
               <div
                 style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(24px)', border: '1px solid rgba(123,63,228,0.25)', borderRadius: 20, padding: '32px 28px' }}
