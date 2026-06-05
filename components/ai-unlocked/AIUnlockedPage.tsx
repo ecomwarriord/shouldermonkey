@@ -14,7 +14,6 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { NeuralWorldCanvas } from './NeuralWorldCanvas'
-import { ValueStackHorizontal } from './ValueStackHorizontal'
 import { AudioAmbient } from './AudioAmbient'
 import { WaitlistForm } from './forms/WaitlistForm'
 import { SegmentationQuestion } from './forms/SegmentationQuestion'
@@ -420,7 +419,6 @@ export function AIUnlockedPage() {
             </div>
           </section>
 
-          <ValueStackHorizontal />
           <AffiliateSection />
           <FAQSection />
 
