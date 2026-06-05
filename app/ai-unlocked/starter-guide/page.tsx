@@ -3,116 +3,170 @@ import { CursorFix } from '@/components/ai-unlocked/CursorFix'
 
 export const metadata: Metadata = {
   title: 'Your 7-Day AI Starter Plan — AI Unlocked',
-  description: 'A 7-day action plan to go from zero AI experience to having built something real. One tool per day. 30-45 minutes each.',
+  description: '7 days. One thing to build each day. Zero experience needed.',
   robots: { index: false, follow: false },
 }
 
 const DAYS = [
   {
     day: 1,
-    title: 'Find and test your first idea',
+    title: 'Find an idea worth building',
     tool: 'ChatGPT',
     toolUrl: 'https://chat.openai.com',
-    timeEstimate: '30 minutes',
+    timeEstimate: '20 minutes',
     color: '#10B981',
-    what: "Don't have an idea yet? Good. AI finds them faster than you do. Already have one? Even better — today you find out if it is actually worth building before you spend a second more on it.",
-    prompt: `If you need an idea — copy this exactly and fill in the blanks:
-"I am [your age, e.g. 16] years old. Five things I enjoy, know about, or notice problems with in daily life: [list five things, e.g. gaming, cooking for my family, helping younger kids with homework, sport, social media for small businesses]. For each one, suggest one specific business idea I could start using AI tools, with no money and no experience. For each idea, tell me: exactly who would pay for it, roughly how much they would pay, and how I could make the first $100."
+    intro: "You do not need a business idea before you start. AI will help you find one. All you need to know is what you enjoy or what annoys you.",
+    steps: [
+      {
+        label: 'Open ChatGPT and type this. Fill in the one blank.',
+        content: `"I'm [your age] years old. I want to make money online. Here are 3-5 things I spend my time on or care about: [e.g. gaming / making TikToks / looking after younger kids / cooking / sport / helping my friends with their Instagram].
 
-If you already have an idea — copy this exactly and fill in the blanks:
-"My business idea is: [one sentence, e.g. 'an AI-powered study guide service for Year 10 students in Australia']. The people I want to help are [e.g. 'Year 10 students who are stressed about exams and don't have money for tutors']. Tell me: (1) the three most likely reasons this idea fails, (2) the one thing that would make it succeed, (3) the single most important question I need to answer before building anything."
-
-What a good AI response looks like: specific names for the type of person who would pay, actual dollar amounts, a clear reason why they'd choose your solution over what they use now. If the response is vague, type: "Be more specific. Give me real examples."`,
-    deliverable: "An idea you have actually tested with AI — not just thought about. If it survived, you have something worth building. If it didn't, you saved yourself months.",
-    tip: "If AI says your idea has problems, do not quit. Type: \"How would I fix those three problems?\" The fix is often better than the original idea.",
+For each one, suggest a simple business idea I could start this week using AI and my phone, with no money. For each idea tell me: who would pay me, how much, and exactly how I'd make my first $100."`,
+      },
+      {
+        label: 'Pick one idea. Then type this — fill in the blank with the idea you liked.',
+        content: `"I want to start: [paste the idea here]. Tell me the three biggest reasons this could fail, and for each problem, tell me how I would fix it."`,
+      },
+    ],
+    whatGoodLooksLike: "A list of 3 problems with 3 fixes. If the fixes make sense and feel doable, your idea is worth continuing. If they feel impossible, pick a different idea from the first list.",
+    stuck: 'If you cannot think of what to put in the first blank, write: gaming, helping friends, making videos, food, sport. That is enough to get started.',
   },
   {
     day: 2,
-    title: 'Find out who actually has the problem',
+    title: 'Find out who would actually pay you',
     tool: 'Perplexity',
     toolUrl: 'https://perplexity.ai',
-    timeEstimate: '30 minutes',
+    timeEstimate: '20 minutes',
     color: '#7B3FE4',
-    what: 'Perplexity is AI search that shows you where it got every answer. Today you use it to find out who already has the problem you are solving, how many of them there are, and what they are doing about it right now.',
-    prompt: `"I want to understand who has this problem: [describe the problem your idea solves]. Tell me: (1) what kinds of people specifically deal with this problem and how often, (2) what they are currently doing to solve it and why they are unhappy with those solutions, (3) roughly how much they spend on solutions right now. Cite your sources."`,
-    deliverable: "A clear picture of your customer — who they are, what frustrates them, and what they already spend money on. This is more market research than most adults do before starting a business.",
-    tip: 'If the answer feels too general, ask: "Specifically for Australia" or "Specifically for people aged 15-25." Narrow it down until it feels real.',
+    intro: "Before you build anything, you need to know one thing: is there someone who would actually pay for this? Today you find out in 20 minutes.",
+    steps: [
+      {
+        label: 'Open Perplexity and type this. Fill in the blanks with your Day 1 idea.',
+        content: `"I want to start a business that helps [type who your idea helps, e.g. 'students who need study help' or 'parents who need pet sitting']. Tell me: how many people in Australia have this problem, what they are currently doing to solve it, and how much they spend on it. Include sources."`,
+      },
+      {
+        label: 'Read the answer. Then type this follow-up.',
+        content: `"What do people complain about most with the current solutions? What would make someone switch to something new?"`,
+      },
+    ],
+    whatGoodLooksLike: "A real number of people with this problem, what they already pay, and what frustrates them most. If the answer feels vague, type: \"Give me more specific numbers for Australia, for people aged 15-30.\"",
+    stuck: "If Perplexity gives a short or unclear answer, it means your idea might be too vague. Go back to ChatGPT and ask: \"Make my idea more specific — narrow it down to one type of person in one situation.\"",
   },
   {
     day: 3,
-    title: 'Write the one sentence that sells your idea',
+    title: 'Write the one sentence that explains your business',
     tool: 'Claude AI',
     toolUrl: 'https://claude.ai',
-    timeEstimate: '45 minutes',
+    timeEstimate: '20 minutes',
     color: '#FF3366',
-    what: "Every successful business can explain itself in one sentence. Not a paragraph. Not a pitch. One sentence that makes someone think \"I need that.\" Today you write yours.",
-    prompt: `Copy this exactly and fill in the blanks:
-"I am building [e.g. 'an AI-powered study guide service']. The people I help are [e.g. 'Year 10 students in Australia who are stressed about exams and can't afford tutors']. The thing they hate most about their current options is [e.g. 'tutors are too expensive, YouTube videos are too long and unfocused, and their school teachers don't have time for one-on-one help']. Write me 5 different one-sentence descriptions of my business that focus only on what the customer gets — not on what I do or how it works. Make them different: one aimed at teenagers, one aimed at parents, one that sounds urgent, one that sounds exciting, one that sounds reassuringly simple."
+    intro: "Every business that works can explain itself in one sentence. Not a paragraph. Not a list. One sentence that makes someone say \"I need that.\" Today you write yours.",
+    steps: [
+      {
+        label: 'Open Claude and type this. Fill in the blanks.',
+        content: `"My business helps [the type of person from Day 2, e.g. 'Year 10 students in Australia']. The problem they have is [what you found out in Day 2, e.g. 'they can't afford tutors but are stressed about exams']. What they want is [the result they actually want, e.g. 'to feel prepared and not panic before their tests'].
 
-What a good response looks like: each sentence starts with what the customer experiences, not with "we" or "I." It should describe a feeling or an outcome, not a feature. If a sentence starts with "I help" or "We provide" — ask AI to rewrite it starting from the customer's perspective instead.`,
-    deliverable: "Five ways to describe your business. Pick the one that makes someone immediately say \"tell me more.\" That is the sentence you use everywhere from now on.",
-    tip: 'Read each one to a real person and watch their face. The one that makes them lean forward or ask a question is the one.',
+Write me 5 different one-sentence descriptions of my business. Each one should start with what the customer gets — not what I do. Write one for a teenager, one for their parent, one that sounds urgent, one that sounds exciting, and one that sounds simple and easy."`,
+      },
+    ],
+    whatGoodLooksLike: "Five sentences that do NOT start with \"I\" or \"We.\" They should describe how the customer's life gets better. Read each one aloud — the one that does not sound weird when you say it is probably the winner.",
+    stuck: "If they all start with \"I help\" or \"We provide\" — type: \"Rewrite these so every sentence starts from the customer's point of view. What does the customer experience, not what do I do?\"",
   },
   {
     day: 4,
-    title: 'Decide how your business sounds',
+    title: 'Give your business a personality',
     tool: 'Claude AI',
     toolUrl: 'https://claude.ai',
-    timeEstimate: '30 minutes',
+    timeEstimate: '20 minutes',
     color: '#FF3366',
-    what: "Your business has a personality — the way it sounds in every post, every message, every piece of content. Getting this clear now means everything you create from Day 5 onwards will sound like it belongs together.",
-    prompt: `"I am building a business called [name or working title]. My customers are [who they are]. Three businesses or brands I think sound great and would want to be similar to are [list three — can be brands, YouTubers, apps, anything]. Write me: (1) three words that describe how my business should sound, (2) five words my business would use a lot, (3) five words my business would never use, (4) two example sentences written the way my business would write."`,
-    deliverable: "A personality guide for your business. Save this — you will paste it into every AI prompt from here on to make sure everything sounds like you.",
-    tip: 'Add this to the start of future prompts: "Write this in my business tone: [paste your guide]." Everything you create will instantly sound more consistent.',
+    intro: "Your business sounds like something. It might be funny, serious, friendly, bold, calm, or energetic. Figuring this out now means every post and message you create from Day 5 will sound like it came from the same place.",
+    steps: [
+      {
+        label: 'Open Claude and type this. Fill in the blanks.',
+        content: `"I am starting a business called [name or working title]. My customers are [who they are, from Day 2]. Three things or people whose tone or style I like and want to sound similar to: [list three — could be a YouTuber, a brand, an app, a friend, anything].
+
+Write me: (1) three words that describe how my business sounds, (2) five words or phrases my business uses a lot, (3) five words my business never uses, (4) two example sentences written exactly the way my business would write them."`,
+      },
+    ],
+    whatGoodLooksLike: "Three short words that actually feel like you. Two example sentences that sound like something you'd actually say. Save this whole answer — you'll paste it into every prompt from Day 5 onwards.",
+    stuck: "If you cannot think of three things whose tone you like, use these: a YouTuber you watch, a brand whose ads you do not skip, and one friend who texts in a way that always sounds right.",
   },
   {
     day: 5,
-    title: 'Write and design your first social post',
+    title: 'Write and design your first post',
     tool: 'Claude AI + Canva',
     toolUrl: 'https://claude.ai',
-    timeEstimate: '45 minutes',
+    timeEstimate: '30 minutes',
     color: '#7B3FE4',
-    what: "Today you put something real into the world. First Claude writes the words. Then Canva designs the visual. One post, ready to publish. This is how creators who look like they have a team actually work alone.",
-    prompt: `Step 1 — Write the post with Claude:
-"Write a social media post for [Instagram/TikTok] announcing my business for the first time. Use my business tone: [paste your Day 4 guide]. The post should: start with a line that makes someone stop scrolling, explain the problem I solve in two sentences, end with a question that makes people want to comment."
+    intro: "Today you make something you can actually post. Claude writes the words. Canva makes the visual. By the end of tonight, your business exists in the world.",
+    steps: [
+      {
+        label: 'Open Claude. Paste this prompt — fill in the blanks.',
+        content: `"Write a social media post announcing my business for the first time. My business helps [from Day 2]. My business personality is: [paste your full Day 4 answer here].
 
-Step 2 — Design the visual: open Canva (canva.com), click Create, search "Instagram post," use Magic Design with a description of your idea, and match it to the post tone.`,
-    deliverable: "A written post and a designed graphic — ready to post tonight. The goal is not perfection. The goal is having something real exist.",
-    tip: 'Post it. Even if only five people see it. The habit of publishing is more valuable than the reach of any single post.',
+The post should: (1) first line stops someone scrolling — make it a question or a bold statement, (2) two sentences explaining what I do and who it helps, (3) last line is a question that makes people want to comment. Make it short. No hashtags."`,
+      },
+      {
+        label: 'Now go to canva.com. Do this:',
+        content: `1. Click "Create a design"
+2. Search "Instagram post" and choose a template
+3. Click the magic wand or "Magic Design" button
+4. Type what your business does in one sentence
+5. Pick a design that matches the mood of your Day 4 words
+6. Replace the template text with your Claude post
+7. Download it`,
+      },
+    ],
+    whatGoodLooksLike: "A post you are not embarrassed to show someone. It does not have to be perfect. It has to exist. Post it tonight.",
+    stuck: "If the Claude post sounds boring or stiff, type: \"Rewrite this to sound like a 16-year-old who is genuinely excited about this idea, talking to their friends.\"",
   },
   {
     day: 6,
-    title: 'Create a 60-second pitch in your voice',
+    title: 'Make a 60-second pitch in your own voice',
     tool: 'ElevenLabs',
     toolUrl: 'https://elevenlabs.io',
-    timeEstimate: '45 minutes',
+    timeEstimate: '30 minutes',
     color: '#F59E0B',
-    what: "A voice pitch in your own voice — that you can send in a DM, attach to an email, or post as audio content. Today you clone your voice once and then generate it as many times as you want without ever recording yourself again.",
-    prompt: `Step 1 — Write your script with Claude. Copy this exactly:
-"Write me a 60-second pitch script for [your business name and one-sentence description from Day 3]. My business tone is: [paste your Day 4 guide here]. Structure: one sentence naming the problem my customer has right now, two sentences on who I help and exactly how, one sentence on why this matters more now than a year ago [e.g. 'because AI tools now make this possible for anyone'], one sentence on what to do next. Sound like I am explaining this to a friend at lunch — not presenting to a boardroom."
-
-What a good script looks like: reading it aloud takes 55-65 seconds, sounds like a normal conversation, and someone could repeat the main idea back to you. If it sounds stiff, type: "Rewrite this to sound more like a teenager explaining something they are genuinely excited about."
-
-Step 2 — Go to ElevenLabs (free account), click Voice Lab, record 30 seconds of yourself reading anything aloud in a quiet room, clone the voice, paste your script, click Generate.`,
-    deliverable: "A 60-second MP3 in your own cloned voice. Send it to someone today and watch their reaction.",
-    tip: 'Record your voice sample in the quietest room you can find. Speak at your natural pace. The better the sample, the more natural the clone.',
+    intro: "A voice message explaining your business — in your own voice — that you can send in a DM, attach to an email, or use on social. Today you clone your voice once. After that you never have to record yourself again.",
+    steps: [
+      {
+        label: 'First, write the script with Claude.',
+        content: `"Write me a 60-second script for [my business name and what it does from Day 3]. My business personality is: [paste your Day 4 answer]. The script should sound like I am explaining this to a friend — not presenting it. Structure: one sentence on the problem, two sentences on what I do and who I help, one sentence on why this is better now than it was before, one sentence on what to do next."`,
+      },
+      {
+        label: 'Then clone your voice.',
+        content: `1. Go to elevenlabs.io — create a free account
+2. Click "Voice Lab" then "Add a new voice"
+3. Find the quietest spot you can — a cupboard works
+4. Record yourself reading anything aloud for 30 seconds
+5. Name the voice, save it
+6. Go to Text to Speech, select your voice
+7. Paste your Claude script
+8. Click Generate — download the MP3`,
+      },
+    ],
+    whatGoodLooksLike: "A 55-65 second audio clip that sounds like you talking normally. Send it to one person today and watch their reaction. If they ask \"wait, how did you make that?\" — it worked.",
+    stuck: "If the script sounds too formal, type: \"Make this sound more casual — like I'm explaining it at the dinner table, not in a job interview.\"",
   },
   {
     day: 7,
-    title: 'Make a 10-second video for your business',
+    title: 'Make a video for your business',
     tool: 'Higgsfield',
     toolUrl: 'https://higgsfield.ai',
-    timeEstimate: '45 minutes',
+    timeEstimate: '30 minutes',
     color: '#EC4899',
-    what: "Cinematic video used to cost thousands and take weeks. Today you make one in under an hour with a text prompt. This is the kind of content that makes people stop and think \"that looks like a real brand.\"",
-    prompt: `Write your prompt for Higgsfield:
-"[Describe your target customer in one sentence], [describe what they are doing — working, creating, building something], in [a setting that matches your brand — bedroom, cafe, outdoors], looking focused and capable, cinematic lighting, authentic."
+    intro: "Cinematic video used to cost thousands and take weeks to produce. Today you make one with a sentence. This is what makes people stop and think your business looks like a real brand.",
+    steps: [
+      {
+        label: 'Go to higgsfield.ai and create a free account. Then type this — adapt it to your business.',
+        content: `"A [your age, e.g. 16]-year-old in [a place that fits your brand, e.g. a Sydney bedroom / a kitchen / a park], [doing something that relates to your business, e.g. looking at their laptop / cooking / studying], looking focused and confident, cinematic lighting, warm and authentic."
 
-Example: "A 16-year-old in a Sydney bedroom, laptop open, building a business online, focused expression, warm afternoon light, cinematic."
+Example for a study business: "A 16-year-old in a Sydney bedroom, laptop open, studying and smiling slightly, organised desk, warm lamp light, cinematic, authentic."
 
-Generate 3-4 versions with slight variations. Pick your favourite.`,
-    deliverable: "A 5-10 second cinematic video. Post it. Use it as a website background. Attach it to your pitch. This is what your brand looks like.",
-    tip: 'The more specific your prompt, the better the result. Add details: the colour of the walls, the time of day, the mood. Specificity is the skill.',
+Generate this 3-4 times with small changes. Pick the one that looks most like your brand.`,
+      },
+    ],
+    whatGoodLooksLike: "A 5-10 second video that looks like it belongs in an ad. Show it to someone and ask: \"Does this look like a real business?\" If they say yes — it is working.",
+    stuck: "If the video looks nothing like what you imagined, add more detail to your prompt: the colour of the walls, what time of day, what expression the person has. The more specific the prompt, the better the result.",
   },
 ]
 
@@ -122,86 +176,90 @@ export default function StarterGuidePage() {
       <CursorFix />
 
       {/* Header */}
-      <div style={{ maxWidth: 780, margin: '0 auto', padding: '60px 24px 48px' }}>
+      <div style={{ maxWidth: 740, margin: '0 auto', padding: '60px 24px 40px' }}>
         <p style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#7B3FE4', marginBottom: 12 }}>
-          AI Unlocked · Starter Plan
+          AI Unlocked · Starter Guide
         </p>
-        <h1 style={{ fontFamily: 'var(--font-syne, system-ui)', fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: 900, letterSpacing: '-0.03em', color: '#ffffff', margin: '0 0 16px', lineHeight: 1.1 }}>
-          7 days. 7 builds.<br />
-          <span style={{ color: '#FF3366' }}>Zero experience needed.</span>
+        <h1 style={{ fontFamily: 'var(--font-syne, system-ui)', fontSize: 'clamp(2rem, 5vw, 2.8rem)', fontWeight: 900, letterSpacing: '-0.03em', color: '#ffffff', margin: '0 0 16px', lineHeight: 1.1 }}>
+          7 days. One thing to do each day.<br />
+          <span style={{ color: '#FF3366' }}>By the end, you've built something real.</span>
         </h1>
-        <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '1rem', lineHeight: 1.7, maxWidth: 580, margin: 0 }}>
-          This is not a list of tools. It is a plan. By Day 7 you will have a tested idea, real market research,
-          a selling sentence, a business personality, a social post live in the world, a voice pitch you can send in a DM,
-          and a cinematic video. One tool per day. 30-45 minutes each. All free to start.
+        <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '1rem', lineHeight: 1.7, maxWidth: 560, margin: 0 }}>
+          No experience. No money. No idea needed before you start.
+          Each day takes 20-30 minutes. All the tools are free.
+          Every prompt is ready to copy — just fill in the gaps.
         </p>
 
-        <div style={{ marginTop: 24, display: 'flex', flexWrap: 'wrap', gap: 12 }}>
-          {['A tested idea', 'Market research', 'Your selling sentence', 'Your business personality', 'A social post', 'A voice pitch', 'A brand video'].map((item) => (
-            <span key={item} style={{ fontSize: '0.78rem', fontWeight: 600, color: 'rgba(255,255,255,0.6)', background: 'rgba(123,63,228,0.08)', border: '1px solid rgba(123,63,228,0.2)', padding: '4px 12px', borderRadius: 100 }}>
-              {item}
-            </span>
-          ))}
+        <div style={{ marginTop: 20, padding: '16px 20px', background: 'rgba(123,63,228,0.06)', border: '1px solid rgba(123,63,228,0.2)', borderRadius: 10 }}>
+          <p style={{ margin: 0, fontSize: '0.9rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.6 }}>
+            By Day 7 you will have: a tested business idea, research on who would pay you, a one-sentence description, a business personality, a social post live in the world, a voice pitch, and a video.
+          </p>
         </div>
       </div>
 
       {/* Days */}
-      <div style={{ maxWidth: 780, margin: '0 auto', padding: '0 24px 80px', display: 'flex', flexDirection: 'column', gap: 24 }}>
+      <div style={{ maxWidth: 740, margin: '0 auto', padding: '0 24px 80px', display: 'flex', flexDirection: 'column', gap: 28 }}>
         {DAYS.map((day) => (
           <div key={day.day} style={{
             background: 'rgba(255,255,255,0.02)',
             border: '1px solid rgba(255,255,255,0.07)',
             borderLeft: `4px solid ${day.color}`,
             borderRadius: 14,
-            padding: '28px 28px 24px',
+            overflow: 'hidden',
           }}>
             {/* Day header */}
-            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap', marginBottom: 16 }}>
+            <div style={{ padding: '22px 24px 0' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap', marginBottom: 12 }}>
+                <div>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', color: day.color }}>
+                    Day {day.day} · {day.timeEstimate}
+                  </span>
+                  <h2 style={{ fontFamily: 'var(--font-syne, system-ui)', fontSize: '1.2rem', fontWeight: 800, color: '#ffffff', margin: '5px 0 0', letterSpacing: '-0.01em' }}>
+                    {day.title}
+                  </h2>
+                </div>
+                <a href={day.toolUrl} target="_blank" rel="noopener noreferrer"
+                  style={{ flexShrink: 0, fontSize: '0.8rem', fontWeight: 700, color: day.color, background: `${day.color}15`, border: `1px solid ${day.color}33`, padding: '6px 14px', borderRadius: 100, textDecoration: 'none' }}>
+                  Open {day.tool} →
+                </a>
+              </div>
+              <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.9rem', lineHeight: 1.65, margin: '0 0 20px' }}>
+                {day.intro}
+              </p>
+            </div>
+
+            {/* Steps */}
+            <div style={{ padding: '0 24px', display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 20 }}>
+              {day.steps.map((step, si) => (
+                <div key={si}>
+                  <p style={{ fontSize: '0.78rem', fontWeight: 700, color: 'rgba(255,255,255,0.5)', margin: '0 0 8px', letterSpacing: '0.02em' }}>
+                    {`Step ${si + 1}: ${step.label}`}
+                  </p>
+                  <div style={{ background: 'rgba(0,0,0,0.45)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 10, padding: '14px 16px' }}>
+                    <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '0.88rem', lineHeight: 1.7, margin: 0, whiteSpace: 'pre-wrap' }}>
+                      {step.content}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* What good looks like + stuck */}
+            <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', padding: '16px 24px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
               <div>
-                <span style={{ fontSize: '0.72rem', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', color: day.color }}>
-                  Day {day.day} · {day.timeEstimate}
-                </span>
-                <h2 style={{ fontFamily: 'var(--font-syne, system-ui)', fontSize: '1.3rem', fontWeight: 800, color: '#ffffff', margin: '6px 0 0', letterSpacing: '-0.01em' }}>
-                  {day.title}
-                </h2>
-              </div>
-              <a href={day.toolUrl} target="_blank" rel="noopener noreferrer"
-                style={{ flexShrink: 0, fontSize: '0.82rem', fontWeight: 700, color: day.color, background: `${day.color}15`, border: `1px solid ${day.color}33`, padding: '6px 14px', borderRadius: 100, textDecoration: 'none' }}>
-                Open {day.tool} →
-              </a>
-            </div>
-
-            {/* What */}
-            <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.9rem', lineHeight: 1.65, marginBottom: 20 }}>
-              {day.what}
-            </p>
-
-            {/* Prompt */}
-            <div style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '16px 18px', marginBottom: 16 }}>
-              <p style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 10 }}>
-                Your prompt
-              </p>
-              <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.88rem', lineHeight: 1.7, margin: 0, whiteSpace: 'pre-wrap' }}>
-                {day.prompt}
-              </p>
-            </div>
-
-            {/* Deliverable + Tip */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-              <div style={{ background: `${day.color}0a`, border: `1px solid ${day.color}22`, borderRadius: 8, padding: '12px 14px' }}>
                 <p style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: day.color, marginBottom: 6 }}>
-                  What you end the day with
+                  What a good result looks like
                 </p>
-                <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '0.85rem', lineHeight: 1.55, margin: 0 }}>
-                  {day.deliverable}
+                <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.83rem', lineHeight: 1.6, margin: 0 }}>
+                  {day.whatGoodLooksLike}
                 </p>
               </div>
-              <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 8, padding: '12px 14px' }}>
-                <p style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: 6 }}>
-                  Tip
+              <div>
+                <p style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 6 }}>
+                  If you get stuck
                 </p>
-                <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem', lineHeight: 1.55, margin: 0 }}>
-                  {day.tip}
+                <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.83rem', lineHeight: 1.6, margin: 0 }}>
+                  {day.stuck}
                 </p>
               </div>
             </div>
@@ -209,13 +267,12 @@ export default function StarterGuidePage() {
         ))}
 
         {/* Footer */}
-        <div style={{ marginTop: 16, padding: '32px', background: 'rgba(123,63,228,0.06)', border: '1px solid rgba(123,63,228,0.2)', borderRadius: 14, textAlign: 'center' }}>
-          <h3 style={{ fontFamily: 'var(--font-syne, system-ui)', fontSize: '1.3rem', fontWeight: 800, color: '#ffffff', margin: '0 0 10px', letterSpacing: '-0.01em' }}>
-            After 7 days, you have 7 real things.
+        <div style={{ marginTop: 8, padding: '28px', background: 'rgba(123,63,228,0.06)', border: '1px solid rgba(123,63,228,0.2)', borderRadius: 14, textAlign: 'center' }}>
+          <h3 style={{ fontFamily: 'var(--font-syne, system-ui)', fontSize: '1.2rem', fontWeight: 800, color: '#ffffff', margin: '0 0 10px', letterSpacing: '-0.01em' }}>
+            That is 7 real things you built in 7 days.
           </h3>
-          <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.9rem', lineHeight: 1.65, margin: '0 0 20px', maxWidth: 480, marginLeft: 'auto', marginRight: 'auto' }}>
-            The webinar in August shows you how to use these same tools to turn that foundation into
-            your first income online. One night live. August 2026, AEST.
+          <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.88rem', lineHeight: 1.65, margin: '0 0 20px', maxWidth: 440, marginLeft: 'auto', marginRight: 'auto' }}>
+            The webinar in August shows you how to turn that foundation into your first income online. One night live. August 2026.
           </p>
           <a href="/ai-unlocked#waitlist-form"
             style={{ display: 'inline-block', background: 'linear-gradient(135deg, #7B3FE4 0%, #FF3366 100%)', color: '#fff', fontWeight: 700, fontSize: '0.9rem', padding: '12px 28px', borderRadius: 100, textDecoration: 'none' }}>
