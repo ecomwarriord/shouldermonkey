@@ -185,14 +185,13 @@ export default function StarterGuidePage() {
           <span style={{ color: '#FF3366' }}>By the end, you've built something real.</span>
         </h1>
         <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '1rem', lineHeight: 1.7, maxWidth: 560, margin: 0 }}>
-          No experience. No money. No idea needed before you start.
-          Each day takes 20-30 minutes. All the tools are free.
-          Every prompt is ready to copy — just fill in the gaps.
+          No experience needed. No money. You do not even need an idea yet.
+          Each day takes 20-30 minutes. Every prompt is ready to copy — just fill in the gaps.
         </p>
 
         <div style={{ marginTop: 20, padding: '16px 20px', background: 'rgba(123,63,228,0.06)', border: '1px solid rgba(123,63,228,0.2)', borderRadius: 10 }}>
-          <p style={{ margin: 0, fontSize: '0.9rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.6 }}>
-            By Day 7 you will have: a tested business idea, research on who would pay you, a one-sentence description, a business personality, a social post live in the world, a voice pitch, and a video.
+          <p style={{ margin: 0, fontSize: '0.9rem', color: 'rgba(255,255,255,0.65)', lineHeight: 1.7 }}>
+            By Day 7 you will have: a business idea you actually tested, a social post published and live, a 60-second pitch in your own cloned voice you can DM to anyone, and a cinematic video that makes your business look real. All made with AI. All free.
           </p>
         </div>
       </div>
