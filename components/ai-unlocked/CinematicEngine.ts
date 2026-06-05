@@ -69,8 +69,8 @@ export class CinematicEngine {
       this.composer = new EffectComposer(this.renderer)
       this.composer.addPass(new RenderPass(this.scene, this.camera))
       const bloom = new BloomEffect({
-        intensity: 0.8,
-        luminanceThreshold: 0.4, // council fix: raised from 0.15 to prevent text area washout
+        intensity: 1.4,            // stronger so glow is clearly visible
+        luminanceThreshold: 0.15, // lower threshold = more nodes bloom
         luminanceSmoothing: 0.9,
         mipmapBlur: true,
       })
@@ -93,16 +93,17 @@ export class CinematicEngine {
     // Generate positions — wide spread, sense of vastness and possibility
     const positions: THREE.Vector3[] = []
     for (let i = 0; i < this.NODE_COUNT; i++) {
+      // Keep nodes within the visible camera frustum — no rogue outer nodes
       const isOuter = i > this.NODE_COUNT * 0.4
-      const minR = isOuter ? 5 : 1.5
-      const maxR = isOuter ? 9 : 4
+      const minR = isOuter ? 3.5 : 1.2
+      const maxR = isOuter ? 6.0 : 3.2
       const r = minR + Math.random() * (maxR - minR)
       const theta = Math.random() * Math.PI * 2
       const phi = Math.acos(2 * Math.random() - 1)
       positions.push(new THREE.Vector3(
         r * Math.sin(phi) * Math.cos(theta),
         r * Math.sin(phi) * Math.sin(theta),
-        r * Math.cos(phi) * 0.4,
+        r * Math.cos(phi) * 0.5,
       ))
     }
 
@@ -127,11 +128,11 @@ export class CinematicEngine {
     this.network.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
     this.scene.add(this.network)
 
-    // Set all instance matrices (required before first render)
+    // Set all instance matrices — nodes sized to be clearly visible
     const dummy = new THREE.Object3D()
     positions.forEach((pos, i) => {
       dummy.position.copy(pos)
-      dummy.scale.setScalar(0.045 + Math.random() * 0.08)
+      dummy.scale.setScalar(0.12 + Math.random() * 0.16) // 3x larger than before
       dummy.updateMatrix()
       this.network.setMatrixAt(i, dummy.matrix)
     })
@@ -154,16 +155,24 @@ export class CinematicEngine {
     this.lines = new THREE.LineSegments(lineGeo, new THREE.LineBasicMaterial({
       color: 0x7B3FE4,
       transparent: true,
-      opacity: 0.1,
+      opacity: 0.22,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
     }))
     this.scene.add(this.lines)
 
-    // PointLight — descends through network on scroll
-    this.pointLight = new THREE.PointLight(0x7B3FE4, 0.5, 25, 2)
-    this.pointLight.position.set(0, 0, 12)
+    // PointLight — arrives from above on load, creating cinematic entry
+    this.pointLight = new THREE.PointLight(0x7B3FE4, 0, 22, 2)
+    this.pointLight.position.set(0, 0, 20) // starts far back
     this.scene.add(this.pointLight)
+
+    // Animate light arrival after 800ms (after preloader)
+    setTimeout(async () => {
+      if (this.destroyed) return
+      const { gsap } = await import('gsap')
+      gsap.to(this.pointLight.position, { z: 8, duration: 2.0, ease: 'power2.out' })
+      gsap.to(this.pointLight, { intensity: 3.5, duration: 2.0, ease: 'power2.out' })
+    }, 800)
   }
 
   private async setupGSAP() {
@@ -256,8 +265,9 @@ export class CinematicEngine {
     const time = (performance.now() - this.startTime) * 0.001
 
     this.material.uniforms.uTime.value = time
-    this.network.rotation.y += 0.00015
-    this.lines.rotation.y += 0.00015
+    // Very slow rotation — atmospheric drift, not erratic spinning
+    this.network.rotation.y += 0.00004
+    this.lines.rotation.y += 0.00004
 
     this.composer.render()
   }

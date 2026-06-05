@@ -83,10 +83,9 @@ export function ValueStackHorizontal() {
               {panel.label}
             </p>
             <h2 style={{
-              fontFamily: 'var(--font-display, sans-serif)',
-              fontSize: 'clamp(2rem, 5vw, 4rem)',
-              fontWeight: 900, letterSpacing: '-0.03em', color: '#ffffff',
-              maxWidth: 700, lineHeight: 1.1, marginBottom: 20, textAlign: 'center',
+              fontSize: 'clamp(1.6rem, 3vw, 2.4rem)',
+              fontWeight: 600, letterSpacing: '-0.01em', color: '#ffffff',
+              maxWidth: 640, lineHeight: 1.25, marginBottom: 20, textAlign: 'center',
             }}>
               {panel.headline}
             </h2>
