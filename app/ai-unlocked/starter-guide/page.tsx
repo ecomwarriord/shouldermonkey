@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { CursorFix } from '@/components/ai-unlocked/CursorFix'
 
 export const metadata: Metadata = {
   title: 'AI Starter Guide — AI Unlocked',
@@ -84,6 +85,7 @@ const TOOLS = [
 export default function StarterGuidePage() {
   return (
     <div style={{ background: '#000', minHeight: '100vh', color: '#f0edff', fontFamily: 'var(--font-inter, system-ui, sans-serif)' }}>
+      <CursorFix />
       {/* Header */}
       <div style={{ maxWidth: 800, margin: '0 auto', padding: '60px 24px 40px' }}>
         <p style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#7B3FE4', marginBottom: 12 }}>
