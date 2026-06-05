@@ -263,27 +263,27 @@ export function AIUnlockedPage() {
 
                   {/* Dee */}
                   <div className="rounded-2xl p-8 text-left" style={{ background: 'rgba(255,51,102,0.05)', border: '1.5px solid rgba(255,51,102,0.22)' }}>
-                    <p style={{ fontSize: '0.72rem', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#FF3366', marginBottom: 14 }}>
+                    <p style={{ fontSize: '0.72rem', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#FF3366', marginBottom: 12 }}>
                       Dee · Sydney · Your instructor
                     </p>
-                    <h3 style={{ fontFamily: 'var(--font-display, sans-serif)', fontSize: 'clamp(1.3rem, 2.5vw, 2rem)', fontWeight: 800, color: '#ffffff', lineHeight: 1.2, letterSpacing: '-0.02em', margin: '0 0 14px' }}>
-                      ShoulderMonkey is used by 200+ businesses today. In the last 12 months, AI let him ship 5 more products.
-                    </h3>
-                    <p style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1.7 }}>
-                      He has been building with technology for years. Then AI arrived — and everything accelerated. Qaneri, Holmes, Donna, Veridian, FORGE: all built in the last year, all still live. The tools you will use in this event are the same ones he built with.
+                    <p style={{ fontSize: 'clamp(1.4rem, 2vw, 1.7rem)', fontWeight: 700, color: '#ffffff', lineHeight: 1.25, margin: '0 0 14px', letterSpacing: '-0.01em' }}>
+                      ShoulderMonkey: 200+ businesses.<br />5 more products shipped in 12 months.
+                    </p>
+                    <p style={{ fontSize: '0.92rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1.7 }}>
+                      He has been building with technology for years. Then AI arrived and changed the pace. Qaneri, Holmes, Donna, Veridian, FORGE — all built in the last 12 months, all still live. Everything taught in this event, he built with.
                     </p>
                   </div>
 
                   {/* Abhinav */}
                   <div className="rounded-2xl p-8 text-left" style={{ background: 'rgba(123,63,228,0.07)', border: '1.5px solid rgba(123,63,228,0.25)' }}>
-                    <p style={{ fontSize: '0.72rem', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#7B3FE4', marginBottom: 14 }}>
+                    <p style={{ fontSize: '0.72rem', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#7B3FE4', marginBottom: 12 }}>
                       Abhinav Verma · RackTheBrain
                     </p>
-                    <h3 style={{ fontFamily: 'var(--font-display, sans-serif)', fontSize: 'clamp(1.3rem, 2.5vw, 2rem)', fontWeight: 800, color: '#ffffff', lineHeight: 1.2, letterSpacing: '-0.02em', margin: '0 0 14px' }}>
-                      He built RackTheBrain because he watched the same problem repeat: young people not reaching what they were capable of.
-                    </h3>
-                    <p style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1.7 }}>
-                      Over 1,000 students have gone through his programs. He knows how young people actually learn — and he knows how to make it stick long after the session ends.
+                    <p style={{ fontSize: 'clamp(1.4rem, 2vw, 1.7rem)', fontWeight: 700, color: '#ffffff', lineHeight: 1.25, margin: '0 0 14px', letterSpacing: '-0.01em' }}>
+                      1,000+ students taught.<br />Built RackTheBrain to fix how young people learn.
+                    </p>
+                    <p style={{ fontSize: '0.92rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1.7 }}>
+                      He watched the same problem repeat — young people capable of more, not reaching it. He spent years working out how they actually learn, not how adults think they learn. He knows how to make it stick.
                     </p>
                   </div>
                 </div>
