@@ -14,6 +14,8 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { CinematicPage } from './CinematicPage'
+import { ValueStackHorizontal } from './ValueStackHorizontal'
+import { AudioAmbient } from './AudioAmbient'
 import { WaitlistForm } from './forms/WaitlistForm'
 import { SegmentationQuestion } from './forms/SegmentationQuestion'
 import { ParentHandoff } from './forms/ParentHandoff'
@@ -138,6 +140,7 @@ export function AIUnlockedPage() {
         }}
         onReady={onCanvasReady}
       />
+      <AudioAmbient chapter={chapter} />
 
       {/* Radial vignette — text area darkened so headline reads cleanly over network */}
       <div
@@ -438,6 +441,7 @@ export function AIUnlockedPage() {
             </div>
           </section>
 
+          <ValueStackHorizontal />
           <AffiliateSection />
           <FAQSection />
 

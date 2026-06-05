@@ -317,6 +317,23 @@ body[data-page="ai-unlocked"] button { cursor: pointer !important; }
   .ai-mobile-cta-bar { display: block; }
 }
 
+/* ── Value Stack Horizontal Scroll ── */
+.ai-value-track {
+  display: flex;
+  overflow-x: hidden;
+  width: 100%; /* 100% not 100vw — avoids Windows scrollbar overshoot */
+}
+.ai-value-panel {
+  flex-shrink: 0;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 48px;
+}
+
 /* ── Mobile responsive utilities ── */
 .sm-desktop-only { display: flex; }
 .sm-mobile-only  { display: none; }
