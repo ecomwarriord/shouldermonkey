@@ -13,7 +13,7 @@
  */
 
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { CinematicPage } from './CinematicPage'
+import { NeuralWorldCanvas } from './NeuralWorldCanvas'
 import { ValueStackHorizontal } from './ValueStackHorizontal'
 import { AudioAmbient } from './AudioAmbient'
 import { WaitlistForm } from './forms/WaitlistForm'
@@ -117,29 +117,8 @@ export function AIUnlockedPage() {
     <div data-page="ai-unlocked" style={{ background: '#000' }}>
       <SkipNav />
 
-      {/* CinematicEngine — vanilla Three.js + GSAP film reel */}
-      <CinematicPage
-        scrollRef={scrollRef}
-        onChapterChange={(ch) => {
-          setChapter(ch)
-          const p = scrollRef.current
-          const peaks = [0, 0.22, 0.44, 0.66, 0.88]
-          const FADE = 0.10
-          const opacities = peaks.map((peak, i) => {
-            const fadeIn = peak - FADE
-            const peakEnd = i === 4 ? 1.0 : peaks[i + 1] - FADE
-            const fadeOut = i === 4 ? 1.0 : peaks[i + 1]
-            if (i === 0 && p < peakEnd) return 1
-            if (p < fadeIn) return 0
-            if (p < peak) return (p - fadeIn) / FADE
-            if (p < peakEnd) return 1
-            if (p < fadeOut) return 1 - (p - peakEnd) / FADE
-            return 0
-          })
-          setChapterOpacities(opacities)
-        }}
-        onReady={onCanvasReady}
-      />
+      {/* Original NeuralWorldCanvas — pure Three.js, no GSAP, stays stable */}
+      <NeuralWorldCanvas scrollRef={scrollRef} onReady={onCanvasReady} />
       <AudioAmbient chapter={chapter} />
 
       {/* Radial vignette — text area darkened so headline reads cleanly over network */}
