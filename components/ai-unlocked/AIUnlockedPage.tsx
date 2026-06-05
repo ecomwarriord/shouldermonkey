@@ -436,10 +436,10 @@ export function AIUnlockedPage() {
               <span style={{ color: '#FF3366' }}>Join the waitlist.</span>
             </h2>
             <a
-              href="#waitlist"
+              href="#waitlist-form"
               className="btn-primary"
               style={{ background: 'linear-gradient(135deg, #7B3FE4 0%, #FF3366 100%)', fontSize: '1.1rem', padding: '1.1rem 2.8rem', display: 'inline-flex' }}
-              onClick={e => { e.preventDefault(); document.getElementById('waitlist')?.scrollIntoView({ behavior: 'smooth' }) }}
+              onClick={e => { e.preventDefault(); document.getElementById('waitlist-form')?.scrollIntoView({ behavior: 'smooth' }) }}
             >
               Claim Your Spot →
             </a>

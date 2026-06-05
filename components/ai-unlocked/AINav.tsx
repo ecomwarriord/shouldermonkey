@@ -76,7 +76,7 @@ export function AINav() {
           }}
           onClick={(e) => {
             e.preventDefault()
-            document.getElementById('waitlist')?.scrollIntoView({ behavior: 'smooth' })
+            document.getElementById('waitlist-form')?.scrollIntoView({ behavior: 'smooth' })
           }}
         >
           Join the Waitlist
