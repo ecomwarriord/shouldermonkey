@@ -1,5 +1,6 @@
 import { Syne } from 'next/font/google'
 import 'animate.css'
+import { CursorFix } from '@/components/ai-unlocked/CursorFix'
 
 // Syne: bold display font available on Google Fonts — character-driven, works for 13+ audience
 const syne = Syne({
@@ -13,6 +14,7 @@ const syne = Syne({
 export default function AIUnlockedLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className={syne.variable}>
+      <CursorFix />
       <link rel="stylesheet" href="/css/tuesday.min.css" />
       <link rel="stylesheet" href="/css/animation-library.css" />
       {children}
