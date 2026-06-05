@@ -63,27 +63,23 @@ export class CinematicEngine {
     // Build neural network geometry
     this.buildNetwork()
 
-    // Postprocessing — dynamic import avoids SSR issues with three/addons
+    // Postprocessing via 'postprocessing' package (v6, already in node_modules)
     try {
-      const [{ EffectComposer }, { RenderPass }, { UnrealBloomPass }] = await Promise.all([
-        import('three/examples/jsm/postprocessing/EffectComposer.js' as any),
-        import('three/examples/jsm/postprocessing/RenderPass.js' as any),
-        import('three/examples/jsm/postprocessing/UnrealBloomPass.js' as any),
-      ])
+      const { EffectComposer, RenderPass, BloomEffect, EffectPass } = await import('postprocessing' as any)
       this.composer = new EffectComposer(this.renderer)
       this.composer.addPass(new RenderPass(this.scene, this.camera))
-      const bloom = new UnrealBloomPass(
-        new THREE.Vector2(W, H),
-        0.8,  // strength
-        0.4,  // radius
-        0.4,  // threshold (raised from 0.15 to avoid washing text — council fix)
-      )
-      this.composer.addPass(bloom)
+      const bloom = new BloomEffect({
+        intensity: 0.8,
+        luminanceThreshold: 0.4, // council fix: raised from 0.15 to prevent text area washout
+        luminanceSmoothing: 0.9,
+        mipmapBlur: true,
+      })
+      this.composer.addPass(new EffectPass(this.camera, bloom))
     } catch {
-      // Postprocessing unavailable — render without bloom (graceful degradation)
+      // Graceful degradation — render without bloom
       this.composer = {
         render: () => this.renderer.render(this.scene, this.camera),
-        setSize: (w: number, h: number) => this.renderer.setSize(w, h),
+        setSize: (_w: number, _h: number) => {},
       }
     }
 
