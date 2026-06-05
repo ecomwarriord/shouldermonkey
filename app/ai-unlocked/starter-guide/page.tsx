@@ -16,13 +16,15 @@ const DAYS = [
     timeEstimate: '30 minutes',
     color: '#10B981',
     what: "Don't have an idea yet? Good. AI finds them faster than you do. Already have one? Even better — today you find out if it is actually worth building before you spend a second more on it.",
-    prompt: `If you need an idea:
-"I am [your age] and I am interested in [hobbies, things you know about, problems you notice around you]. What are five specific business ideas I could start with AI tools, no money, and no experience? For each one, tell me who would pay for it and why."
+    prompt: `If you need an idea — copy this exactly and fill in the blanks:
+"I am [your age, e.g. 16] years old. Five things I enjoy, know about, or notice problems with in daily life: [list five things, e.g. gaming, cooking for my family, helping younger kids with homework, sport, social media for small businesses]. For each one, suggest one specific business idea I could start using AI tools, with no money and no experience. For each idea, tell me: exactly who would pay for it, roughly how much they would pay, and how I could make the first $100."
 
-If you already have an idea:
-"My idea is: [describe it in one sentence]. The people I want to sell to are [describe them]. Tell me: (1) the three most likely reasons this fails, (2) the one thing that would make it work, (3) the one question I need to answer before going further."`,
-    deliverable: "An idea that has been stress-tested by AI. If it survived, you have something worth building. If it didn't, you just saved months.",
-    tip: "If AI says your idea has problems, don't quit — ask it: \"How would I fix those problems?\" The fix is often better than the original idea.",
+If you already have an idea — copy this exactly and fill in the blanks:
+"My business idea is: [one sentence, e.g. 'an AI-powered study guide service for Year 10 students in Australia']. The people I want to help are [e.g. 'Year 10 students who are stressed about exams and don't have money for tutors']. Tell me: (1) the three most likely reasons this idea fails, (2) the one thing that would make it succeed, (3) the single most important question I need to answer before building anything."
+
+What a good AI response looks like: specific names for the type of person who would pay, actual dollar amounts, a clear reason why they'd choose your solution over what they use now. If the response is vague, type: "Be more specific. Give me real examples."`,
+    deliverable: "An idea you have actually tested with AI — not just thought about. If it survived, you have something worth building. If it didn't, you saved yourself months.",
+    tip: "If AI says your idea has problems, do not quit. Type: \"How would I fix those three problems?\" The fix is often better than the original idea.",
   },
   {
     day: 2,
@@ -44,9 +46,12 @@ If you already have an idea:
     timeEstimate: '45 minutes',
     color: '#FF3366',
     what: "Every successful business can explain itself in one sentence. Not a paragraph. Not a pitch. One sentence that makes someone think \"I need that.\" Today you write yours.",
-    prompt: `"I am building [your idea]. The people I help are [who they are]. The biggest thing they hate about current options is [what frustrates them]. Write me 5 different one-sentence descriptions of my business that focus entirely on what the customer gets — not what I do. Make each one different: one for teenagers, one for parents, one that sounds urgent, one that sounds exciting, one that sounds simple."`,
-    deliverable: "Five ways to describe your business. Pick the one that makes someone immediately say \"tell me more.\" That is the sentence you use everywhere.",
-    tip: 'Read each one to someone else and watch their face. The one that makes them lean in slightly is the winner.',
+    prompt: `Copy this exactly and fill in the blanks:
+"I am building [e.g. 'an AI-powered study guide service']. The people I help are [e.g. 'Year 10 students in Australia who are stressed about exams and can't afford tutors']. The thing they hate most about their current options is [e.g. 'tutors are too expensive, YouTube videos are too long and unfocused, and their school teachers don't have time for one-on-one help']. Write me 5 different one-sentence descriptions of my business that focus only on what the customer gets — not on what I do or how it works. Make them different: one aimed at teenagers, one aimed at parents, one that sounds urgent, one that sounds exciting, one that sounds reassuringly simple."
+
+What a good response looks like: each sentence starts with what the customer experiences, not with "we" or "I." It should describe a feeling or an outcome, not a feature. If a sentence starts with "I help" or "We provide" — ask AI to rewrite it starting from the customer's perspective instead.`,
+    deliverable: "Five ways to describe your business. Pick the one that makes someone immediately say \"tell me more.\" That is the sentence you use everywhere from now on.",
+    tip: 'Read each one to a real person and watch their face. The one that makes them lean forward or ask a question is the one.',
   },
   {
     day: 4,
@@ -83,10 +88,12 @@ Step 2 — Design the visual: open Canva (canva.com), click Create, search "Inst
     timeEstimate: '45 minutes',
     color: '#F59E0B',
     what: "A voice pitch in your own voice — that you can send in a DM, attach to an email, or post as audio content. Today you clone your voice once and then generate it as many times as you want without ever recording yourself again.",
-    prompt: `Step 1 — Write the script with Claude:
-"Write a 60-second spoken pitch for [your business]. Use my business tone: [paste your Day 4 guide]. Structure: one sentence naming the problem, two sentences on who I help and how, one sentence on why now, one sentence on what to do next. Make it sound like I am talking to a friend — not reading a script."
+    prompt: `Step 1 — Write your script with Claude. Copy this exactly:
+"Write me a 60-second pitch script for [your business name and one-sentence description from Day 3]. My business tone is: [paste your Day 4 guide here]. Structure: one sentence naming the problem my customer has right now, two sentences on who I help and exactly how, one sentence on why this matters more now than a year ago [e.g. 'because AI tools now make this possible for anyone'], one sentence on what to do next. Sound like I am explaining this to a friend at lunch — not presenting to a boardroom."
 
-Step 2 — Go to ElevenLabs, create a free account, go to Voice Lab, record 30 seconds of yourself speaking naturally, clone your voice, paste the script, and generate.`,
+What a good script looks like: reading it aloud takes 55-65 seconds, sounds like a normal conversation, and someone could repeat the main idea back to you. If it sounds stiff, type: "Rewrite this to sound more like a teenager explaining something they are genuinely excited about."
+
+Step 2 — Go to ElevenLabs (free account), click Voice Lab, record 30 seconds of yourself reading anything aloud in a quiet room, clone the voice, paste your script, click Generate.`,
     deliverable: "A 60-second MP3 in your own cloned voice. Send it to someone today and watch their reaction.",
     tip: 'Record your voice sample in the quietest room you can find. Speak at your natural pace. The better the sample, the more natural the clone.',
   },
