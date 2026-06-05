@@ -13,7 +13,7 @@
  */
 
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { NeuralWorldCanvas } from './NeuralWorldCanvas'
+// NeuralWorldCanvas removed — replaced by CinematicEngine in Task 3-4
 import { WaitlistForm } from './forms/WaitlistForm'
 import { SegmentationQuestion } from './forms/SegmentationQuestion'
 import { ParentHandoff } from './forms/ParentHandoff'
@@ -115,8 +115,8 @@ export function AIUnlockedPage() {
     <div data-page="ai-unlocked" style={{ background: '#000' }}>
       <SkipNav />
 
-      {/* Fixed 3D canvas — always behind everything */}
-      <NeuralWorldCanvas scrollRef={scrollRef} onReady={onCanvasReady} />
+      {/* Canvas placeholder — CinematicEngine replaces this in Task 4 */}
+      <div style={{ position: 'fixed', inset: 0, zIndex: 0, background: '#000' }} aria-hidden="true" />
 
       {/* Radial vignette — text area darkened so headline reads cleanly over network */}
       <div
