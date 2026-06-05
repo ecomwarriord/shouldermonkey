@@ -13,7 +13,7 @@
  */
 
 import { useEffect, useRef, useState, useCallback } from 'react'
-// NeuralWorldCanvas removed — replaced by CinematicEngine in Task 3-4
+import { CinematicPage } from './CinematicPage'
 import { WaitlistForm } from './forms/WaitlistForm'
 import { SegmentationQuestion } from './forms/SegmentationQuestion'
 import { ParentHandoff } from './forms/ParentHandoff'
@@ -115,8 +115,29 @@ export function AIUnlockedPage() {
     <div data-page="ai-unlocked" style={{ background: '#000' }}>
       <SkipNav />
 
-      {/* Canvas placeholder — CinematicEngine replaces this in Task 4 */}
-      <div style={{ position: 'fixed', inset: 0, zIndex: 0, background: '#000' }} aria-hidden="true" />
+      {/* CinematicEngine — vanilla Three.js + GSAP film reel */}
+      <CinematicPage
+        scrollRef={scrollRef}
+        onChapterChange={(ch) => {
+          setChapter(ch)
+          const p = scrollRef.current
+          const peaks = [0, 0.22, 0.44, 0.66, 0.88]
+          const FADE = 0.10
+          const opacities = peaks.map((peak, i) => {
+            const fadeIn = peak - FADE
+            const peakEnd = i === 4 ? 1.0 : peaks[i + 1] - FADE
+            const fadeOut = i === 4 ? 1.0 : peaks[i + 1]
+            if (i === 0 && p < peakEnd) return 1
+            if (p < fadeIn) return 0
+            if (p < peak) return (p - fadeIn) / FADE
+            if (p < peakEnd) return 1
+            if (p < fadeOut) return 1 - (p - peakEnd) / FADE
+            return 0
+          })
+          setChapterOpacities(opacities)
+        }}
+        onReady={onCanvasReady}
+      />
 
       {/* Radial vignette — text area darkened so headline reads cleanly over network */}
       <div
@@ -133,7 +154,7 @@ export function AIUnlockedPage() {
       <main id="main-content">
 
         {/* ── CINEMATIC ZONE: 800vh — more dwell time per chapter ───────── */}
-        <div ref={storyRef} style={{ height: '800vh', position: 'relative' }}>
+        <div ref={storyRef} data-cinematic-story style={{ height: '800vh', position: 'relative' }}>
 
           {/* Chapters are fixed overlays within this zone */}
           <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
