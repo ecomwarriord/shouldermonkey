@@ -14,7 +14,7 @@ interface FormData {
   lastName: string
   email: string
   phone: string
-  role: 'student' | 'parent' | ''
+  role: 'student' | 'parent' | 'educator' | ''
   age: string
   // Under-18 parent/guardian details
   parentFirstName: string
@@ -64,7 +64,7 @@ export function WaitlistForm({ onSuccess, utm_source, ref_id }: WaitlistFormProp
     if (!form.lastName.trim()) return 'Last name is required.'
     if (!form.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) return 'A valid email is required.'
     if (!form.phone.trim()) return 'Phone number is required (for webinar reminders).'
-    if (!form.role) return 'Please select whether you are a student or parent/guardian.'
+    if (!form.role) return 'Please select your role.'
     if (!form.age) return 'Age is required.'
     if (age < 13) return 'This event is for ages 13 and up.'
     if (isUnder18) {
@@ -173,11 +173,15 @@ export function WaitlistForm({ onSuccess, utm_source, ref_id }: WaitlistFormProp
         <div>
           <label style={LABEL_STYLE}>I am a *</label>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 4 }}>
-            {(['student', 'parent'] as const).map(r => (
-              <label key={r} style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', fontSize: '0.875rem', color: form.role === r ? '#ffffff' : 'rgba(240,237,255,0.55)' }}>
-                <input type="radio" name="role" value={r} checked={form.role === r} onChange={() => set('role', r)}
+            {([
+              { value: 'student', label: 'Student (13+)' },
+              { value: 'parent', label: 'Parent / Guardian' },
+              { value: 'educator', label: 'Educator / Professional' },
+            ] as const).map(r => (
+              <label key={r.value} style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', fontSize: '0.875rem', color: form.role === r.value ? '#ffffff' : 'rgba(240,237,255,0.55)' }}>
+                <input type="radio" name="role" value={r.value} checked={form.role === r.value} onChange={() => set('role', r.value)}
                   style={{ accentColor: '#7B3FE4', width: 16, height: 16 }} />
-                {r === 'student' ? 'Student (13+)' : 'Parent / Guardian'}
+                {r.label}
               </label>
             ))}
           </div>

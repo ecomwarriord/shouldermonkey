@@ -16,6 +16,7 @@
     "@anthropic-ai/sdk": "^0.90.0",
     "@gsap/react": "^2.1.2",
     "@radix-ui/react-accordion": "^1.2.12",
+    "@react-email/components": "^1.0.12",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
     "@react-three/postprocessing": "^3.0.4",
@@ -31,6 +32,7 @@
     "playwright": "^1.59.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "resend": "^6.14.0",
     "splitting": "^1.1.0",
     "three": "^0.183.2"
   },
