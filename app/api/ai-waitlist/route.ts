@@ -15,7 +15,7 @@ const redis = new Redis({
 const resend = new Resend(process.env.RESEND_API_KEY)
 const WEBHOOK_URL = process.env.SHOULDERMONKEY_WEBHOOK_URL!
 const ABHI_EMAIL = 'rackdbrain@gmail.com'
-const FROM_EMAIL = 'AI Unlocked <hello@shouldermonkey.co>'
+const FROM_EMAIL = 'AI Unlocked <info@shouldermonkey.co>'
 
 async function postToGHL(payload: Record<string, unknown>, attempt = 1): Promise<boolean> {
   try {
