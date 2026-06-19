@@ -1,21 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Redis } from '@upstash/redis'
-import { Resend } from 'resend'
-import { render } from '@react-email/components'
-import { ConfirmationStudent } from '@/components/ai-unlocked/emails/ConfirmationStudent'
-import { ConfirmationParent } from '@/components/ai-unlocked/emails/ConfirmationParent'
-import { ConfirmationEducator } from '@/components/ai-unlocked/emails/ConfirmationEducator'
-import { AbhiNotification } from '@/components/ai-unlocked/emails/AbhiNotification'
 
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL!,
   token: process.env.UPSTASH_REDIS_REST_TOKEN!,
 })
 
-const resend = new Resend(process.env.RESEND_API_KEY)
 const WEBHOOK_URL = process.env.SHOULDERMONKEY_WEBHOOK_URL!
-const ABHI_EMAIL = 'rackdbrain@gmail.com'
-const FROM_EMAIL = 'AI Unlocked <info@shouldermonkey.co>'
 
 async function postToGHL(payload: Record<string, unknown>, attempt = 1): Promise<boolean> {
   try {
@@ -106,7 +97,7 @@ export async function POST(req: NextRequest) {
     'source-landing-page',
   ].filter(Boolean) as string[]
 
-  // Primary GHL contact
+  // Primary GHL contact — GHL workflow handles confirmation email + nurture
   const primaryPayload = {
     firstName,
     lastName,
@@ -132,7 +123,6 @@ export async function POST(req: NextRequest) {
     await redis.lpush('ai-waitlist-fallback', JSON.stringify({ ...primaryPayload, timestamp: Date.now() }))
     await sendTelegram(`⚠️ AI Unlocked: GHL webhook failed for ${email}. Saved to fallback.`)
   } else {
-    // Telegram alert on every successful signup
     const roleEmoji = role === 'student' ? '🎓' : role === 'parent' ? '👨‍👩‍👧' : role === 'educator' ? '📚' : '👤'
     await sendTelegram(
       `${roleEmoji} New AI Unlocked signup!\n` +
@@ -144,7 +134,8 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  // Under-18: register parent as separate GHL contact
+  // Under-18: register parent as a separate GHL contact
+  // GHL workflow on role-parent tag handles parent confirmation email
   if (isUnder18 && body.parentEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.parentEmail)) {
     const parentPayload = {
       firstName: body.parentFirstName ?? '',
@@ -160,78 +151,6 @@ export async function POST(req: NextRequest) {
       },
     }
     await postToGHL(parentPayload) // best-effort
-  }
-
-  // Send confirmation email to registrant
-  try {
-    let confirmHtml: string
-
-    if (role === 'student') {
-      confirmHtml = await render(ConfirmationStudent({ firstName, age: body.age }))
-    } else if (role === 'educator') {
-      confirmHtml = await render(ConfirmationEducator({ firstName }))
-    } else {
-      // parent or unknown — use parent template
-      // If this is an under-18 registration, the parent filling in the form is the "parent" role.
-      // If role=parent but signed up standalone, treat same.
-      confirmHtml = await render(ConfirmationParent({
-        parentFirstName: firstName,
-        childFirstName: body.parentFirstName ?? firstName, // fallback: same person
-        childAge: body.age,
-      }))
-    }
-
-    await resend.emails.send({
-      from: FROM_EMAIL,
-      to: email,
-      subject: role === 'student'
-        ? `You're on the list, ${firstName}. AI Unlocked is coming. 🔥`
-        : role === 'educator'
-        ? `Welcome to the AI Unlocked waitlist, ${firstName}.`
-        : `${body.parentFirstName || firstName}, you're confirmed for AI Unlocked.`,
-      html: confirmHtml,
-    })
-
-    // If under-18, also send parent confirmation to parent email
-    if (isUnder18 && body.parentEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.parentEmail)) {
-      const parentConfirmHtml = await render(ConfirmationParent({
-        parentFirstName: body.parentFirstName ?? '',
-        childFirstName: firstName,
-        childAge: body.age,
-      }))
-      await resend.emails.send({
-        from: FROM_EMAIL,
-        to: body.parentEmail.toLowerCase(),
-        subject: `${firstName} is on the AI Unlocked waitlist — what to expect`,
-        html: parentConfirmHtml,
-      })
-    }
-  } catch (err) {
-    // Email failure is non-fatal — registrant is still in GHL
-    console.error('Resend email failed:', err)
-  }
-
-  // Send notification to Abhinav on every signup
-  try {
-    const abhiHtml = await render(AbhiNotification({
-      registrantName: fullName,
-      registrantEmail: email,
-      registrantPhone: body.phone ?? '',
-      role,
-      age: body.age,
-      ageRange,
-      parentName: isUnder18 ? `${body.parentFirstName ?? ''} ${body.parentLastName ?? ''}`.trim() : undefined,
-      parentEmail: isUnder18 ? body.parentEmail : undefined,
-    }))
-
-    await resend.emails.send({
-      from: FROM_EMAIL,
-      to: ABHI_EMAIL,
-      subject: `New AI Unlocked signup: ${fullName} (${role})`,
-      html: abhiHtml,
-    })
-  } catch (err) {
-    console.error('Abhi notification failed:', err)
   }
 
   await redis.incr('ai-waitlist-total').catch(() => {})
