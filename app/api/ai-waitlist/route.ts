@@ -1,48 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { Redis } from '@upstash/redis'
+import { render } from '@react-email/components'
+import { ConfirmationStudent } from '@/components/ai-unlocked/emails/ConfirmationStudent'
+import { ConfirmationParent } from '@/components/ai-unlocked/emails/ConfirmationParent'
+import { ConfirmationEducator } from '@/components/ai-unlocked/emails/ConfirmationEducator'
+import { AbhiNotification } from '@/components/ai-unlocked/emails/AbhiNotification'
+import { redis, saveContact, contactExists, type AiContact } from '@/lib/ai-unlocked/store'
+import { sendEmail, sendTelegram, ABHI_EMAIL } from '@/lib/ai-unlocked/mailer'
 
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL!,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-})
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-const WEBHOOK_URL = process.env.SHOULDERMONKEY_WEBHOOK_URL!
-
-async function postToGHL(payload: Record<string, unknown>, attempt = 1): Promise<boolean> {
-  try {
-    const res = await fetch(WEBHOOK_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    })
-    if (res.ok) return true
-    if (attempt < 3) {
-      await new Promise((r) => setTimeout(r, attempt * 1000))
-      return postToGHL(payload, attempt + 1)
-    }
-    return false
-  } catch {
-    if (attempt < 3) {
-      await new Promise((r) => setTimeout(r, attempt * 1000))
-      return postToGHL(payload, attempt + 1)
-    }
-    return false
-  }
-}
-
-async function sendTelegram(text: string) {
-  const token = process.env.TELEGRAM_BOT_TOKEN
-  const chatId = process.env.TELEGRAM_ALLOWED_CHAT_ID
-  if (!token || !chatId) return
-  fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: chatId, text }),
-  }).catch(() => {})
+// Strip control characters, trim, cap length — used on all free-text fields
+// that flow into emails and stored records
+function clean(value: string | undefined, max = 80): string {
+  return (value ?? '').replace(/[\x00-\x1f\x7f]/g, '').trim().slice(0, max)
 }
 
 export async function POST(req: NextRequest) {
-  const ip = req.headers.get('x-forwarded-for')?.split(',')[0] ?? 'unknown'
+  // x-real-ip is set by Vercel's proxy; leftmost x-forwarded-for is client-spoofable
+  const ip = req.headers.get('x-real-ip')
+    ?? req.headers.get('x-forwarded-for')?.split(',').pop()?.trim()
+    ?? 'unknown'
   const rateKey = `ai-waitlist-rate:${ip}`
 
   const count = await redis.incr(rateKey)
@@ -75,83 +52,169 @@ export async function POST(req: NextRequest) {
   if (body.website) return NextResponse.json({ success: true })
 
   const email = (body.email ?? '').trim().toLowerCase()
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  if (!email || !EMAIL_RE.test(email)) {
     return NextResponse.json({ error: 'Invalid email' }, { status: 400 })
+  }
+
+  // Idempotent: repeat submissions for a known email succeed without
+  // re-sending emails (also blocks confirmation-spam abuse per address)
+  if (await contactExists(email)) {
+    return NextResponse.json({ success: true })
   }
 
   const role = body.role ?? 'unknown'
   const ageRange = body.ageRange ?? 'age-unknown'
   const isUnder18 = ageRange === 'age-under-15' || ageRange === 'age-15-17'
-  const firstName = body.firstName ?? ''
-  const lastName = body.lastName ?? ''
+  const firstName = clean(body.firstName)
+  const lastName = clean(body.lastName)
   const fullName = `${firstName} ${lastName}`.trim()
+  const parentEmail = body.parentEmail?.trim().toLowerCase()
+  const hasValidParentEmail = isUnder18 && !!parentEmail && EMAIL_RE.test(parentEmail)
+  // Consent is only recorded when explicitly declared AND a valid guardian
+  // email was supplied — never stamped by default for under-18s
+  const consentRecorded = hasValidParentEmail && body.parentConsentProvided === true
+  const parentFirstName = clean(body.parentFirstName)
+  const parentLastName = clean(body.parentLastName)
+  const phone = clean(body.phone, 40)
+  const parentPhone = clean(body.parentPhone, 40)
 
   const tags = [
     'ai-unlocked-waitlist',
     `role-${role}`,
     ageRange,
-    isUnder18 && body.parentConsentProvided ? 'parental-consent-provided' : null,
+    consentRecorded ? 'parental-consent-provided' : null,
     body.archetype ? `archetype-${body.archetype.toLowerCase()}` : null,
     body.utm_source ? `utm-${body.utm_source}` : null,
     body.ref ? `referred-by-${body.ref}` : null,
     'source-landing-page',
   ].filter(Boolean) as string[]
 
-  // Primary GHL contact — GHL workflow handles confirmation email + nurture
-  const primaryPayload = {
+  // Contact store in Redis is the CRM of record (GHL removed)
+  const contact: AiContact = {
+    email,
     firstName,
     lastName,
-    email,
-    phone: body.phone ?? '',
-    source: 'ai-unlocked-landing',
+    phone,
+    role,
+    age: body.age,
+    ageRange,
     tags,
-    customFields: {
-      age: body.age,
-      role,
-      ...(isUnder18 ? {
-        parentGuardianName: `${body.parentFirstName ?? ''} ${body.parentLastName ?? ''}`.trim(),
-        parentGuardianEmail: body.parentEmail ?? '',
-        parentGuardianPhone: body.parentPhone ?? '',
-        parentalConsentDate: new Date().toISOString(),
-      } : {}),
-    },
+    ...(isUnder18 ? {
+      parentGuardianName: `${parentFirstName} ${parentLastName}`.trim(),
+      parentGuardianEmail: parentEmail ?? '',
+      parentGuardianPhone: parentPhone,
+      // Consent date only recorded when consent was explicitly declared with
+      // a valid guardian email — never stamped by default
+      ...(consentRecorded ? { parentalConsentDate: new Date().toISOString() } : {}),
+    } : {}),
+    joinedAt: Date.now(),
+    nurtureStep: 0,
+    lastSentAt: 0,
   }
 
-  const ghlSuccess = await postToGHL(primaryPayload)
-
-  if (!ghlSuccess) {
-    await redis.lpush('ai-waitlist-fallback', JSON.stringify({ ...primaryPayload, timestamp: Date.now() }))
-    await sendTelegram(`⚠️ AI Unlocked: GHL webhook failed for ${email}. Saved to fallback.`)
-  } else {
-    const roleEmoji = role === 'student' ? '🎓' : role === 'parent' ? '👨‍👩‍👧' : role === 'educator' ? '📚' : '👤'
-    await sendTelegram(
-      `${roleEmoji} New AI Unlocked signup!\n` +
-      `Name: ${fullName}\n` +
-      `Email: ${email}\n` +
-      `Phone: ${body.phone ?? '—'}\n` +
-      `Role: ${role}${body.age ? ` · Age: ${body.age}` : ''}\n` +
-      `Tags: ${tags.join(', ')}`
-    )
+  try {
+    await saveContact(contact)
+  } catch (err) {
+    console.error('Contact save failed:', err)
+    await sendTelegram(`🚨 AI Unlocked: FAILED to save contact ${email}. Check Redis.`)
+    return NextResponse.json({ error: 'Something went wrong. Please try again.' }, { status: 500 })
   }
 
-  // Under-18: register parent as a separate GHL contact
-  // GHL workflow on role-parent tag handles parent confirmation email
-  if (isUnder18 && body.parentEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.parentEmail)) {
-    const parentPayload = {
-      firstName: body.parentFirstName ?? '',
-      lastName: body.parentLastName ?? '',
-      email: body.parentEmail.toLowerCase(),
-      phone: body.parentPhone ?? '',
-      source: 'ai-unlocked-landing',
-      tags: ['ai-unlocked-waitlist', 'role-parent', 'parental-consent-provided', `child-age-${ageRange}`, 'source-landing-page'],
-      customFields: {
-        childName: fullName,
-        childAge: body.age,
-        consentDate: new Date().toISOString(),
-      },
+  // Under-18: store parent as separate contact
+  if (hasValidParentEmail && parentEmail !== email) {
+    const parentContact: AiContact = {
+      email: parentEmail,
+      firstName: parentFirstName,
+      lastName: parentLastName,
+      phone: parentPhone,
+      role: 'parent',
+      ageRange: 'age-18-plus',
+      tags: [
+        'ai-unlocked-waitlist',
+        'role-parent',
+        ...(consentRecorded ? ['parental-consent-provided'] : []),
+        `child-age-${ageRange}`,
+        'source-landing-page',
+      ],
+      childName: fullName,
+      joinedAt: Date.now(),
+      nurtureStep: 0,
+      lastSentAt: 0,
     }
-    await postToGHL(parentPayload) // best-effort
+    await saveContact(parentContact).catch((err) => console.error('Parent contact save failed:', err))
   }
+
+  // Confirmation email to registrant
+  let confirmationSent = false
+  try {
+    let confirmHtml: string
+    let subject: string
+
+    if (role === 'student') {
+      confirmHtml = await render(ConfirmationStudent({ firstName, age: body.age }))
+      subject = `You're on the list, ${firstName}. AI Unlocked is coming. 🔥`
+    } else if (role === 'educator') {
+      confirmHtml = await render(ConfirmationEducator({ firstName }))
+      subject = `Welcome to the AI Unlocked waitlist, ${firstName}.`
+    } else {
+      confirmHtml = await render(ConfirmationParent({
+        parentFirstName: firstName,
+        childFirstName: firstName,
+        childAge: body.age,
+      }))
+      subject = `${firstName}, you're confirmed for AI Unlocked.`
+    }
+
+    confirmationSent = await sendEmail({ to: email, subject, html: confirmHtml })
+
+    // Under-18: parent confirmation to guardian address
+    if (hasValidParentEmail) {
+      const parentConfirmHtml = await render(ConfirmationParent({
+        parentFirstName,
+        childFirstName: firstName,
+        childAge: body.age,
+      }))
+      await sendEmail({
+        to: parentEmail!,
+        subject: `${firstName} is on the AI Unlocked waitlist — what to expect`,
+        html: parentConfirmHtml,
+      })
+    }
+  } catch (err) {
+    console.error('Confirmation email failed:', err)
+  }
+
+  // Notify Abhinav on every signup
+  try {
+    const abhiHtml = await render(AbhiNotification({
+      registrantName: fullName,
+      registrantEmail: email,
+      registrantPhone: phone,
+      role,
+      age: body.age,
+      ageRange,
+      parentName: isUnder18 ? `${parentFirstName} ${parentLastName}`.trim() : undefined,
+      parentEmail: isUnder18 ? parentEmail : undefined,
+    }))
+    await sendEmail({
+      to: ABHI_EMAIL,
+      subject: `New AI Unlocked signup: ${fullName} (${role})`,
+      html: abhiHtml,
+    })
+  } catch (err) {
+    console.error('Abhi notification failed:', err)
+  }
+
+  const roleEmoji = role === 'student' ? '🎓' : role === 'parent' ? '👨‍👩‍👧' : role === 'educator' ? '📚' : '👤'
+  await sendTelegram(
+    `${roleEmoji} New AI Unlocked signup!\n` +
+    `Name: ${fullName}\n` +
+    `Email: ${email}\n` +
+    `Phone: ${phone || '—'}\n` +
+    `Role: ${role}${body.age ? ` · Age: ${body.age}` : ''}\n` +
+    `Confirmation email: ${confirmationSent ? 'sent ✅' : 'FAILED ⚠️ (contact saved, check Resend)'}\n` +
+    `Tags: ${tags.join(', ')}`
+  )
 
   await redis.incr('ai-waitlist-total').catch(() => {})
 

@@ -100,7 +100,7 @@ export function AbhiNotification({
 
             <Text style={footerNote}>
               This is an automated notification from AI Unlocked (shouldermonkey.co/ai-unlocked).
-              All registrant details are also in GHL.
+              Full registrant details are stored securely in the waitlist system.
             </Text>
           </Section>
         </Container>
