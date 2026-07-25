@@ -4,8 +4,12 @@ import { redis } from './store'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
-export const FROM_EMAIL = 'AI Unlocked <info@shouldermonkey.co>'
+// Sends from the dedicated aiunlocked subdomain (isolated sending reputation),
+// but replies route to a real monitored inbox — nurture emails invite replies
+export const FROM_EMAIL = 'AI Unlocked <hello@aiunlocked.shouldermonkey.co>'
+export const REPLY_TO = 'info@shouldermonkey.co'
 export const ABHI_EMAIL = 'rackdbrain@gmail.com'
+// API routes (unsubscribe, drain) live on the root Vercel app
 export const SITE_URL = 'https://shouldermonkey.co'
 
 // Resend free tier allows 100 emails/day. Shared date-keyed budget across all
@@ -38,6 +42,7 @@ export async function sendEmail(opts: {
     const { error } = await resend.emails.send({
       from: FROM_EMAIL,
       to: opts.to,
+      replyTo: REPLY_TO,
       subject: opts.subject,
       html: opts.html,
     })
