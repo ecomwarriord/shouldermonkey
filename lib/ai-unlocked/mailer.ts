@@ -38,6 +38,18 @@ export async function sendEmail(opts: {
     console.error(`Daily send budget (${DAILY_SEND_BUDGET}) exhausted — skipped email to ${opts.to}`)
     return false
   }
+  // List-Unsubscribe (+ one-click) is a strong inbox-placement signal for
+  // Gmail/Outlook. Point it at the per-recipient unsubscribe URL.
+  let listUnsub: Record<string, string> | undefined
+  try {
+    listUnsub = {
+      'List-Unsubscribe': `<${unsubUrl(opts.to)}>, <mailto:${REPLY_TO}?subject=unsubscribe>`,
+      'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+    }
+  } catch {
+    listUnsub = undefined
+  }
+
   try {
     const { error } = await resend.emails.send({
       from: FROM_EMAIL,
@@ -45,6 +57,7 @@ export async function sendEmail(opts: {
       replyTo: REPLY_TO,
       subject: opts.subject,
       html: opts.html,
+      ...(listUnsub ? { headers: listUnsub } : {}),
     })
     if (error) {
       console.error(`Resend error for ${opts.to}:`, error)
