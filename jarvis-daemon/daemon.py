@@ -149,10 +149,24 @@ def process_confirmation(chat_id: int) -> bool:
 
 def run() -> None:
     """Main polling loop."""
+    import sys
     from telegram_client import send_message
 
-    print(f"[JARVIS Daemon] Started. Polling every {POLL_INTERVAL}s.")
-    send_message(CHAT_ID, "JARVIS daemon online. Ready for commands.")
+    log_path = Path(__file__).parent / 'daemon.log'
+    log = open(log_path, 'a', buffering=1)
+
+    def log_print(msg: str) -> None:
+        import datetime
+        line = f"[{datetime.datetime.now().isoformat()}] {msg}"
+        print(line, flush=True)
+        log.write(line + '\n')
+
+    log_print(f"Daemon starting. Polling every {POLL_INTERVAL}s.")
+    try:
+        send_message(CHAT_ID, "JARVIS daemon online. Ready for commands.")
+        log_print("Startup message sent to Telegram.")
+    except Exception as e:
+        log_print(f"Warning: startup message failed: {e}")
 
     while True:
         try:
@@ -182,9 +196,11 @@ def run() -> None:
                         process_job(job)
 
         except Exception as e:
-            print(f"[JARVIS Daemon] Error: {e}")
-            from telegram_client import send_message
-            send_message(CHAT_ID, f"Something went wrong in the daemon: {e}")
+            log_print(f"Error: {e}")
+            try:
+                send_message(CHAT_ID, f"Something went wrong in the daemon: {e}")
+            except Exception:
+                pass
 
         time.sleep(POLL_INTERVAL)
 
