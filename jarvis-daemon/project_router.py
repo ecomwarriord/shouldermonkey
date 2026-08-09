@@ -1,8 +1,9 @@
 import os
 import re
+from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(dotenv_path=Path(__file__).parent / '.env')
 
 PROJECTS_ROOT = os.getenv('PROJECTS_ROOT', r'C:\Users\derol\Documents\Claude\Code Projects')
 

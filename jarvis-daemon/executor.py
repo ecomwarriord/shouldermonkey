@@ -6,7 +6,7 @@ from pathlib import Path
 import anthropic
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(dotenv_path=Path(__file__).parent / '.env')
 
 COMPLEX_PATTERN = re.compile(
     r'\b(add|create|build|new|implement|integrate|refactor|system|multiple|several|all)\b',

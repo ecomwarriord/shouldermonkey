@@ -3,9 +3,10 @@ import os
 import re
 import time
 import uuid
+from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(dotenv_path=Path(__file__).parent / '.env')
 
 CHAT_ID = int(os.getenv('TELEGRAM_CHAT_ID', '706738923'))
 PASSPHRASE = os.getenv('JARVIS_PASSPHRASE', '').lower()
