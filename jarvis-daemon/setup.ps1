@@ -1,10 +1,9 @@
-# setup.ps1 — Register Jarvis daemon as a Windows startup task
+# setup.ps1 - Register Jarvis daemon as a Windows startup task
 # Run once as Administrator: powershell -ExecutionPolicy Bypass -File setup.ps1
 
 $DaemonPath = "$PSScriptRoot\daemon.py"
 $PythonPath = (Get-Command python).Source
 $TaskName = "JarvisDaemon"
-$LogPath = "$PSScriptRoot\daemon.log"
 
 # Remove existing task if present
 Unregister-ScheduledTask -TaskName $TaskName -Confirm:$false -ErrorAction SilentlyContinue
@@ -27,7 +26,7 @@ Register-ScheduledTask `
     -Trigger $Trigger `
     -Settings $Settings `
     -RunLevel Highest `
-    -Description "Jarvis Mobile — executes code commands from Telegram"
+    -Description "Jarvis Mobile - executes code commands from Telegram"
 
 Write-Host "Jarvis daemon registered. Will start at next login."
-Write-Host "To start now: Start-ScheduledTask -TaskName '$TaskName'"
+Write-Host ("To start now: Start-ScheduledTask -TaskName '" + $TaskName + "'")
