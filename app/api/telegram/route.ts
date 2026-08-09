@@ -80,6 +80,33 @@ async function buildSystemPrompt(): Promise<string> {
   return `${SYSTEM_PROMPT}\n\n## Live Updates (from desktop session)\n${context}`
 }
 
+// --- JARVIS MOBILE: CODE EXECUTION CONSTANTS ---
+const CODE_PROJECTS = [
+  'maikah', 'finance', 'ironbloom', 'forge', 'fitness',
+  'holmes', 'donna', 'shoulder monkey', 'shouldermonkey',
+  'qaneri', 'bunny', 'ai unlocked', 'webinar', 'kp naidoo',
+  'immigration', 'veridian', 'tutor',
+]
+
+const CODE_ACTIONS = [
+  'change', 'fix', 'update', 'add', 'remove', 'build', 'create',
+  'deploy', 'edit', 'modify', 'delete', 'refactor', 'implement',
+]
+
+const JARVIS_PASSPHRASE = (process.env.JARVIS_PASSPHRASE ?? '').toLowerCase()
+
+function isCodeCommand(text: string): boolean {
+  if (!text) return false
+  const lower = text.toLowerCase()
+  if (!JARVIS_PASSPHRASE || !lower.includes(JARVIS_PASSPHRASE)) return false
+  const hasProject = CODE_PROJECTS.some(p => lower.includes(p))
+  const hasAction = CODE_ACTIONS.some(a => lower.includes(a))
+  return hasProject && hasAction
+}
+
+const CONFIRM_WORDS = ['yes', 'yeah', 'yep', 'yup', 'do it', 'go ahead', 'sure', 'ok', 'okay', 'confirmed']
+// --- END MODULE-LEVEL CONSTANTS ---
+
 export async function POST(req: NextRequest) {
   let chatId: number | null = null
   try {
@@ -162,6 +189,36 @@ export async function POST(req: NextRequest) {
       await sendTelegram(chatId, msg)
       return NextResponse.json({ ok: true })
     }
+
+    // --- JARVIS MOBILE: INTENT DETECTION ---
+    // Check for pending confirmation first (user replied "yes" to a plan)
+    const pendingRaw = await redis.get<string>(`jarvis:code:pending:${chatId}`)
+    if (pendingRaw && userText) {
+      const isConfirm = CONFIRM_WORDS.some(w => userText.toLowerCase().includes(w))
+      if (isConfirm) {
+        await redis.lpush('jarvis:code:queue', JSON.stringify({
+          id: crypto.randomUUID(),
+          message: userText,
+          chat_id: chatId,
+          timestamp: new Date().toISOString(),
+        }))
+        await sendTelegram(chatId as number, `On it.`)
+        return NextResponse.json({ ok: true })
+      }
+    }
+
+    // Check for new code execution command
+    if (isCodeCommand(userText)) {
+      await redis.lpush('jarvis:code:queue', JSON.stringify({
+        id: crypto.randomUUID(),
+        message: userText,
+        chat_id: chatId,
+        timestamp: new Date().toISOString(),
+      }))
+      await sendTelegram(chatId as number, `On it. Give me a moment.`)
+      return NextResponse.json({ ok: true })
+    }
+    // --- END INTENT DETECTION ---
 
     // Conversation with persistent memory + live context
     const key = `jarvis:${chatId}`
