@@ -1,3 +1,4 @@
+import json
 import os
 import subprocess
 from pathlib import Path
@@ -8,6 +9,7 @@ load_dotenv(dotenv_path=Path(__file__).parent / '.env')
 PROJECTS_ROOT = os.getenv('PROJECTS_ROOT', r'C:\Users\derol\Documents\Claude\Code Projects')
 OBSIDIAN_VAULT = os.getenv('OBSIDIAN_VAULT', r'C:\Users\derol\Documents\Claude\ClaudeVault')
 CLAUDE_MEMORY_ROOT = os.getenv('CLAUDE_MEMORY_ROOT', r'C:\Users\derol\.claude\projects')
+CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', '706738923')
 
 
 def find_memory_root() -> str | None:
@@ -87,10 +89,40 @@ def load_project_context(project_path: str) -> str:
     return '\n\n'.join(sections)
 
 
+def load_telegram_history() -> str:
+    """Load recent Telegram conversation from Redis so daemon understands prior context."""
+    try:
+        import requests
+        redis_url = os.getenv('UPSTASH_REDIS_REST_URL', '')
+        redis_token = os.getenv('UPSTASH_REDIS_REST_TOKEN', '')
+        if not redis_url or not redis_token:
+            return ''
+        r = requests.get(
+            f'{redis_url}/get/jarvis:{CHAT_ID}',
+            headers={'Authorization': f'Bearer {redis_token}'},
+            timeout=5,
+        )
+        result = r.json().get('result')
+        if not result:
+            return ''
+        history = json.loads(result) if isinstance(result, str) else result
+        if not history:
+            return ''
+        recent = history[-12:]
+        lines = ['## Recent Telegram Conversation (last 12 messages)']
+        for m in recent:
+            role = 'Dee' if m['role'] == 'user' else 'JARVIS'
+            lines.append(f'{role}: {m["content"]}')
+        return '\n'.join(lines)
+    except Exception:
+        return ''
+
+
 def load_context(message: str, project_path: str | None = None) -> str:
     """Load full context for a Claude API call."""
     sections = [
         "# JARVIS — Full Context\n",
+        load_telegram_history(),
         load_memory_context(),
         load_obsidian_context(),
     ]
