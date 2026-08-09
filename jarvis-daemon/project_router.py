@@ -75,4 +75,4 @@ def route_model(message: str) -> str:
         return 'claude-fable-5'
     if COMPLEX_KEYWORDS.search(message):
         return 'claude-opus-5'
-    return 'claude-opus-4-8'
+    return 'claude-fable-5'

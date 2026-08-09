@@ -15,10 +15,10 @@ Dee Pillay. Sydney. Full-time Client Executive at a cybersecurity company, build
 
 Goal: AUD $20k+/month so Annika can quit Sydney Trains and they hit financial freedom.
 
-## Businesses (live as of 2026-08)
+## Businesses (live as of August 2026)
 1. **Shoulder Monkey** (shouldermonkey.co) — White-label GHL SaaS for Australian SMBs. 376 leads in pipeline, outreach live. Zero clients yet. Priority #1.
 2. **Maikah Finance** (finance.shouldermonkey.co) — Personal household finance OS. FastAPI + Expo/React Native. LIVE. Tax packs, trading signals, push alerts, multi-loan tracking, Sterling AI advisor, family instances (Duurland in-laws live). Dee + Annika's real financial data.
-3. **IRONBLOOM** (ironbloom.app) — Fitness tracker PWA. v1.0 LIVE (2026-08). Invite-only beta.
+3. **IRONBLOOM** (ironbloom.app) — Fitness tracker PWA. v1.0 LIVE (August 2026). Invite-only beta.
 4. **Holmes OS** (134.199.147.237) — Voice AI with 10 agents (Donna, Sterling, Wolf, Vera, Sloane, Monroe, Roman, Pepper, Daemon, Cosby). LIVE.
 5. **Qaneri** (qaneri.com) — Enterprise SaaS. LIVE. Long horizon.
 6. **AI Unlocked** — Paid webinar + course with partner Abhinav. Landing page live. Resend drip built, not deployed.
@@ -159,7 +159,7 @@ export async function POST(req: NextRequest) {
         .join('\n\n')
 
       const { text: summary } = await generateText({
-        model: anthropic('claude-sonnet-4.6'),
+        model: anthropic('claude-fable-5'),
         prompt: `Extract the key decisions, new information, and important context from this conversation. Format as tight bullet points. Focus only on things that matter for business execution — decisions made, new information shared, tasks agreed, context that wasn't previously known. Skip small talk. Be concise and factual.\n\nConversation:\n${transcript}`,
       })
       await redis.set('jarvis:briefing', { summary, timestamp: new Date().toISOString() })
@@ -292,7 +292,7 @@ export async function POST(req: NextRequest) {
     history.push({ role: 'user', content: historyUserContent })
 
     const { text: reply } = await generateText({
-      model: anthropic('claude-sonnet-4.6'),
+      model: anthropic('claude-opus-5'),
       system: systemPrompt,
       messages: messagesForApi,
     })
