@@ -103,6 +103,13 @@ def process_job(job: dict) -> None:
         send_message(chat_id, f"Quick change in {project_name}. Doing it now...")
         reply, files_changed = execute(message, model, context, project_path)
         send_message(chat_id, reply)
+        _get_redis().set('jarvis:last_execution', json.dumps({
+            'message': message,
+            'result': reply,
+            'files_changed': files_changed,
+            'project': project_name,
+            'timestamp': __import__('datetime').datetime.now().isoformat(),
+        }))
 
 
 def process_confirmation(chat_id: int) -> bool:
@@ -130,6 +137,13 @@ def process_confirmation(chat_id: int) -> bool:
         pending['project_path'],
     )
     send_message(chat_id, reply)
+    _get_redis().set('jarvis:last_execution', json.dumps({
+        'message': pending['original_message'],
+        'result': reply,
+        'files_changed': files_changed,
+        'project': os.path.basename(pending['project_path']),
+        'timestamp': __import__('datetime').datetime.now().isoformat(),
+    }))
     return True
 
 
